@@ -7,6 +7,7 @@ import 'package:takopedia/pages/login.dart';
 import 'package:takopedia/pages/register.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   runApp(const MyApp());

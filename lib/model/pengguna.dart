@@ -22,7 +22,7 @@ class Pengguna {
       'nama': nama,
       'alamat': alamat,
       'telp': telp,
-      'image': img ?? '',
+      'image': img,
     };
   }
 }

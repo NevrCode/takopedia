@@ -6,6 +6,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:takopedia/model/pengguna.dart';
 
+import '../services/authService.dart';
+
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
 
@@ -19,34 +21,31 @@ class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController _namaController = TextEditingController();
   final TextEditingController _alamatController = TextEditingController();
   final TextEditingController _teleponController = TextEditingController();
-  String _message = '';
-  File? _imageFile;
-
+  File? _profilePic;
+  final AuthService _authService = AuthService();
   final ImagePicker _picker = ImagePicker();
+  String _message = '';
 
-  Future<void> _pickImage() async {
+  Future<void> _pickProfilePicture() async {
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      setState(() {
-        _imageFile = File(pickedFile.path);
-      });
-    }
+    setState(() {
+      _profilePic = pickedFile != null ? File(pickedFile.path) : null;
+    });
   }
 
   // Fungsi untuk menyimpan gambar ke folder yang dapat diakses
-  Future<void> _saveImage() async {
-    if (_imageFile != null) {
-      final directory = await getApplicationDocumentsDirectory();
-      final String imageName =
-          '${_namaController.text.split(" ")[0]}.jpg'; // Ambil nama depan
-      final String newPath = '${directory.path}/$imageName'; // Path baru
+  // Future<void> _saveImage() async {
+  //   if (_profilePic != null) {
+  //     final directory = await getApplicationDocumentsDirectory();
+  //     final String imageName =
+  //         '${_namaController.text.split(" ")[0]}.jpg'; // Ambil nama depan
+  //     final String newPath = '${directory.path}/$imageName'; // Path baru
 
-      // Simpan gambar ke path baru
-      await _imageFile!.copy(newPath);
-      print(
-          'Image saved to: $newPath'); // Debugging untuk memastikan penyimpanan
-    }
-  }
+  //     await _profilePic!.copy(newPath);
+  //     print(
+  //         'Image saved to: $newPath'); // Debugging untuk memastikan penyimpanan
+  //   }
+  // }
 
   Future<void> _register() async {
     final email = _emailController.text;
@@ -55,20 +54,28 @@ class _RegisterPageState extends State<RegisterPage> {
     final alamat = _alamatController.text;
     final telp = _teleponController.text;
 
-    await _saveImage(); // Simpan gambar sebelum registrasi
+    // await _saveImage(); // Simpan gambar sebelum registrasi
 
-    CollectionReference users = FirebaseFirestore.instance.collection('users');
-
-    users
-        .add(Pengguna(
-                email: email,
-                pass: pass,
-                nama: nama,
-                alamat: alamat,
-                telp: telp)
-            .toMap())
-        .then((value) => print("Done"))
-        .catchError((error) => Text(error));
+    if (_profilePic != null) {
+      final user = await _authService.registerWithEmailandDetail(
+        email,
+        pass,
+        nama,
+        alamat,
+        _profilePic!.path,
+        telp,
+      );
+      // print('${Platform.operatingSystem}');
+      if (user != null) {
+        print('user registered with uid : ${user.uid}');
+      } else if (user == null) {
+        print('Registration Failed');
+      } else {
+        print("entah");
+      }
+    } else {
+      print('Please select a profile picture');
+    }
   }
 
   @override
@@ -153,15 +160,15 @@ class _RegisterPageState extends State<RegisterPage> {
               CircleAvatar(
                 radius: 50,
                 backgroundImage:
-                    _imageFile != null ? FileImage(_imageFile!) : null,
-                child: _imageFile == null
+                    _profilePic != null ? FileImage(_profilePic!) : null,
+                child: _profilePic == null
                     ? Icon(Icons.person, size: 50)
                     : null, // Tampilkan icon person jika belum ada foto
               ),
               SizedBox(height: 16),
 
               // Hanya menampilkan nama file
-              if (_imageFile != null)
+              if (_profilePic != null)
                 Text(
                   'Nama file: ${_namaController.text.split(" ")[0]}.jpg',
                   style: TextStyle(fontSize: 14),
@@ -170,7 +177,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
               // Tombol Upload Foto
               ElevatedButton(
-                onPressed: _pickImage,
+                onPressed: _pickProfilePicture,
                 style: ElevatedButton.styleFrom(
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30.0),

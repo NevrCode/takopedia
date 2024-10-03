@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:takopedia/model/pengguna.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -27,8 +26,8 @@ class AuthService {
           'profile_pic': picUrl,
           'telp': telp,
         });
-        return user;
       }
+      return user;
     } catch (e) {
       print('user null ${e.toString()}');
       return null;
@@ -45,6 +44,31 @@ class AuthService {
     } catch (e) {
       print(e.toString());
       rethrow;
+    }
+  }
+
+  Future<User?> signInWithEmailAndPassword(
+      String email, String password) async {
+    try {
+      UserCredential result = await _auth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      User? user = result.user;
+
+      return user;
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
+
+  Future signOut() async {
+    try {
+      return await _auth.signOut();
+    } catch (e) {
+      print(e);
+      return null;
     }
   }
 }

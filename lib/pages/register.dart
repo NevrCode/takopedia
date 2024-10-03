@@ -68,6 +68,7 @@ class _RegisterPageState extends State<RegisterPage> {
       // print('${Platform.operatingSystem}');
       if (user != null) {
         print('user registered with uid : ${user.uid}');
+        Navigator.pushReplacementNamed(context, '/');
       } else if (user == null) {
         print('Registration Failed');
       } else {

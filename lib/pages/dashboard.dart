@@ -1,7 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:takopedia/pages/login.dart';
 import 'package:takopedia/pages/product_detail.dart';
+import 'package:takopedia/services/authService.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -14,7 +16,13 @@ class _DashboardPageState extends State<DashboardPage> {
   List products = [];
   bool isLoading = true;
   String errorMessage = '';
+  final AuthService _auth = AuthService();
+  final user = FirebaseAuth.instance.currentUser;
   Future<void> fetchProducts() async {}
+  void signOut() {
+    _auth.signOut();
+    Navigator.pushReplacementNamed(context, '/');
+  }
 
   @override
   void initState() {
@@ -36,13 +44,7 @@ class _DashboardPageState extends State<DashboardPage> {
         actions: [
           IconButton(
             icon: Icon(Icons.logout),
-            onPressed: () {
-              // Navigasi ke halaman login
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => LoginPage()),
-              );
-            },
+            onPressed: signOut,
           ),
         ],
       ),
@@ -50,11 +52,13 @@ class _DashboardPageState extends State<DashboardPage> {
         child: Column(
           children: [
             UserAccountsDrawerHeader(
-              accountName: Text('Nama Pengguna'), // Nama pengguna
-              accountEmail: Text('email@domain.com'), // Email pengguna
+              accountName:
+                  Text('${user?.displayName ?? "no name"}'), // Nama pengguna
+              accountEmail: Text(
+                  '${user?.email ?? "email@domain.com"}'), // Email pengguna
               currentAccountPicture: CircleAvatar(
                 backgroundImage: NetworkImage(
-                  'https://via.placeholder.com/150', // Ganti dengan URL foto pengguna
+                  '${user?.photoURL ?? "https://via.placeholder.com/150"}', // Ganti dengan URL foto pengguna
                 ),
               ),
             ),

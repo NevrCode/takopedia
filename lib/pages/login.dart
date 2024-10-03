@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:takopedia/services/authService.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -13,13 +14,21 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _passwordController = TextEditingController();
   bool _obscureText = true; // Untuk menyembunyikan/menampilkan password
   String _message = '';
+  final AuthService _auth = AuthService();
 
   Future<void> _login() async {
     final String email = _emailController.text;
     final String password = _passwordController.text;
 
     //handle login
-    CollectionReference users = FirebaseFirestore.instance.collection('users');
+    final user = await _auth.signInWithEmailAndPassword(email, password);
+    if (user != null) {
+      print('Logged in as ${user.email}');
+      if (!context.mounted) return;
+      Navigator.pushReplacementNamed(context, '/dashboard');
+    } else {
+      print('Login failed');
+    }
   }
 
   @override

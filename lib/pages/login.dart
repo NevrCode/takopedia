@@ -16,6 +16,8 @@ class _LoginPageState extends State<LoginPage> {
   Future<void> _login() async {
     final String email = _emailController.text;
     final String password = _passwordController.text;
+
+    //handle login
   }
 
   @override
@@ -30,13 +32,6 @@ class _LoginPageState extends State<LoginPage> {
           Container(
             width: screenWidth,
             height: screenHeight,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage(
-                    'assets/images/Gambar_login2.png'), // Gambar background
-                fit: BoxFit.cover,
-              ),
-            ),
           ),
 
           // Konten halaman login di atas background
@@ -48,6 +43,7 @@ class _LoginPageState extends State<LoginPage> {
                 children: [
                   // Logo berbentuk lingkaran
                   CircleAvatar(
+                    backgroundColor: Colors.white,
                     radius: 50,
                     backgroundImage: AssetImage('assets/img/logo.png'),
                   ),

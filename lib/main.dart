@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:takopedia/firebase_options.dart';
+import 'package:takopedia/pages/dashboard.dart';
 import 'package:takopedia/pages/login.dart';
 
 void main() async {
@@ -37,7 +38,11 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const LoginPage(),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => LoginPage(),
+        '/dashboard': (context) => DashboardPage(),
+      },
     );
   }
 }

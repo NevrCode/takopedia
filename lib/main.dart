@@ -2,7 +2,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:takopedia/firebase_options.dart';
 import 'package:takopedia/pages/dashboard.dart';
+import 'package:takopedia/pages/forgot_password.dart';
 import 'package:takopedia/pages/login.dart';
+import 'package:takopedia/pages/register.dart';
 
 void main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
@@ -42,6 +44,8 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => LoginPage(),
         '/dashboard': (context) => DashboardPage(),
+        '/register': (context) => RegisterPage(),
+        '/forgot': (context) => ForgotPasswordPage(),
       },
     );
   }

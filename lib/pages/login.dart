@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
@@ -18,6 +19,7 @@ class _LoginPageState extends State<LoginPage> {
     final String password = _passwordController.text;
 
     //handle login
+    CollectionReference users = FirebaseFirestore.instance.collection('users');
   }
 
   @override
@@ -129,11 +131,7 @@ class _LoginPageState extends State<LoginPage> {
                       SizedBox(width: 16),
                       ElevatedButton(
                         onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => Placeholder()),
-                          );
+                          Navigator.pushReplacementNamed(context, '/register');
                         },
                         child: Text('Register'),
                       ),

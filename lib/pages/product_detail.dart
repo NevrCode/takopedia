@@ -39,6 +39,69 @@ class ProductDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return;
+    String formattedPrice = formatCurrency(productPrice);
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(productName),
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Center(
+                child: Image.network(
+                  productImage,
+                  height: 250,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Icon(
+                      Icons.error,
+                      size: 100,
+                      color: Colors.red,
+                    );
+                  },
+                ),
+              ),
+              SizedBox(height: 20),
+              Text(
+                productName,
+                style: TextStyle(
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(height: 10),
+              // Menampilkan harga yang sudah diformat
+              Text(
+                formattedPrice,
+                style: TextStyle(
+                  fontSize: 24,
+                  color: Colors.green,
+                ),
+              ),
+              SizedBox(height: 20),
+              Text(
+                productDescription,
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.black54,
+                ),
+              ),
+              SizedBox(height: 30),
+              ElevatedButton(
+                onPressed: () => _buyProduct(context),
+                child: Text('Beli Sekarang'),
+                style: ElevatedButton.styleFrom(
+                  minimumSize: Size(double.infinity, 36),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }

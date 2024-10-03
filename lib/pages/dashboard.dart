@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:takopedia/pages/login.dart';
+import 'package:takopedia/pages/product_detail.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});

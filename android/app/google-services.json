@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "622391599624",
+    "firebase_url": "https://takopedia-24e8b-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "takopedia-24e8b",
+    "storage_bucket": "takopedia-24e8b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:622391599624:android:38a643363d8d66915427bd",
+        "android_client_info": {
+          "package_name": "com.example.takopedia"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB9GF63KPo0B-QiIeVPnLX0_JZx9Uhg8z4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

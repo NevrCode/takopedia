@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -13,11 +14,12 @@ class DashboardPage extends StatefulWidget {
 }
 
 class _DashboardPageState extends State<DashboardPage> {
-  List products = [];
+  // List products = [];
   bool isLoading = true;
   String errorMessage = '';
   final AuthService _auth = AuthService();
   final user = FirebaseAuth.instance.currentUser;
+  final products = FirebaseFirestore.instance.collection('products');
   Future<void> fetchProducts() async {}
   void signOut() {
     _auth.signOut();
@@ -114,112 +116,6 @@ class _DashboardPageState extends State<DashboardPage> {
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 20),
-            Expanded(
-              child: isLoading
-                  ? const Center(child: CircularProgressIndicator())
-                  : errorMessage.isNotEmpty
-                      ? Center(
-                          child: Text(errorMessage)) // Menampilkan pesan error
-                      : GridView.builder(
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            crossAxisSpacing: 16,
-                            mainAxisSpacing: 16,
-                            childAspectRatio: 0.75,
-                          ),
-                          itemCount: products.length,
-                          itemBuilder: (context, index) {
-                            final product = products[index];
-                            return Card(
-                              elevation: 4,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                children: [
-                                  Expanded(
-                                    child: ClipRRect(
-                                      borderRadius: const BorderRadius.vertical(
-                                        top: Radius.circular(10),
-                                      ),
-                                      child: Image.network(
-                                        product['image'],
-                                        fit: BoxFit.cover,
-                                        errorBuilder:
-                                            (context, error, stackTrace) {
-                                          return const Icon(
-                                            Icons.error,
-                                            size: 100,
-                                            color: Colors.red,
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          product['product'],
-                                          style: const TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        const SizedBox(height: 4),
-                                        // Gunakan format angka untuk harga
-                                        Text(
-                                          formatCurrency(product['price']),
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            color: Colors.grey[700],
-                                          ),
-                                        ),
-                                        const SizedBox(height: 8),
-                                        ElevatedButton(
-                                          onPressed: () {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    ProductDetailPage(
-                                                  productName:
-                                                      product['product'] ??
-                                                          'Unknown Product',
-                                                  productPrice: formatCurrency(
-                                                      product['price'] ?? '0'),
-                                                  productImage:
-                                                      product['image'] ?? '',
-                                                  productDescription:
-                                                      product['description'] ??
-                                                          'No description',
-                                                  productId:
-                                                      product['idproduct'] ??
-                                                          '0',
-                                                ),
-                                              ),
-                                            );
-                                          },
-                                          style: ElevatedButton.styleFrom(
-                                            minimumSize:
-                                                const Size(double.infinity, 36),
-                                          ),
-                                          child: const Text('Beli'),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
-                        ),
-            ),
           ],
         ),
       ),

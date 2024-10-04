@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -9,6 +10,19 @@ class AuthService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
 
+  Future<String> uploadPic(String uid, String filePath) async {
+    try {
+      Reference storageRef = _storage.ref().child('profile_pic/$uid');
+      UploadTask uploadTask = storageRef.putFile(File(filePath));
+      TaskSnapshot taskSnapshot = await uploadTask.whenComplete(() => null);
+      String downloadURL = await taskSnapshot.ref.getDownloadURL();
+      return downloadURL;
+    } catch (e) {
+      log(e.toString());
+      rethrow;
+    }
+  }
+
   Future<User?> registerWithEmailandDetail(String email, String password,
       String name, String address, String profilePicPath, String telp) async {
     try {
@@ -17,7 +31,7 @@ class AuthService {
       User? user = result.user;
 
       if (user != null) {
-        print('masuk');
+        log('masuk');
         String picUrl = await uploadPic(user.uid, profilePicPath);
         await _db.collection('users').doc(user.uid).set({
           'name': name,
@@ -29,21 +43,8 @@ class AuthService {
       }
       return user;
     } catch (e) {
-      print('user null ${e.toString()}');
+      log('user null ${e.toString()}');
       return null;
-    }
-  }
-
-  Future<String> uploadPic(String uid, String filePath) async {
-    try {
-      Reference storageRef = _storage.ref().child('profile_pic/$uid');
-      UploadTask uploadTask = storageRef.putFile(File(filePath));
-      TaskSnapshot taskSnapshot = await uploadTask.whenComplete(() => null);
-      String downloadURL = await taskSnapshot.ref.getDownloadURL();
-      return downloadURL;
-    } catch (e) {
-      print(e.toString());
-      rethrow;
     }
   }
 
@@ -58,16 +59,33 @@ class AuthService {
 
       return user;
     } catch (e) {
-      print(e);
+      log('e');
       return null;
     }
+  }
+
+  Future<User?> signinWithGoogle() async {
+    try {
+      UserCredential result =
+          await _auth.signInWithProvider(GoogleAuthProvider());
+
+      User? user = result.user;
+      return user;
+    } catch (e) {
+      log('e');
+      return null;
+    }
+  }
+
+  Future<void> sendEmailforResetPassword(String email) async {
+    _auth.sendPasswordResetEmail(email: email);
   }
 
   Future signOut() async {
     try {
       return await _auth.signOut();
     } catch (e) {
-      print(e);
+      log('e');
       return null;
     }
   }

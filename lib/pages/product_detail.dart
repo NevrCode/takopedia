@@ -8,7 +8,7 @@ class ProductDetailPage extends StatelessWidget {
   final String productDescription;
   final String productId;
 
-  ProductDetailPage({
+  const ProductDetailPage({
     super.key,
     required this.productName,
     required this.productPrice,
@@ -20,13 +20,13 @@ class ProductDetailPage extends StatelessWidget {
   Future<void> _buyProduct(BuildContext context) async {
     // Tampilkan pesan loading
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
+      const SnackBar(
         content: Text('Sedang memproses pembelian...'),
         duration: Duration(seconds: 2),
       ),
     );
 
-    String cleanedPrice = productPrice.replaceAll(RegExp(r'[^0-9]'), '');
+    // String cleanedPrice = productPrice.replaceAll(RegExp(r'[^0-9]'), '');
   }
 
   // Fungsi untuk memformat harga dengan NumberFormat yang sesuai
@@ -57,7 +57,7 @@ class ProductDetailPage extends StatelessWidget {
                   height: 250,
                   fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) {
-                    return Icon(
+                    return const Icon(
                       Icons.error,
                       size: 100,
                       color: Colors.red,
@@ -65,37 +65,37 @@ class ProductDetailPage extends StatelessWidget {
                   },
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Text(
                 productName,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               // Menampilkan harga yang sudah diformat
               Text(
                 formattedPrice,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 24,
                   color: Colors.green,
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Text(
                 productDescription,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 16,
                   color: Colors.black54,
                 ),
               ),
-              SizedBox(height: 30),
+              const SizedBox(height: 30),
               ElevatedButton(
                 onPressed: () => _buyProduct(context),
-                child: Text('Beli Sekarang'),
+                child: const Text('Beli Sekarang'),
                 style: ElevatedButton.styleFrom(
-                  minimumSize: Size(double.infinity, 36),
+                  minimumSize: const Size(double.infinity, 36),
                 ),
               ),
             ],

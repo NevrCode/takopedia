@@ -13,7 +13,7 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _obscureText = true; // Untuk menyembunyikan/menampilkan password
-  String _message = '';
+  final String _message = '';
   final AuthService _auth = AuthService();
 
   Future<void> _login() async {
@@ -40,7 +40,7 @@ class _LoginPageState extends State<LoginPage> {
       body: Stack(
         children: [
           // Gambar latar belakang
-          Container(
+          SizedBox(
             width: screenWidth,
             height: screenHeight,
           ),
@@ -53,12 +53,12 @@ class _LoginPageState extends State<LoginPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   // Logo berbentuk lingkaran
-                  CircleAvatar(
+                  const CircleAvatar(
                     backgroundColor: Colors.white,
                     radius: 50,
                     backgroundImage: AssetImage('assets/img/logo.png'),
                   ),
-                  SizedBox(height: 24),
+                  const SizedBox(height: 24),
 
                   // TextField email dengan desain kapsul dan ikon email
                   SizedBox(
@@ -67,17 +67,18 @@ class _LoginPageState extends State<LoginPage> {
                       controller: _emailController,
                       decoration: InputDecoration(
                         labelText: 'Email',
-                        prefixIcon: Icon(Icons.email),
+                        prefixIcon: const Icon(Icons.email),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(30),
                         ),
-                        contentPadding: EdgeInsets.symmetric(horizontal: 20),
+                        contentPadding:
+                            const EdgeInsets.symmetric(horizontal: 20),
                         filled: true,
                         fillColor: Colors.white.withOpacity(0.8),
                       ),
                     ),
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
 
                   // TextField password dengan ikon mata untuk menampilkan/menyembunyikan password
                   SizedBox(
@@ -87,7 +88,7 @@ class _LoginPageState extends State<LoginPage> {
                       obscureText: _obscureText,
                       decoration: InputDecoration(
                         labelText: 'Password',
-                        prefixIcon: Icon(Icons.lock),
+                        prefixIcon: const Icon(Icons.lock),
                         suffixIcon: IconButton(
                           icon: Icon(
                             _obscureText
@@ -103,7 +104,8 @@ class _LoginPageState extends State<LoginPage> {
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(30),
                         ),
-                        contentPadding: EdgeInsets.symmetric(horizontal: 20),
+                        contentPadding:
+                            const EdgeInsets.symmetric(horizontal: 20),
                         filled: true,
                         fillColor: Colors.white.withOpacity(0.8),
                       ),
@@ -118,16 +120,16 @@ class _LoginPageState extends State<LoginPage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => Placeholder()),
+                              builder: (context) => const Placeholder()),
                         );
                       },
-                      child: Text(
+                      child: const Text(
                         'Lupa Password?',
                         style: TextStyle(color: Colors.blue),
                       ),
                     ),
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
 
                   // Tombol login dan register dalam satu row
                   Row(
@@ -135,39 +137,39 @@ class _LoginPageState extends State<LoginPage> {
                     children: [
                       ElevatedButton(
                         onPressed: _login,
-                        child: Text('Login'),
+                        child: const Text('Login'),
                       ),
-                      SizedBox(width: 16),
+                      const SizedBox(width: 16),
                       ElevatedButton(
                         onPressed: () {
                           Navigator.pushReplacementNamed(context, '/register');
                         },
-                        child: Text('Register'),
+                        child: const Text('Register'),
                       ),
                     ],
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
 
                   // Pesan error
                   Text(
                     _message,
-                    style: TextStyle(color: Colors.red),
+                    style: const TextStyle(color: Colors.red),
                   ),
-                  SizedBox(height: 100),
+                  const SizedBox(height: 100),
 
                   // Login dengan sosial media
-                  Text(
+                  const Text(
                     "Atau login dengan",
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
 
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       GestureDetector(
                         onTap: () {},
-                        child: CircleAvatar(
+                        child: const CircleAvatar(
                           radius: 25,
                           backgroundImage: AssetImage('assets/img/google.png'),
                         ),

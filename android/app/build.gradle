@@ -1,9 +1,25 @@
+buildscript {
+    ext.kotlin_version = '2.0.0' // Add this line or update if it already exists
+
+    repositories {
+        google()
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath "com.android.tools.build:gradle:2.1.0" // Use the correct version
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version" // Update to use the variable
+        classpath 'com.google.gms:google-services:4.3.10'
+    }
+}
+
+
 plugins {
     id "com.android.application"
     // START: FlutterFire Configuration
     id 'com.google.gms.google-services'
     // END: FlutterFire Configuration
-    id "kotlin-android"
+    id "org.jetbrains.kotlin.android"
     id "dev.flutter.flutter-gradle-plugin"
 }
 
@@ -27,7 +43,8 @@ if (flutterVersionName == null) {
 
 android {
     namespace "com.example.takopedia"
-    compileSdkVersion flutter.compileSdkVersion
+    compileSdkVersion 34 // Update to 34
+    // compileSdkVersion flutter.compileSdkVersion
     ndkVersion flutter.ndkVersion
 
     compileOptions {
@@ -46,10 +63,9 @@ android {
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "com.example.takopedia"
-        // You can update the following values to match your application needs.
-        // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
-        minSdkVersion flutter.minSdkVersion
-        targetSdkVersion flutter.targetSdkVersion
+        minSdkVersion 21
+        targetSdkVersion 34
+        multiDexEnabled true  
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }
@@ -67,4 +83,8 @@ flutter {
     source '../..'
 }
 
-dependencies {}
+// dependencies {
+//     implementation platform('com.google.firebase:firebase-bom:27.1.0')
+//     implementation 'com.google.firebase:firebase-analytics-ktx'
+//     implementation 'com.android.support:multidex:1.0.3' // add this line
+// }

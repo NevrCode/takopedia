@@ -24,7 +24,7 @@ class _RegisterPageState extends State<RegisterPage> {
   File? _profilePic;
   final AuthService _authService = AuthService();
   final ImagePicker _picker = ImagePicker();
-  String _message = '';
+  final String _message = '';
 
   Future<void> _pickProfilePicture() async {
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
@@ -82,7 +82,7 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Register')),
+      appBar: AppBar(title: const Text('Register')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
@@ -92,70 +92,70 @@ class _RegisterPageState extends State<RegisterPage> {
                 controller: _emailController,
                 decoration: InputDecoration(
                   labelText: 'Email',
-                  prefixIcon: Icon(Icons.email),
+                  prefixIcon: const Icon(Icons.email),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(30.0),
                   ),
-                  contentPadding:
-                      EdgeInsets.symmetric(vertical: 10.0, horizontal: 16.0),
+                  contentPadding: const EdgeInsets.symmetric(
+                      vertical: 10.0, horizontal: 16.0),
                 ),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               TextField(
                 controller: _passwordController,
                 decoration: InputDecoration(
                   labelText: 'Password',
-                  prefixIcon: Icon(Icons.lock),
+                  prefixIcon: const Icon(Icons.lock),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(30.0),
                   ),
-                  contentPadding:
-                      EdgeInsets.symmetric(vertical: 10.0, horizontal: 16.0),
+                  contentPadding: const EdgeInsets.symmetric(
+                      vertical: 10.0, horizontal: 16.0),
                 ),
                 obscureText: true,
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               TextField(
                 controller: _namaController,
                 decoration: InputDecoration(
                   labelText: 'Nama',
-                  prefixIcon: Icon(Icons.person),
+                  prefixIcon: const Icon(Icons.person),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(30.0),
                   ),
-                  contentPadding:
-                      EdgeInsets.symmetric(vertical: 10.0, horizontal: 16.0),
+                  contentPadding: const EdgeInsets.symmetric(
+                      vertical: 10.0, horizontal: 16.0),
                 ),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               TextField(
                 controller: _alamatController,
                 decoration: InputDecoration(
                   labelText: 'Alamat',
-                  prefixIcon: Icon(Icons.home),
+                  prefixIcon: const Icon(Icons.home),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(30.0),
                   ),
-                  contentPadding:
-                      EdgeInsets.symmetric(vertical: 10.0, horizontal: 16.0),
+                  contentPadding: const EdgeInsets.symmetric(
+                      vertical: 10.0, horizontal: 16.0),
                 ),
                 minLines: 3,
                 maxLines: 3,
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               TextField(
                 controller: _teleponController,
                 decoration: InputDecoration(
                   labelText: 'Telepon',
-                  prefixIcon: Icon(Icons.phone),
+                  prefixIcon: const Icon(Icons.phone),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(30.0),
                   ),
-                  contentPadding:
-                      EdgeInsets.symmetric(vertical: 10.0, horizontal: 16.0),
+                  contentPadding: const EdgeInsets.symmetric(
+                      vertical: 10.0, horizontal: 16.0),
                 ),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
 
               // Foto dalam bentuk lingkaran
               CircleAvatar(
@@ -163,18 +163,18 @@ class _RegisterPageState extends State<RegisterPage> {
                 backgroundImage:
                     _profilePic != null ? FileImage(_profilePic!) : null,
                 child: _profilePic == null
-                    ? Icon(Icons.person, size: 50)
+                    ? const Icon(Icons.person, size: 50)
                     : null, // Tampilkan icon person jika belum ada foto
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
 
               // Hanya menampilkan nama file
               if (_profilePic != null)
                 Text(
                   'Nama file: ${_namaController.text.split(" ")[0]}.jpg',
-                  style: TextStyle(fontSize: 14),
+                  style: const TextStyle(fontSize: 14),
                 ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
 
               // Tombol Upload Foto
               ElevatedButton(
@@ -184,9 +184,9 @@ class _RegisterPageState extends State<RegisterPage> {
                     borderRadius: BorderRadius.circular(30.0),
                   ),
                 ),
-                child: Text('Upload Foto'),
+                child: const Text('Upload Foto'),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
 
               // Tombol Register
               ElevatedButton(
@@ -196,12 +196,12 @@ class _RegisterPageState extends State<RegisterPage> {
                     borderRadius: BorderRadius.circular(30.0),
                   ),
                 ),
-                child: Text('Register'),
+                child: const Text('Register'),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               Text(
                 _message,
-                style: TextStyle(color: Colors.red),
+                style: const TextStyle(color: Colors.red),
               ),
             ],
           ),

@@ -49,10 +49,10 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: '/',
       routes: {
-        '/': (context) => LoginPage(),
-        '/dashboard': (context) => DashboardPage(),
-        '/register': (context) => RegisterPage(),
-        '/forgot': (context) => ForgotPasswordPage(),
+        '/': (context) => const LoginPage(),
+        '/dashboard': (context) => const DashboardPage(),
+        '/register': (context) => const RegisterPage(),
+        '/forgot': (context) => const ForgotPasswordPage(),
       },
     );
   }

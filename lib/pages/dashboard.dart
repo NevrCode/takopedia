@@ -20,6 +20,8 @@ class _DashboardPageState extends State<DashboardPage> {
   final AuthService _auth = AuthService();
   final user = FirebaseAuth.instance.currentUser;
   final products = FirebaseFirestore.instance.collection('products');
+  final userData = FirebaseFirestore.instance.collection('users');
+  Map<String, dynamic> session = {};
   Future<void> fetchProducts() async {}
   void signOut() {
     _auth.signOut();
@@ -29,10 +31,9 @@ class _DashboardPageState extends State<DashboardPage> {
   @override
   void initState() {
     super.initState();
-    fetchProducts(); // Panggil fungsi untuk mengambil data saat widget diinisialisasi
+    fetchProducts();
   }
 
-  // Fungsi untuk memformat harga
   String formatCurrency(String price) {
     final formatter = NumberFormat.currency(locale: 'id', symbol: 'Rp ');
     return formatter.format(int.parse(price));
@@ -54,8 +55,7 @@ class _DashboardPageState extends State<DashboardPage> {
         child: Column(
           children: [
             UserAccountsDrawerHeader(
-              accountName:
-                  Text('${user?.displayName ?? "no name"}'), // Nama pengguna
+              accountName: Text('${"no name"}'), // Nama pengguna
               accountEmail: Text(
                   '${user?.email ?? "email@domain.com"}'), // Email pengguna
               currentAccountPicture: CircleAvatar(

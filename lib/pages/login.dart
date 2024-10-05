@@ -1,9 +1,13 @@
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:takopedia/model/user_model.dart';
 import 'package:takopedia/pages/forgot_password.dart';
 import 'package:takopedia/services/auth_service.dart';
+import 'package:takopedia/services/user_provider.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -30,6 +34,31 @@ class _LoginPageState extends State<LoginPage> {
       Navigator.pushReplacementNamed(context, '/dashboard');
     } else {
       log('Login failed');
+    }
+  }
+
+  Future<Map<String, dynamic>?> getData(String uid) async {
+    final data =
+        await FirebaseFirestore.instance.collection('users').doc(uid).get();
+
+    if (data.exists) {
+      return data as Map<String, dynamic>;
+    }
+    return null;
+  }
+
+  Future<void> fetchUserData(BuildContext context) async {
+    User? currentUser = FirebaseAuth.instance.currentUser;
+
+    if (currentUser != null) {
+      String uid = currentUser.uid;
+      Map<String, dynamic>? userData = await getData(uid);
+
+      if (userData != null) {
+        UserModel userModel = UserModel.fromMap(userData);
+        // ignore: use_build_context_synchronously
+        Provider.of<UserProvider>(context, listen: false).setUser(userModel);
+      }
     }
   }
 
@@ -150,7 +179,7 @@ class _LoginPageState extends State<LoginPage> {
                       const SizedBox(width: 16),
                       ElevatedButton(
                         onPressed: () {
-                          Navigator.pushReplacementNamed(context, '/register');
+                          Navigator.pushNamed(context, '/register');
                         },
                         child: const Text('Register'),
                       ),

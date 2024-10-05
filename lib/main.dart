@@ -1,22 +1,21 @@
-import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:takopedia/firebase_options.dart';
 import 'package:takopedia/pages/dashboard.dart';
 import 'package:takopedia/pages/forgot_password.dart';
 import 'package:takopedia/pages/login.dart';
 import 'package:takopedia/pages/register.dart';
+import 'package:takopedia/services/user_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  // await FirebaseAppCheck.instance.activate(
-  //   webProvider: ReCaptchaV3Provider('recaptcha-v3-site-key'),
-  //   androidProvider: AndroidProvider.debug,
-  //   appleProvider: AppleProvider.appAttest,
-  // );
 
-  runApp(const MyApp());
+  runApp(ChangeNotifierProvider(
+    create: (create) => UserProvider(),
+    child: const MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
@@ -29,7 +28,8 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme:
+            ColorScheme.fromSeed(seedColor: Color.fromARGB(255, 35, 196, 236)),
         useMaterial3: true,
       ),
       initialRoute: '/',

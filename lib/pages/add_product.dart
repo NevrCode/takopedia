@@ -1,93 +1,52 @@
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:takopedia/services/product_service.dart';
 
-import '../services/auth_service.dart';
-
-class RegisterPage extends StatefulWidget {
-  const RegisterPage({super.key});
+class ProductPage extends StatefulWidget {
+  const ProductPage({super.key});
 
   @override
-  State<RegisterPage> createState() => _RegisterPageState();
+  State<ProductPage> createState() => _ProductPageState();
 }
 
-class _RegisterPageState extends State<RegisterPage> {
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _namaController = TextEditingController();
-  final TextEditingController _alamatController = TextEditingController();
-  final TextEditingController _teleponController = TextEditingController();
-  File? _profilePic;
-  final AuthService _authService = AuthService();
+class _ProductPageState extends State<ProductPage> {
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _priceController = TextEditingController();
+  final TextEditingController _descController = TextEditingController();
+  File? _productPic;
   final ImagePicker _picker = ImagePicker();
+  final ProductService product = ProductService();
 
-  Future<void> _pickProfilePicture() async {
+  Future<void> _pickProductPicture() async {
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
     setState(() {
-      _profilePic = pickedFile != null ? File(pickedFile.path) : null;
+      _productPic = pickedFile != null ? File(pickedFile.path) : null;
     });
   }
 
-  // Fungsi untuk menyimpan gambar ke folder yang dapat diakses
-  // Future<void> _saveImage() async {
-  //   if (_profilePic != null) {
-  //     final directory = await getApplicationDocumentsDirectory();
-  //     final String imageName =
-  //         '${_namaController.text.split(" ")[0]}.jpg'; // Ambil nama depan
-  //     final String newPath = '${directory.path}/$imageName'; // Path baru
-
-  //     await _profilePic!.copy(newPath);
-  //     log(
-  //         'Image saved to: $newPath'); // Debugging untuk memastikan penyimpanan
-  //   }
-  // }
-
-  Future<void> _register() async {
-    final email = _emailController.text;
-    final pass = _passwordController.text;
-    final nama = _namaController.text;
-    final alamat = _alamatController.text;
-    final telp = _teleponController.text;
+  Future<void> _addProduct() async {
+    final name = _nameController.text;
+    final price = _priceController.text;
+    final desc = _descController.text;
 
     // await _saveImage(); // Simpan gambar sebelum registrasi
-
-    if (_profilePic != null) {
-      final user = await _authService.registerWithEmailandDetail(
-        email,
-        pass,
-        nama,
-        alamat,
-        _profilePic!.path,
-        telp,
-      );
-      // log('${Platform.operatingSystem}');
-      if (user != null) {
-        log('user registered with uid : ${user.uid}');
-      } else if (user == null) {
-        log('Registration Failed');
-      } else {
-        log("entah");
-      }
-    } else {
-      log('Please select a profile picture');
-    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Register')),
+      appBar: AppBar(title: const Text('Add Product')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
           child: Column(
             children: [
               TextField(
-                controller: _emailController,
+                controller: _nameController,
                 decoration: InputDecoration(
-                  labelText: 'Email',
+                  labelText: 'nama',
                   prefixIcon: const Icon(Icons.email),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(30.0),
@@ -98,9 +57,9 @@ class _RegisterPageState extends State<RegisterPage> {
               ),
               const SizedBox(height: 16),
               TextField(
-                controller: _passwordController,
+                controller: _priceController,
                 decoration: InputDecoration(
-                  labelText: 'Password',
+                  labelText: 'price',
                   prefixIcon: const Icon(Icons.lock),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(30.0),
@@ -112,38 +71,11 @@ class _RegisterPageState extends State<RegisterPage> {
               ),
               const SizedBox(height: 16),
               TextField(
-                controller: _namaController,
-                decoration: InputDecoration(
-                  labelText: 'Nama',
-                  prefixIcon: const Icon(Icons.person),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30.0),
-                  ),
-                  contentPadding: const EdgeInsets.symmetric(
-                      vertical: 10.0, horizontal: 16.0),
-                ),
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: _alamatController,
-                decoration: InputDecoration(
-                  labelText: 'Alamat',
-                  prefixIcon: const Icon(Icons.home),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30.0),
-                  ),
-                  contentPadding: const EdgeInsets.symmetric(
-                      vertical: 10.0, horizontal: 16.0),
-                ),
-                minLines: 3,
+                controller: _descController,
                 maxLines: 3,
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: _teleponController,
                 decoration: InputDecoration(
-                  labelText: 'Telepon',
-                  prefixIcon: const Icon(Icons.phone),
+                  labelText: 'desc',
+                  prefixIcon: const Icon(Icons.description),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(30.0),
                   ),
@@ -157,24 +89,24 @@ class _RegisterPageState extends State<RegisterPage> {
               CircleAvatar(
                 radius: 50,
                 backgroundImage:
-                    _profilePic != null ? FileImage(_profilePic!) : null,
-                child: _profilePic == null
-                    ? const Icon(Icons.person, size: 50)
+                    _productPic != null ? FileImage(_productPic!) : null,
+                child: _productPic == null
+                    ? const Icon(Icons.picture_in_picture, size: 50)
                     : null, // Tampilkan icon person jika belum ada foto
               ),
               const SizedBox(height: 16),
 
               // Hanya menampilkan nama file
-              if (_profilePic != null)
+              if (_productPic != null)
                 Text(
-                  'Nama file: ${_namaController.text.split(" ")[0]}.jpg',
+                  'Nama file: ${_nameController.text.split(" ")[0]}.jpg',
                   style: const TextStyle(fontSize: 14),
                 ),
               const SizedBox(height: 16),
 
               // Tombol Upload Foto
               ElevatedButton(
-                onPressed: _pickProfilePicture,
+                onPressed: _pickProductPicture,
                 style: ElevatedButton.styleFrom(
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30.0),
@@ -187,7 +119,7 @@ class _RegisterPageState extends State<RegisterPage> {
               // Tombol Register
               ElevatedButton(
                 onPressed: () {
-                  _register();
+                  _addProduct();
                   Navigator.pushReplacementNamed(context, '/');
                 },
                 style: ElevatedButton.styleFrom(

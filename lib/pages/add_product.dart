@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:takopedia/pages/dashboard.dart';
 import 'package:takopedia/services/product_service.dart';
 
 class ProductPage extends StatefulWidget {
@@ -17,7 +18,7 @@ class _ProductPageState extends State<ProductPage> {
   final TextEditingController _descController = TextEditingController();
   File? _productPic;
   final ImagePicker _picker = ImagePicker();
-  final ProductService product = ProductService();
+  final ProductService _productService = ProductService();
 
   Future<void> _pickProductPicture() async {
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
@@ -28,10 +29,11 @@ class _ProductPageState extends State<ProductPage> {
 
   Future<void> _addProduct() async {
     final name = _nameController.text;
-    final price = _priceController.text;
+    final price = int.parse(_priceController.text);
     final desc = _descController.text;
-
-    // await _saveImage(); // Simpan gambar sebelum registrasi
+    if (_productPic != null) {
+      await _productService.addProduct(name, price, desc, _productPic!.path);
+    }
   }
 
   @override
@@ -120,14 +122,14 @@ class _ProductPageState extends State<ProductPage> {
               ElevatedButton(
                 onPressed: () {
                   _addProduct();
-                  Navigator.pushReplacementNamed(context, '/');
+                  Navigator.pop(context);
                 },
                 style: ElevatedButton.styleFrom(
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30.0),
                   ),
                 ),
-                child: const Text('Register'),
+                child: const Text('Submit'),
               ),
               const SizedBox(height: 16),
             ],

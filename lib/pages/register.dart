@@ -30,20 +30,6 @@ class _RegisterPageState extends State<RegisterPage> {
     });
   }
 
-  // Fungsi untuk menyimpan gambar ke folder yang dapat diakses
-  // Future<void> _saveImage() async {
-  //   if (_profilePic != null) {
-  //     final directory = await getApplicationDocumentsDirectory();
-  //     final String imageName =
-  //         '${_namaController.text.split(" ")[0]}.jpg'; // Ambil nama depan
-  //     final String newPath = '${directory.path}/$imageName'; // Path baru
-
-  //     await _profilePic!.copy(newPath);
-  //     log(
-  //         'Image saved to: $newPath'); // Debugging untuk memastikan penyimpanan
-  //   }
-  // }
-
   Future<void> _register() async {
     final email = _emailController.text;
     final pass = _passwordController.text;
@@ -62,7 +48,6 @@ class _RegisterPageState extends State<RegisterPage> {
         _profilePic!.path,
         telp,
       );
-      // log('${Platform.operatingSystem}');
       if (user != null) {
         log('user registered with uid : ${user.uid}');
       } else if (user == null) {

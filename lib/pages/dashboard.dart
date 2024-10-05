@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:takopedia/model/user_model.dart';
+import 'package:takopedia/pages/add_product.dart';
 import 'package:takopedia/pages/login.dart';
 import 'package:takopedia/pages/product_detail.dart';
 import 'package:takopedia/services/auth_service.dart';
@@ -83,12 +84,13 @@ class _DashboardPageState extends State<DashboardPage> {
         child: Column(
           children: [
             UserAccountsDrawerHeader(
-              accountName: Text(userProvider!.nama), // Nama pengguna
+              accountName: Text(userProvider?.nama ?? 'Quest'), // Nama pengguna
               accountEmail:
                   Text(user?.email ?? "name@domain.com"), // Email pengguna
               currentAccountPicture: CircleAvatar(
                 backgroundImage: NetworkImage(
-                  userProvider.img, // Ganti dengan URL foto pengguna
+                  userProvider?.img ??
+                      'https://firebasestorage.googleapis.com/v0/b/takopedia-24e8b.appspot.com/o/profile_pic%2FJvtcPsGmaTUi0kUtPdTdGo7QU443?alt=media&token=a97b2473-bc5f-4ebe-85aa-5fb7ee46d391', // Ganti dengan URL foto pengguna
                 ),
               ),
             ),
@@ -118,9 +120,9 @@ class _DashboardPageState extends State<DashboardPage> {
               title: const Text('Halaman Login'),
               onTap: () {
                 // Navigasi ke halaman login
-                Navigator.pushReplacement(
+                Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const LoginPage()),
+                  MaterialPageRoute(builder: (context) => const ProductPage()),
                 );
               },
             ),

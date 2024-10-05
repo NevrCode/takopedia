@@ -13,10 +13,10 @@ class UserModel {
 
   factory UserModel.fromMap(Map<String, dynamic> data) {
     return UserModel(
-      nama: data['name'],
-      alamat: data['address'],
-      telp: data['telp'],
-      img: data['profile_pic'],
+      nama: data['name'] ?? '',
+      alamat: data['address'] ?? '',
+      telp: data['telp'] ?? '',
+      img: data['profile_pic'] ?? '',
     );
   }
 

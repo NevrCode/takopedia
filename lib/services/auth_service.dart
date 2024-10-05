@@ -4,6 +4,11 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:takopedia/model/user_model.dart';
+
+import 'user_provider.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -79,6 +84,30 @@ class AuthService {
 
   Future<void> sendEmailforResetPassword(String email) async {
     _auth.sendPasswordResetEmail(email: email);
+  }
+
+  Future<Map<String, dynamic>?> getData(String uid) async {
+    final data =
+        await FirebaseFirestore.instance.collection('users').doc(uid).get();
+
+    if (data.exists) {
+      return data as Map<String, dynamic>;
+    }
+    return null;
+  }
+
+  Future<void> fetchUserData(BuildContext context) async {
+    User? currentUser = FirebaseAuth.instance.currentUser;
+    var userProvider = Provider.of<UserProvider>(context, listen: false);
+    if (currentUser != null) {
+      String uid = currentUser.uid;
+      Map<String, dynamic>? userData = await getData(uid);
+
+      if (userData != null) {
+        UserModel userModel = UserModel.fromMap(userData);
+        userProvider.setUser(userModel);
+      }
+    }
   }
 
   Future signOut() async {

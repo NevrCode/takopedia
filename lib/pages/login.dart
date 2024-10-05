@@ -27,13 +27,19 @@ class _LoginPageState extends State<LoginPage> {
     final String password = _passwordController.text;
 
     //handle login
-    final user = await _auth.signInWithEmailAndPassword(email, password);
-    if (user != null) {
-      log('Logged in as ${user.email}');
-      if (!context.mounted) return;
-      Navigator.pushReplacementNamed(context, '/dashboard');
-    } else {
-      log('Login failed');
+    try {
+      final user = await _auth.signInWithEmailAndPassword(email, password);
+      if (user != null && mounted) {
+        await fetchUserData(context);
+        if (mounted) {
+          Navigator.pushReplacementNamed(context, '/dashboard');
+        }
+        log('Logged in as ${user.email}');
+      } else {
+        log('Login failed');
+      }
+    } catch (e) {
+      rethrow;
     }
   }
 
@@ -42,22 +48,21 @@ class _LoginPageState extends State<LoginPage> {
         await FirebaseFirestore.instance.collection('users').doc(uid).get();
 
     if (data.exists) {
-      return data as Map<String, dynamic>;
+      return data.data();
     }
     return null;
   }
 
   Future<void> fetchUserData(BuildContext context) async {
     User? currentUser = FirebaseAuth.instance.currentUser;
-
+    var userProvider = Provider.of<UserProvider>(context, listen: false);
     if (currentUser != null) {
       String uid = currentUser.uid;
       Map<String, dynamic>? userData = await getData(uid);
 
       if (userData != null) {
         UserModel userModel = UserModel.fromMap(userData);
-        // ignore: use_build_context_synchronously
-        Provider.of<UserProvider>(context, listen: false).setUser(userModel);
+        userProvider.setUser(userModel);
       }
     }
   }

@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:takopedia/model/user_model.dart';
+import 'package:takopedia/pages/component/style.dart';
 import 'package:takopedia/pages/forgot_password.dart';
 import 'package:takopedia/services/auth_service.dart';
 import 'package:takopedia/services/user_provider.dart';
@@ -94,13 +95,16 @@ class _LoginPageState extends State<LoginPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  SizedBox(
+                    height: 200,
+                  ),
                   // Logo berbentuk lingkaran
                   const CircleAvatar(
                     backgroundColor: Colors.white,
                     radius: 50,
-                    backgroundImage: AssetImage('assets/img/logo.png'),
+                    backgroundImage: AssetImage('assets/img/logo.jpg'),
                   ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 50),
 
                   // TextField email dengan desain kapsul dan ikon email
                   SizedBox(
@@ -174,45 +178,32 @@ class _LoginPageState extends State<LoginPage> {
                   const SizedBox(height: 16),
 
                   // Tombol login dan register dalam satu row
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ElevatedButton(
-                        onPressed: _login,
-                        child: const Text('Login'),
-                      ),
-                      const SizedBox(width: 16),
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.pushNamed(context, '/register');
-                        },
-                        child: const Text('Register'),
-                      ),
-                    ],
+                  ElevatedButton(
+                    style: ButtonStyle(
+                      fixedSize: MaterialStateProperty.all(const Size(240, 42)),
+                      padding: MaterialStateProperty.all(
+                          const EdgeInsets.fromLTRB(0, 0, 0, 0)),
+                      backgroundColor: MaterialStateProperty.all(
+                          Color.fromARGB(255, 50, 63, 71)),
+                      elevation: MaterialStateProperty.all(2),
+                    ),
+                    onPressed: _login,
+                    child: const Text(
+                      'Login',
+                      style: loginbuttonTextStyle,
+                    ),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(width: 16),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/register');
+                    },
+                    child: const Text('Sign Up'),
+                  ),
 
-                  const SizedBox(height: 100),
+                  const SizedBox(height: 16),
 
                   // Login dengan sosial media
-                  const Text(
-                    "Atau login dengan",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                  ),
-                  const SizedBox(height: 16),
-
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      GestureDetector(
-                        onTap: _loginWIthGoogle,
-                        child: const CircleAvatar(
-                          radius: 25,
-                          backgroundImage: AssetImage('assets/img/google.png'),
-                        ),
-                      ),
-                    ],
-                  ),
                 ],
               ),
             ),

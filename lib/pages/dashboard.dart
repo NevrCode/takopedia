@@ -1,13 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:takopedia/model/product_model.dart';
 import 'package:takopedia/model/user_model.dart';
 import 'package:takopedia/pages/add_product.dart';
 import 'package:takopedia/pages/login.dart';
 import 'package:takopedia/pages/product_detail.dart';
 import 'package:takopedia/services/auth_service.dart';
+import 'package:takopedia/services/product_service.dart';
 import 'package:takopedia/services/user_provider.dart';
 
 class DashboardPage extends StatefulWidget {
@@ -18,47 +21,16 @@ class DashboardPage extends StatefulWidget {
 }
 
 class _DashboardPageState extends State<DashboardPage> {
-  // List products = [];
+  final _auth = AuthService();
+  final _user = FirebaseAuth.instance.currentUser;
+  final _productService = ProductService();
+  late Future<List<ProductModel>> _productList;
   bool isLoading = true;
-  String errorMessage = '';
-  final AuthService _auth = AuthService();
-  final products = FirebaseFirestore.instance.collection('products');
-  final user = FirebaseAuth.instance.currentUser;
-  Map<String, dynamic> session = {};
-  Future<void> fetchProducts() async {}
-  void signOut() {
-    _auth.signOut();
-    Navigator.pushReplacementNamed(context, '/');
-  }
 
   @override
   void initState() {
     super.initState();
-    fetchProducts();
-  }
-
-  Future<Map<String, dynamic>?> getData(String uid) async {
-    final data =
-        await FirebaseFirestore.instance.collection('users').doc(uid).get();
-
-    if (data.exists) {
-      return data as Map<String, dynamic>;
-    }
-    return null;
-  }
-
-  Future<void> fetchUserData(BuildContext context) async {
-    User? currentUser = FirebaseAuth.instance.currentUser;
-    var userProvider = Provider.of<UserProvider>(context, listen: false);
-    if (currentUser != null) {
-      String uid = currentUser.uid;
-      Map<String, dynamic>? userData = await getData(uid);
-
-      if (userData != null) {
-        UserModel userModel = UserModel.fromMap(userData);
-        userProvider.setUser(userModel);
-      }
-    }
+    _productList = _productService.fetchProduct();
   }
 
   String formatCurrency(String price) {
@@ -72,11 +44,17 @@ class _DashboardPageState extends State<DashboardPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Dashboard Produk'),
+        title: const Text(
+          'Takopedia',
+          style: TextStyle(fontFamily: 'Poppins-Regular'),
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.logout),
-            onPressed: signOut,
+            onPressed: () {
+              _auth.signOut();
+              Navigator.pushReplacementNamed(context, '/');
+            },
           ),
         ],
       ),
@@ -86,13 +64,14 @@ class _DashboardPageState extends State<DashboardPage> {
             UserAccountsDrawerHeader(
               accountName: Text(userProvider?.nama ?? 'Quest'), // Nama pengguna
               accountEmail:
-                  Text(user?.email ?? "name@domain.com"), // Email pengguna
+                  Text(_user?.email ?? "name@domain.com"), // Email pengguna
               currentAccountPicture: CircleAvatar(
                 backgroundImage: NetworkImage(
                   userProvider?.img ??
                       'https://firebasestorage.googleapis.com/v0/b/takopedia-24e8b.appspot.com/o/profile_pic%2FJvtcPsGmaTUi0kUtPdTdGo7QU443?alt=media&token=a97b2473-bc5f-4ebe-85aa-5fb7ee46d391', // Ganti dengan URL foto pengguna
                 ),
               ),
+              decoration: BoxDecoration(),
             ),
             ListTile(
               leading: const Icon(Icons.shopping_cart),
@@ -136,17 +115,94 @@ class _DashboardPageState extends State<DashboardPage> {
           ],
         ),
       ),
-      body: const Padding(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Selamat Berbelanja',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+      body: Container(
+        decoration: const BoxDecoration(color: Colors.white),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: SafeArea(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Flexible(
+                  child: FutureBuilder(
+                    future: _productList,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      } else if (snapshot.hasError) {
+                        return Center(
+                            child: Text(
+                                'Error: ${snapshot.error}')); // Show error if fetching failed
+                      } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                        return const Center(
+                            child: Text(
+                                'Product Kosong')); // Show error if fetching failed
+                      } else {
+                        List<ProductModel> products = snapshot.data!;
+
+                        return GridView.builder(
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            childAspectRatio: 0.7,
+                          ),
+                          itemCount: products.length,
+                          itemBuilder: (context, index) {
+                            ProductModel product = products[index];
+
+                            return GestureDetector(
+                              onTap: () {},
+                              child: Card(
+                                elevation: 0.4,
+                                child: Container(
+                                  decoration:
+                                      BoxDecoration(color: Colors.white),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      // Display item image
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(10),
+                                            topRight: Radius.circular(10)),
+                                        child: AspectRatio(
+                                          aspectRatio: 1,
+                                          child: Image.network(
+                                            product.picURL,
+                                            fit: BoxFit.cover,
+                                            width: double.infinity,
+                                            // Adjust the height as needed
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text(
+                                          product.name, // Display item title
+                                          style: const TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                            fontFamily: 'Poppins',
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        );
+                      }
+                    },
+                  ),
+                )
+              ],
             ),
-            SizedBox(height: 20),
-          ],
+          ),
         ),
       ),
     );

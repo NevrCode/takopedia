@@ -19,12 +19,19 @@ class _ProductPageState extends State<ProductPage> {
   File? _productPic;
   final ImagePicker _picker = ImagePicker();
   final ProductService _productService = ProductService();
+  final cleartxt = TextEditingController();
 
   Future<void> _pickProductPicture() async {
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
     setState(() {
       _productPic = pickedFile != null ? File(pickedFile.path) : null;
     });
+  }
+
+  void clearAll() {
+    _nameController.clear();
+    _priceController.clear();
+    _descController.clear();
   }
 
   Future<void> _addProduct() async {
@@ -62,14 +69,13 @@ class _ProductPageState extends State<ProductPage> {
                 controller: _priceController,
                 decoration: InputDecoration(
                   labelText: 'price',
-                  prefixIcon: const Icon(Icons.lock),
+                  prefixIcon: const Icon(Icons.attach_money),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(30.0),
                   ),
                   contentPadding: const EdgeInsets.symmetric(
                       vertical: 10.0, horizontal: 16.0),
                 ),
-                obscureText: true,
               ),
               const SizedBox(height: 16),
               TextField(
@@ -122,7 +128,7 @@ class _ProductPageState extends State<ProductPage> {
               ElevatedButton(
                 onPressed: () {
                   _addProduct();
-                  Navigator.pop(context);
+                  clearAll();
                 },
                 style: ElevatedButton.styleFrom(
                   shape: RoundedRectangleBorder(

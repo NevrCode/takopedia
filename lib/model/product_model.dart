@@ -13,10 +13,10 @@ class ProductModel {
 
   factory ProductModel.fromMap(Map<String, dynamic> data) {
     return ProductModel(
-      name: data['name'],
-      desc: data['desc'],
-      price: data['price'],
-      picURL: data[''],
+      name: data['name'] ?? '',
+      desc: data['desc'] ?? '',
+      price: data['price'] ?? '',
+      picURL: data['product_pic'] ?? '',
     );
   }
   Map<String, dynamic> toMap() {

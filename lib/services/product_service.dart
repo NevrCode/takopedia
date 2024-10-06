@@ -3,16 +3,17 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:takopedia/model/product_model.dart';
 
 class ProductService {
-  final CollectionReference products =
+  final CollectionReference _products =
       FirebaseFirestore.instance.collection('products');
   final _storage = FirebaseStorage.instance;
 
   Future<void> addProduct(
       String nama, int price, String desc, String productPicPath) async {
     String picURL = await uploadPic(nama, productPicPath);
-    await products
+    await _products
         .add({
           'name': nama,
           'price': price,
@@ -33,6 +34,18 @@ class ProductService {
     } catch (e) {
       log("Error : ${e.toString()}");
       rethrow;
+    }
+  }
+
+  Future<List<ProductModel>> fetchProduct() async {
+    try {
+      QuerySnapshot snapshot = await _products.get();
+      return snapshot.docs.map((doc) {
+        return ProductModel.fromMap(doc.data() as Map<String, dynamic>);
+      }).toList();
+    } catch (e) {
+      log("Error : $e");
+      return [];
     }
   }
 }

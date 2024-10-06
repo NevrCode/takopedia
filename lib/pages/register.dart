@@ -6,6 +6,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
+import 'package:path/path.dart';
+
 import '../services/auth_service.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -143,6 +145,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: _teleponController,
+                  keyboardType: TextInputType.number,
                   decoration: InputDecoration(
                     labelText: 'Telepon',
                     prefixIcon: const Icon(Icons.phone),
@@ -169,7 +172,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 // Hanya menampilkan nama file
                 if (_profilePic != null)
                   Text(
-                    'Nama file: ${_namaController.text.split(" ")[0]}.jpg',
+                    'Nama file: ${basename(_profilePic!.path)}',
                     style: const TextStyle(fontSize: 14),
                   ),
                 const SizedBox(height: 16),

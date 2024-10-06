@@ -48,8 +48,8 @@ class AuthService {
       }
       return user;
     } catch (e) {
-      log('user null ${e.toString()}');
-      return null;
+      // log('user null ${e.toString()}');
+      rethrow;
     }
   }
 
@@ -64,8 +64,7 @@ class AuthService {
 
       return user;
     } catch (e) {
-      log('e');
-      return null;
+      rethrow;
     }
   }
 
@@ -77,7 +76,7 @@ class AuthService {
       User? user = result.user;
       return user;
     } catch (e) {
-      log('e');
+      log(e.toString());
       return null;
     }
   }

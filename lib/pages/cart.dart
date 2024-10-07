@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:takopedia/model/sales_model.dart';
 import 'package:takopedia/services/cart_service.dart';
@@ -11,6 +12,7 @@ class CartPage extends StatefulWidget {
 
 class _CartPageState extends State<CartPage> {
   final CartService _cardService = CartService();
+  final _user = FirebaseAuth.instance.currentUser;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,7 +31,7 @@ class _CartPageState extends State<CartPage> {
             decoration:
                 const BoxDecoration(color: Color.fromARGB(255, 246, 249, 255)),
             child: FutureBuilder(
-              future: _cardService.fetchSales(),
+              future: _cardService.fetchSales(_user!.uid),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return CircularProgressIndicator();

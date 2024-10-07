@@ -20,12 +20,20 @@ class CartService {
         .catchError((error) => log("Failed to add product: $error"));
   }
 
-  Future<List<SalesModel>> fetchSales() async {
+  Future<List<SalesModel>> fetchSales(String uid) async {
     try {
       QuerySnapshot snapshot = await _sales.get();
-      return snapshot.docs.map((doc) {
+      List<SalesModel> cartItem = [];
+      final cartData = snapshot.docs.map((doc) {
         return SalesModel.fromMap(doc.data() as Map<String, dynamic>);
       }).toList();
+
+      for (var element in cartData) {
+        if (element.userId == uid) {
+          cartItem.add(element);
+        }
+      }
+      return cartItem;
     } catch (e) {
       log("Error : $e");
       return [];

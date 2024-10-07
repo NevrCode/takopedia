@@ -71,7 +71,7 @@ class _DashboardPageState extends State<DashboardPage> {
                       'https://firebasestorage.googleapis.com/v0/b/takopedia-24e8b.appspot.com/o/profile_pic%2FJvtcPsGmaTUi0kUtPdTdGo7QU443?alt=media&token=a97b2473-bc5f-4ebe-85aa-5fb7ee46d391', // Ganti dengan URL foto pengguna
                 ),
               ),
-              decoration: BoxDecoration(),
+              decoration: const BoxDecoration(),
             ),
             ListTile(
               leading: const Icon(Icons.shopping_cart),
@@ -158,14 +158,14 @@ class _DashboardPageState extends State<DashboardPage> {
                                 elevation: 0.4,
                                 child: Container(
                                   decoration:
-                                      BoxDecoration(color: Colors.white),
+                                      const BoxDecoration(color: Colors.white),
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
                                       // Display item image
                                       ClipRRect(
-                                        borderRadius: BorderRadius.only(
+                                        borderRadius: const BorderRadius.only(
                                             topLeft: Radius.circular(10),
                                             topRight: Radius.circular(10)),
                                         child: AspectRatio(

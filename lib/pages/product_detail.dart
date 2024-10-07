@@ -93,7 +93,6 @@ class ProductDetailPage extends StatelessWidget {
               const SizedBox(height: 30),
               ElevatedButton(
                 onPressed: () => _buyProduct(context),
-                child: const Text('Beli Sekarang'),
                 style: ElevatedButton.styleFrom(
                   minimumSize: const Size(double.infinity, 36),
                 ),

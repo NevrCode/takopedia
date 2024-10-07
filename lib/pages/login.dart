@@ -109,108 +109,111 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     const SizedBox(height: 50),
 
-                  // TextField email dengan desain kapsul dan ikon email
-                  SizedBox(
-                    width: 300,
-                    child: TextField(
-                      controller: _emailController,
-                      decoration: InputDecoration(
-                        labelText: 'Email',
-                        prefixIcon: const Icon(Icons.email),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        contentPadding:
-                            const EdgeInsets.symmetric(horizontal: 20),
-                        filled: true,
-                        fillColor: Colors.white.withOpacity(0.8),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-
-                  // TextField password dengan ikon mata untuk menampilkan/menyembunyikan password
-                  SizedBox(
-                    width: 300,
-                    child: TextField(
-                      controller: _passwordController,
-                      obscureText: _obscureText,
-                      decoration: InputDecoration(
-                        labelText: 'Password',
-                        prefixIcon: const Icon(Icons.lock),
-                        suffixIcon: IconButton(
-                          icon: Icon(
-                            _obscureText
-                                ? Icons.visibility
-                                : Icons.visibility_off,
+                    // TextField email dengan desain kapsul dan ikon email
+                    SizedBox(
+                      width: 300,
+                      child: TextField(
+                        controller: _emailController,
+                        decoration: InputDecoration(
+                          labelText: 'Email',
+                          prefixIcon: const Icon(Icons.email),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
                           ),
-                          onPressed: () {
-                            setState(() {
-                              _obscureText = !_obscureText;
-                            });
-                          },
+                          contentPadding:
+                              const EdgeInsets.symmetric(horizontal: 20),
+                          filled: true,
+                          fillColor: Colors.white.withOpacity(0.8),
                         ),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        contentPadding:
-                            const EdgeInsets.symmetric(horizontal: 20),
-                        filled: true,
-                        fillColor: Colors.white.withOpacity(0.8),
                       ),
                     ),
-                  ),
+                    const SizedBox(height: 16),
 
-                  // Link Lupa Password di bawah isian Password
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: TextButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const ForgotPasswordPage()),
-                        );
-                      },
+                    // TextField password dengan ikon mata untuk menampilkan/menyembunyikan password
+                    SizedBox(
+                      width: 300,
+                      child: TextField(
+                        controller: _passwordController,
+                        obscureText: _obscureText,
+                        decoration: InputDecoration(
+                          labelText: 'Password',
+                          prefixIcon: const Icon(Icons.lock),
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _obscureText
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _obscureText = !_obscureText;
+                              });
+                            },
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          contentPadding:
+                              const EdgeInsets.symmetric(horizontal: 20),
+                          filled: true,
+                          fillColor: Colors.white.withOpacity(0.8),
+                        ),
+                      ),
+                    ),
+
+                    // Link Lupa Password di bawah isian Password
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const ForgotPasswordPage()),
+                          );
+                        },
+                        child: const Text(
+                          'Lupa Password?',
+                          style: TextStyle(color: Colors.blue),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+
+                    // Tombol login dan register dalam satu row
+                    ElevatedButton(
+                      style: ButtonStyle(
+                        fixedSize:
+                            MaterialStateProperty.all(const Size(240, 42)),
+                        padding: MaterialStateProperty.all(
+                            const EdgeInsets.fromLTRB(0, 0, 0, 0)),
+                        backgroundColor: MaterialStateProperty.all(
+                            const Color.fromARGB(255, 50, 63, 71)),
+                        elevation: MaterialStateProperty.all(2),
+                      ),
+                      onPressed: _login,
                       child: const Text(
-                        'Lupa Password?',
-                        style: TextStyle(color: Colors.blue),
+                        'Login',
+                        style: loginbuttonTextStyle,
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 16),
-
-                  // Tombol login dan register dalam satu row
-                  ElevatedButton(
-                    style: ButtonStyle(
-                      fixedSize: MaterialStateProperty.all(const Size(240, 42)),
-                      padding: MaterialStateProperty.all(
-                          const EdgeInsets.fromLTRB(0, 0, 0, 0)),
-                      backgroundColor: MaterialStateProperty.all(
-                          Color.fromARGB(255, 50, 63, 71)),
-                      elevation: MaterialStateProperty.all(2),
+                    const SizedBox(width: 16),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/register');
+                      },
+                      child: const Text('Sign Up'),
                     ),
-                    onPressed: _login,
-                    child: const Text(
-                      'Login',
-                      style: loginbuttonTextStyle,
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/register');
-                    },
-                    child: const Text('Sign Up'),
-                  ),
 
-                  const SizedBox(height: 16),
+                    const SizedBox(height: 16),
 
-                  // Login dengan sosial media
-                ],
+                    // Login dengan sosial media
+                  ],
+                ),
               ),
             ),
-          ),
+          )
         ],
       ),
     );

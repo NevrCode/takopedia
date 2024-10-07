@@ -32,10 +32,10 @@ class ProductDetailPage extends StatelessWidget {
         formatCurrency('${product.price}'); // string interpolation to cast
 
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 255, 255, 255),
+      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
       appBar: AppBar(
-        backgroundColor: Color.fromARGB(255, 255, 255, 255),
-        title: Text(
+        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+        title: const Text(
           'Product Detail',
           style: TextStyle(
             fontFamily: 'Poppins-regular',
@@ -44,7 +44,7 @@ class ProductDetailPage extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () {},
-            icon: Icon(Icons.shopping_cart_outlined),
+            icon: const Icon(Icons.shopping_cart_outlined),
           )
         ],
       ),
@@ -120,7 +120,7 @@ class ProductDetailPage extends StatelessWidget {
                 ElevatedButton(
                     onPressed: () => _buyProduct(context),
                     style: ButtonStyle(
-                      side: MaterialStatePropertyAll(BorderSide(
+                      side: const MaterialStatePropertyAll(BorderSide(
                         color: Color.fromARGB(255, 255, 255, 255),
                       )),
                       shape: MaterialStatePropertyAll(RoundedRectangleBorder(
@@ -129,11 +129,11 @@ class ProductDetailPage extends StatelessWidget {
                       padding: MaterialStateProperty.all(
                           const EdgeInsets.fromLTRB(0, 0, 0, 0)),
                       backgroundColor: MaterialStateProperty.all(
-                          Color.fromARGB(255, 54, 121, 199)),
+                          const Color.fromARGB(255, 54, 121, 199)),
                       elevation: MaterialStateProperty.all(1),
                     ),
                     child: IconButton(
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.add_shopping_cart_outlined,
                         color: Color.fromARGB(255, 250, 253, 255),
                       ),
@@ -142,7 +142,7 @@ class ProductDetailPage extends StatelessWidget {
                 ElevatedButton(
                   onPressed: () => _buyProduct(context),
                   style: ButtonStyle(
-                    side: MaterialStatePropertyAll(BorderSide(
+                    side: const MaterialStatePropertyAll(BorderSide(
                         color: Color.fromARGB(255, 38, 95, 216), width: 2)),
                     shape: MaterialStatePropertyAll(RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(17))),
@@ -150,7 +150,7 @@ class ProductDetailPage extends StatelessWidget {
                     padding: MaterialStateProperty.all(
                         const EdgeInsets.fromLTRB(0, 0, 0, 0)),
                     backgroundColor: MaterialStateProperty.all(
-                        Color.fromARGB(255, 255, 255, 255)),
+                        const Color.fromARGB(255, 255, 255, 255)),
                     elevation: MaterialStateProperty.all(3),
                   ),
                   child: const Text(

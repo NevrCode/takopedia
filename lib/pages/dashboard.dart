@@ -173,7 +173,6 @@ class _DashboardPageState extends State<DashboardPage> {
                 CarouselSlider(
                   items: carouselItem,
                   options: CarouselOptions(
-                    aspectRatio: 2 / 1,
                     autoPlay: true,
                     enlargeCenterPage: true,
                   ),

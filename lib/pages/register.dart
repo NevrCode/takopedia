@@ -1,6 +1,9 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'dart:developer';
 import 'dart:io';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
@@ -190,7 +193,24 @@ class _RegisterPageState extends State<RegisterPage> {
 
               // Tombol Register
               ElevatedButton(
-                onPressed: _register,
+                onPressed: () async {
+                  try {
+                    await _register();
+                  } on FirebaseAuthException catch (e) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text("[${e.code}] Email atau Password salah"),
+                      ),
+                    );
+                  } catch (e) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text("Email atau Password salah"),
+                      ),
+                    );
+                  }
+                  Navigator.pushReplacementNamed(context, '/');
+                },
                 style: ElevatedButton.styleFrom(
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30.0),

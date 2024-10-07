@@ -29,8 +29,7 @@ class AuthService {
       }
       return user;
     } catch (e) {
-      print('user null ${e.toString()}');
-      return null;
+      rethrow;
     }
   }
 
@@ -58,7 +57,19 @@ class AuthService {
 
       return user;
     } catch (e) {
-      print(e);
+      rethrow;
+    }
+  }
+
+  Future<User?> signinWithGoogle() async {
+    try {
+      UserCredential result =
+          await _auth.signInWithProvider(GoogleAuthProvider());
+
+      User? user = result.user;
+      return user;
+    } catch (e) {
+      log('e');
       return null;
     }
   }

@@ -62,6 +62,7 @@ class _DashboardPageState extends State<DashboardPage> {
                       "https://via.placeholder.com/150", // Ganti dengan URL foto pengguna
                 ),
               ),
+              decoration: const BoxDecoration(),
             ),
             ListTile(
               leading: const Icon(Icons.shopping_cart),
@@ -131,42 +132,38 @@ class _DashboardPageState extends State<DashboardPage> {
                           ),
                           itemCount: products.length,
                           itemBuilder: (context, index) {
-                            final product = products[index];
-                            return Card(
-                              elevation: 4,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                children: [
-                                  Expanded(
-                                    child: ClipRRect(
-                                      borderRadius: const BorderRadius.vertical(
-                                        top: Radius.circular(10),
+                            ProductModel product = products[index];
+
+                            return GestureDetector(
+                              onTap: () {},
+                              child: Card(
+                                elevation: 0.4,
+                                child: Container(
+                                  decoration:
+                                      const BoxDecoration(color: Colors.white),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      // Display item image
+                                      ClipRRect(
+                                        borderRadius: const BorderRadius.only(
+                                            topLeft: Radius.circular(10),
+                                            topRight: Radius.circular(10)),
+                                        child: AspectRatio(
+                                          aspectRatio: 1,
+                                          child: Image.network(
+                                            product.picURL,
+                                            fit: BoxFit.cover,
+                                            width: double.infinity,
+                                            // Adjust the height as needed
+                                          ),
+                                        ),
                                       ),
-                                      child: Image.network(
-                                        product['image'],
-                                        fit: BoxFit.cover,
-                                        errorBuilder:
-                                            (context, error, stackTrace) {
-                                          return const Icon(
-                                            Icons.error,
-                                            size: 100,
-                                            color: Colors.red,
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          product['product'],
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text(
+                                          product.name, // Display item title
                                           style: const TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold,

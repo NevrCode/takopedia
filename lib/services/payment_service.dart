@@ -16,7 +16,7 @@ class PaymentService {
           'quantity': sales.quantity,
           'user_id': sales.userId
         })
-        .then((value) => log("Product Added"))
+        .then((value) => log("Sales Added"))
         .catchError((error) => log("Failed to add product: $error"));
   }
 

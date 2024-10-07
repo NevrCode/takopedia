@@ -1,13 +1,23 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:takopedia/model/product_model.dart';
+import 'package:takopedia/model/sales_model.dart';
+import 'package:takopedia/services/payment_service.dart';
 
 class ProductDetailPage extends StatelessWidget {
   final ProductModel product;
+  final PaymentService _paymentService = PaymentService();
+  final User? _user = FirebaseAuth.instance.currentUser;
 
-  const ProductDetailPage({super.key, required this.product});
+  ProductDetailPage({super.key, required this.product});
 
   Future<void> _buyProduct(BuildContext context) async {
+    SalesModel purchasedProduct = SalesModel(
+        date: DateTime.timestamp().toString(),
+        userId: _user?.uid ?? "",
+        product: product.toMap(),
+        quantity: 1); // 1 karena baru bisa beli 1 di page ini
     // Tampilkan pesan loading
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
@@ -15,6 +25,7 @@ class ProductDetailPage extends StatelessWidget {
         duration: Duration(seconds: 2),
       ),
     );
+    _paymentService.addSales(purchasedProduct);
 
     // String cleanedPrice = productPrice.replaceAll(RegExp(r'[^0-9]'), '');
   }

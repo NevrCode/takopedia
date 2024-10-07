@@ -1,13 +1,23 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:takopedia/model/product_model.dart';
+import 'package:takopedia/model/sales_model.dart';
+import 'package:takopedia/services/payment_service.dart';
 
 class ProductDetailPage extends StatelessWidget {
   final ProductModel product;
+  final PaymentService _paymentService = PaymentService();
+  final User? _user = FirebaseAuth.instance.currentUser;
 
-  const ProductDetailPage({super.key, required this.product});
+  ProductDetailPage({super.key, required this.product});
 
   Future<void> _buyProduct(BuildContext context) async {
+    SalesModel purchasedProduct = SalesModel(
+        date: DateTime.timestamp().toString(),
+        userId: _user?.uid ?? "",
+        product: product.toMap(),
+        quantity: 1); // 1 karena baru bisa beli 1 di page ini
     // Tampilkan pesan loading
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
@@ -15,6 +25,7 @@ class ProductDetailPage extends StatelessWidget {
         duration: Duration(seconds: 2),
       ),
     );
+    _paymentService.addSales(purchasedProduct);
 
     // String cleanedPrice = productPrice.replaceAll(RegExp(r'[^0-9]'), '');
   }
@@ -32,10 +43,10 @@ class ProductDetailPage extends StatelessWidget {
         formatCurrency('${product.price}'); // string interpolation to cast
 
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 255, 255, 255),
+      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
       appBar: AppBar(
-        backgroundColor: Color.fromARGB(255, 255, 255, 255),
-        title: Text(
+        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+        title: const Text(
           'Product Detail',
           style: TextStyle(
             fontFamily: 'Poppins-regular',
@@ -44,7 +55,7 @@ class ProductDetailPage extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () {},
-            icon: Icon(Icons.shopping_cart_outlined),
+            icon: const Icon(Icons.shopping_cart_outlined),
           )
         ],
       ),
@@ -120,7 +131,7 @@ class ProductDetailPage extends StatelessWidget {
                 ElevatedButton(
                     onPressed: () => _buyProduct(context),
                     style: ButtonStyle(
-                      side: MaterialStatePropertyAll(BorderSide(
+                      side: const MaterialStatePropertyAll(BorderSide(
                         color: Color.fromARGB(255, 255, 255, 255),
                       )),
                       shape: MaterialStatePropertyAll(RoundedRectangleBorder(
@@ -129,11 +140,11 @@ class ProductDetailPage extends StatelessWidget {
                       padding: MaterialStateProperty.all(
                           const EdgeInsets.fromLTRB(0, 0, 0, 0)),
                       backgroundColor: MaterialStateProperty.all(
-                          Color.fromARGB(255, 54, 121, 199)),
+                          const Color.fromARGB(255, 54, 121, 199)),
                       elevation: MaterialStateProperty.all(1),
                     ),
                     child: IconButton(
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.add_shopping_cart_outlined,
                         color: Color.fromARGB(255, 250, 253, 255),
                       ),
@@ -142,7 +153,7 @@ class ProductDetailPage extends StatelessWidget {
                 ElevatedButton(
                   onPressed: () => _buyProduct(context),
                   style: ButtonStyle(
-                    side: MaterialStatePropertyAll(BorderSide(
+                    side: const MaterialStatePropertyAll(BorderSide(
                         color: Color.fromARGB(255, 38, 95, 216), width: 2)),
                     shape: MaterialStatePropertyAll(RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(17))),
@@ -150,7 +161,7 @@ class ProductDetailPage extends StatelessWidget {
                     padding: MaterialStateProperty.all(
                         const EdgeInsets.fromLTRB(0, 0, 0, 0)),
                     backgroundColor: MaterialStateProperty.all(
-                        Color.fromARGB(255, 255, 255, 255)),
+                        const Color.fromARGB(255, 255, 255, 255)),
                     elevation: MaterialStateProperty.all(3),
                   ),
                   child: const Text(

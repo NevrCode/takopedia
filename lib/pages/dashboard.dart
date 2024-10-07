@@ -153,7 +153,14 @@ class _DashboardPageState extends State<DashboardPage> {
                             ProductModel product = products[index];
 
                             return GestureDetector(
-                              onTap: () {},
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => ProductDetailPage(
+                                              product: product,
+                                            )));
+                              },
                               child: Card(
                                 elevation: 0.4,
                                 child: Container(

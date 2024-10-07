@@ -1,21 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:takopedia/model/product_model.dart';
 
 class ProductDetailPage extends StatelessWidget {
-  final String productName;
-  final String productPrice;
-  final String productImage;
-  final String productDescription;
-  final String productId;
+  final ProductModel product;
 
-  const ProductDetailPage({
-    super.key,
-    required this.productName,
-    required this.productPrice,
-    required this.productImage,
-    required this.productDescription,
-    required this.productId,
-  });
+  const ProductDetailPage({super.key, required this.product});
 
   Future<void> _buyProduct(BuildContext context) async {
     // Tampilkan pesan loading
@@ -39,11 +29,12 @@ class ProductDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String formattedPrice = formatCurrency(productPrice);
+    String formattedPrice =
+        formatCurrency('${product.price}'); // string interpolation to cast
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(productName),
+        title: Text(product.name),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -53,7 +44,7 @@ class ProductDetailPage extends StatelessWidget {
             children: [
               Center(
                 child: Image.network(
-                  productImage,
+                  product.picURL,
                   height: 250,
                   fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) {
@@ -67,7 +58,7 @@ class ProductDetailPage extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               Text(
-                productName,
+                product.name,
                 style: const TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.bold,
@@ -84,7 +75,7 @@ class ProductDetailPage extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               Text(
-                productDescription,
+                product.desc,
                 style: const TextStyle(
                   fontSize: 16,
                   color: Colors.black54,

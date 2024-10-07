@@ -68,11 +68,11 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  Future<void> _loginWIthGoogle() async {
-    _auth.signinWithGoogle();
-    if (!context.mounted) return;
-    Navigator.pushReplacementNamed(context, '/dashboard');
-  }
+  // Future<void> _loginWIthGoogle() async {
+  //   _auth.signinWithGoogle();
+  //   if (!context.mounted) return;
+  //   Navigator.pushReplacementNamed(context, '/dashboard');
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -95,7 +95,7 @@ class _LoginPageState extends State<LoginPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SizedBox(
+                  const SizedBox(
                     height: 200,
                   ),
                   // Logo berbentuk lingkaran

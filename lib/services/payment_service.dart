@@ -10,10 +10,11 @@ class PaymentService {
   Future<void> addSales(SalesModel sales) async {
     await _sales
         .add({
-          'date': sales.salesDate,
+          'date': sales.date,
           'item': sales.product,
           'price': sales.price,
           'quantity': sales.quantity,
+          'user_id': sales.userId
         })
         .then((value) => log("Product Added"))
         .catchError((error) => log("Failed to add product: $error"));

@@ -368,11 +368,11 @@ class _DashboardPageState extends State<DashboardPage> {
                                         Padding(
                                           padding: const EdgeInsets.all(8.0),
                                           child: Text(
-                                            product.name, // Display item title
+                                            product.name,
                                             style: const TextStyle(
                                               fontSize: 16,
                                               fontWeight: FontWeight.bold,
-                                              fontFamily: 'Poppins',
+                                              fontFamily: 'Poppins-regular',
                                             ),
                                           ),
                                         ),

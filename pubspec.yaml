@@ -91,6 +91,9 @@ flutter:
     - family: Poppins-regular
       fonts:
         - asset: assets/fonts/Poppins/Poppins-Regular.ttf
+    - family: Poppins-Bold
+      fonts:
+        - asset: assets/fonts/Poppins/Poppins-Bold.ttf
         
     - family: Montserrat
       fonts:

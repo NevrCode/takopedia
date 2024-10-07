@@ -173,6 +173,7 @@ class _DashboardPageState extends State<DashboardPage> {
                 CarouselSlider(
                   items: carouselItem,
                   options: CarouselOptions(
+                    aspectRatio: 2 / 1,
                     autoPlay: true,
                     enlargeCenterPage: true,
                   ),
@@ -332,7 +333,13 @@ class _DashboardPageState extends State<DashboardPage> {
                             ProductModel product = products[index];
 
                             return GestureDetector(
-                              onTap: () {},
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => ProductDetailPage(
+                                            product: product)));
+                              },
                               child: Container(
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
@@ -364,11 +371,11 @@ class _DashboardPageState extends State<DashboardPage> {
                                         Padding(
                                           padding: const EdgeInsets.all(8.0),
                                           child: Text(
-                                            product.name, // Display item title
+                                            product.name,
                                             style: const TextStyle(
                                               fontSize: 16,
                                               fontWeight: FontWeight.bold,
-                                              fontFamily: 'Poppins',
+                                              fontFamily: 'Poppins-regular',
                                             ),
                                           ),
                                         ),

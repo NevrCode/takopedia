@@ -43,8 +43,7 @@ if (flutterVersionName == null) {
 
 android {
     namespace "com.example.takopedia"
-    compileSdkVersion 34 // Update to 34
-    // compileSdkVersion flutter.compileSdkVersion
+    compileSdkVersion 34
     ndkVersion flutter.ndkVersion
 
     compileOptions {

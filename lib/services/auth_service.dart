@@ -1,13 +1,32 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:takopedia/model/user_model.dart';
+
+import 'user_provider.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
+
+  Future<String> uploadPic(String uid, String filePath) async {
+    try {
+      Reference storageRef = _storage.ref().child('profile_pic/$uid');
+      UploadTask uploadTask = storageRef.putFile(File(filePath));
+      TaskSnapshot taskSnapshot = await uploadTask.whenComplete(() => null);
+      String downloadURL = await taskSnapshot.ref.getDownloadURL();
+      return downloadURL;
+    } catch (e) {
+      log(e.toString());
+      rethrow;
+    }
+  }
 
   Future<User?> registerWithEmailandDetail(String email, String password,
       String name, String address, String profilePicPath, String telp) async {
@@ -17,7 +36,7 @@ class AuthService {
       User? user = result.user;
 
       if (user != null) {
-        print('masuk');
+        log('masuk');
         String picUrl = await uploadPic(user.uid, profilePicPath);
         await _db.collection('users').doc(user.uid).set({
           'name': name,
@@ -29,20 +48,8 @@ class AuthService {
       }
       return user;
     } catch (e) {
-      rethrow;
-    }
-  }
-
-  Future<String> uploadPic(String uid, String filePath) async {
-    try {
-      Reference storageRef = _storage.ref().child('profile_pic/$uid');
-      UploadTask uploadTask = storageRef.putFile(File(filePath));
-      TaskSnapshot taskSnapshot = await uploadTask.whenComplete(() => null);
-      String downloadURL = await taskSnapshot.ref.getDownloadURL();
-      return downloadURL;
-    } catch (e) {
-      print(e.toString());
-      rethrow;
+      log('user null ${e.toString()}');
+      return null;
     }
   }
 
@@ -57,7 +64,8 @@ class AuthService {
 
       return user;
     } catch (e) {
-      rethrow;
+      log('e');
+      return null;
     }
   }
 
@@ -74,11 +82,39 @@ class AuthService {
     }
   }
 
+  Future<void> sendEmailforResetPassword(String email) async {
+    _auth.sendPasswordResetEmail(email: email);
+  }
+
+  Future<Map<String, dynamic>?> getData(String uid) async {
+    final data =
+        await FirebaseFirestore.instance.collection('users').doc(uid).get();
+
+    if (data.exists) {
+      return data as Map<String, dynamic>;
+    }
+    return null;
+  }
+
+  Future<void> fetchUserData(BuildContext context) async {
+    User? currentUser = FirebaseAuth.instance.currentUser;
+    var userProvider = Provider.of<UserProvider>(context, listen: false);
+    if (currentUser != null) {
+      String uid = currentUser.uid;
+      Map<String, dynamic>? userData = await getData(uid);
+
+      if (userData != null) {
+        UserModel userModel = UserModel.fromMap(userData);
+        userProvider.setUser(userModel);
+      }
+    }
+  }
+
   Future signOut() async {
     try {
       return await _auth.signOut();
     } catch (e) {
-      print(e);
+      log('e');
       return null;
     }
   }

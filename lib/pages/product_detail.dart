@@ -8,8 +8,7 @@ class ProductDetailPage extends StatelessWidget {
   final String productDescription;
   final String productId;
 
-  // ignore: prefer_const_constructors_in_immutables
-  ProductDetailPage({
+  const ProductDetailPage({
     super.key,
     required this.productName,
     required this.productPrice,
@@ -27,7 +26,7 @@ class ProductDetailPage extends StatelessWidget {
       ),
     );
 
-    String cleanedPrice = productPrice.replaceAll(RegExp(r'[^0-9]'), '');
+    // String cleanedPrice = productPrice.replaceAll(RegExp(r'[^0-9]'), '');
   }
 
   // Fungsi untuk memformat harga dengan NumberFormat yang sesuai
@@ -94,6 +93,7 @@ class ProductDetailPage extends StatelessWidget {
               const SizedBox(height: 30),
               ElevatedButton(
                 onPressed: () => _buyProduct(context),
+                child: const Text('Beli Sekarang'),
                 style: ElevatedButton.styleFrom(
                   minimumSize: const Size(double.infinity, 36),
                 ),

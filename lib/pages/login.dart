@@ -3,8 +3,14 @@
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:takopedia/services/authService.dart';
+import 'package:provider/provider.dart';
+import 'package:takopedia/model/user_model.dart';
+import 'package:takopedia/pages/component/style.dart';
+import 'package:takopedia/pages/forgot_password.dart';
+import 'package:takopedia/services/auth_service.dart';
+import 'package:takopedia/services/user_provider.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -16,8 +22,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  bool _obscureText = true; // Untuk menyembunyikan/menampilkan password
-  final String _message = '';
+  bool _obscureText = true;
   final AuthService _auth = AuthService();
 
   Future<void> _login() async {
@@ -104,125 +109,105 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     const SizedBox(height: 50),
 
-                    // TextField email dengan desain kapsul dan ikon email
-                    SizedBox(
-                      width: 300,
-                      child: TextField(
-                        controller: _emailController,
-                        decoration: InputDecoration(
-                          labelText: 'Email',
-                          prefixIcon: const Icon(Icons.email),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                          contentPadding:
-                              const EdgeInsets.symmetric(horizontal: 20),
-                          filled: true,
-                          fillColor: Colors.white.withOpacity(0.8),
+                  // TextField email dengan desain kapsul dan ikon email
+                  SizedBox(
+                    width: 300,
+                    child: TextField(
+                      controller: _emailController,
+                      decoration: InputDecoration(
+                        labelText: 'Email',
+                        prefixIcon: const Icon(Icons.email),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30),
                         ),
+                        contentPadding:
+                            const EdgeInsets.symmetric(horizontal: 20),
+                        filled: true,
+                        fillColor: Colors.white.withOpacity(0.8),
                       ),
                     ),
-                    const SizedBox(height: 16),
+                  ),
+                  const SizedBox(height: 16),
 
-                    // TextField password dengan ikon mata untuk menampilkan/menyembunyikan password
-                    SizedBox(
-                      width: 300,
-                      child: TextField(
-                        controller: _passwordController,
-                        obscureText: _obscureText,
-                        decoration: InputDecoration(
-                          labelText: 'Password',
-                          prefixIcon: const Icon(Icons.lock),
-                          suffixIcon: IconButton(
-                            icon: Icon(
-                              _obscureText
-                                  ? Icons.visibility
-                                  : Icons.visibility_off,
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                _obscureText = !_obscureText;
-                              });
-                            },
+                  // TextField password dengan ikon mata untuk menampilkan/menyembunyikan password
+                  SizedBox(
+                    width: 300,
+                    child: TextField(
+                      controller: _passwordController,
+                      obscureText: _obscureText,
+                      decoration: InputDecoration(
+                        labelText: 'Password',
+                        prefixIcon: const Icon(Icons.lock),
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _obscureText
+                                ? Icons.visibility
+                                : Icons.visibility_off,
                           ),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                          contentPadding:
-                              const EdgeInsets.symmetric(horizontal: 20),
-                          filled: true,
-                          fillColor: Colors.white.withOpacity(0.8),
+                          onPressed: () {
+                            setState(() {
+                              _obscureText = !_obscureText;
+                            });
+                          },
                         ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        contentPadding:
+                            const EdgeInsets.symmetric(horizontal: 20),
+                        filled: true,
+                        fillColor: Colors.white.withOpacity(0.8),
                       ),
                     ),
+                  ),
 
-                    // Link Lupa Password di bawah isian Password
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: TextButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    const ForgotPasswordPage()),
-                          );
-                        },
-                        child: const Text(
-                          'Lupa Password?',
-                          style: TextStyle(color: Colors.blue),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-
-                    // Tombol login dan register dalam satu row
-                    ElevatedButton(
-                      style: ButtonStyle(
-                        fixedSize:
-                            MaterialStateProperty.all(const Size(240, 42)),
-                        padding: MaterialStateProperty.all(
-                            const EdgeInsets.fromLTRB(0, 0, 0, 0)),
-                        backgroundColor: MaterialStateProperty.all(
-                            const Color.fromARGB(255, 50, 63, 71)),
-                        elevation: MaterialStateProperty.all(2),
-                      ),
-                      onPressed: () async {
-                        try {
-                          await _login();
-                        } on FirebaseAuthException catch (e) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content:
-                                  Text("[${e.code}] Email atau Password salah"),
-                            ),
-                          );
-                        } catch (e) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text("Terjadi kesalahan di server"),
-                            ),
-                          );
-                        }
+                  // Link Lupa Password di bawah isian Password
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const ForgotPasswordPage()),
+                        );
                       },
                       child: const Text(
-                        'Login',
-                        style: loginbuttonTextStyle,
+                        'Lupa Password?',
+                        style: TextStyle(color: Colors.blue),
                       ),
                     ),
-                    const SizedBox(width: 16),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.pushNamed(context, '/register');
-                      },
-                      child: const Text('Sign Up'),
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Tombol login dan register dalam satu row
+                  ElevatedButton(
+                    style: ButtonStyle(
+                      fixedSize: MaterialStateProperty.all(const Size(240, 42)),
+                      padding: MaterialStateProperty.all(
+                          const EdgeInsets.fromLTRB(0, 0, 0, 0)),
+                      backgroundColor: MaterialStateProperty.all(
+                          Color.fromARGB(255, 50, 63, 71)),
+                      elevation: MaterialStateProperty.all(2),
                     ),
+                    onPressed: _login,
+                    child: const Text(
+                      'Login',
+                      style: loginbuttonTextStyle,
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/register');
+                    },
+                    child: const Text('Sign Up'),
+                  ),
 
-                    const SizedBox(height: 16),
+                  const SizedBox(height: 16),
 
-                    // Login dengan sosial media
-                  ],
-                ),
+                  // Login dengan sosial media
+                ],
               ),
             ),
           ),

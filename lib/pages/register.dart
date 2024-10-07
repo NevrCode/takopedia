@@ -6,10 +6,8 @@ import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:takopedia/model/pengguna.dart';
 
-import '../services/authService.dart';
+import '../services/auth_service.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -27,7 +25,6 @@ class _RegisterPageState extends State<RegisterPage> {
   File? _profilePic;
   final AuthService _authService = AuthService();
   final ImagePicker _picker = ImagePicker();
-  final String _message = '';
 
   Future<void> _pickProfilePicture() async {
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
@@ -35,20 +32,6 @@ class _RegisterPageState extends State<RegisterPage> {
       _profilePic = pickedFile != null ? File(pickedFile.path) : null;
     });
   }
-
-  // Fungsi untuk menyimpan gambar ke folder yang dapat diakses
-  // Future<void> _saveImage() async {
-  //   if (_profilePic != null) {
-  //     final directory = await getApplicationDocumentsDirectory();
-  //     final String imageName =
-  //         '${_namaController.text.split(" ")[0]}.jpg'; // Ambil nama depan
-  //     final String newPath = '${directory.path}/$imageName'; // Path baru
-
-  //     await _profilePic!.copy(newPath);
-  //     print(
-  //         'Image saved to: $newPath'); // Debugging untuk memastikan penyimpanan
-  //   }
-  // }
 
   Future<void> _register() async {
     final email = _emailController.text;
@@ -68,17 +51,15 @@ class _RegisterPageState extends State<RegisterPage> {
         _profilePic!.path,
         telp,
       );
-      // print('${Platform.operatingSystem}');
       if (user != null) {
-        print('user registered with uid : ${user.uid}');
-        Navigator.pushReplacementNamed(context, '/');
+        log('user registered with uid : ${user.uid}');
       } else if (user == null) {
-        print('Registration Failed');
+        log('Registration Failed');
       } else {
-        print("entah");
+        log("entah");
       }
     } else {
-      print('Please select a profile picture');
+      log('Please select a profile picture');
     }
   }
 
@@ -216,6 +197,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     borderRadius: BorderRadius.circular(30.0),
                   ),
                 ),
+                child: const Text('Register'),
                 child: const Text('Register'),
               ),
               const SizedBox(height: 16),

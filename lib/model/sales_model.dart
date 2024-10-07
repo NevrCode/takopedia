@@ -3,12 +3,14 @@ class SalesModel {
   String userId;
   Map<String, dynamic> product;
   int quantity;
+  String size;
 
   SalesModel({
     required this.date,
     required this.userId,
     required this.product,
     required this.quantity,
+    required this.size,
   });
 
   factory SalesModel.fromMap(Map<String, dynamic> data) {
@@ -17,6 +19,7 @@ class SalesModel {
       userId: data['user_id'] ?? '',
       product: data['product'] ?? {},
       quantity: data['quantity'] ?? 0,
+      size: data['size'] ?? 'no size',
     );
   }
 
@@ -26,6 +29,7 @@ class SalesModel {
       'user_id': userId,
       'product': product,
       'quantity': quantity,
+      'size': size,
     };
   }
 }

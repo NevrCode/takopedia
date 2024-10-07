@@ -3,21 +3,24 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:takopedia/model/product_model.dart';
 import 'package:takopedia/model/sales_model.dart';
-import 'package:takopedia/services/payment_service.dart';
+import 'package:takopedia/pages/cart.dart';
+import 'package:takopedia/services/cart_service.dart';
 
 class ProductDetailPage extends StatelessWidget {
   final ProductModel product;
-  final PaymentService _paymentService = PaymentService();
+  final CartService _cartService = CartService();
   final User? _user = FirebaseAuth.instance.currentUser;
 
   ProductDetailPage({super.key, required this.product});
 
   Future<void> _buyProduct(BuildContext context) async {
     SalesModel purchasedProduct = SalesModel(
-        date: DateTime.timestamp().toString(),
-        userId: _user?.uid ?? "",
-        product: product.toMap(),
-        quantity: 1); // 1 karena baru bisa beli 1 di page ini
+      date: DateTime.timestamp().toString(),
+      userId: _user?.uid ?? "",
+      product: product.toMap(),
+      quantity: 1,
+      size: '40',
+    ); // 1 karena baru bisa beli 1 di page ini
     // Tampilkan pesan loading
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
@@ -25,7 +28,7 @@ class ProductDetailPage extends StatelessWidget {
         duration: Duration(seconds: 2),
       ),
     );
-    _paymentService.addSales(purchasedProduct);
+    _cartService.addSales(purchasedProduct);
 
     // String cleanedPrice = productPrice.replaceAll(RegExp(r'[^0-9]'), '');
   }
@@ -54,7 +57,10 @@ class ProductDetailPage extends StatelessWidget {
         ),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const CartPage()));
+            },
             icon: const Icon(Icons.shopping_cart_outlined),
           )
         ],

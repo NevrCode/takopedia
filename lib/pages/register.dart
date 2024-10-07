@@ -198,12 +198,11 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                 ),
                 child: const Text('Register'),
-                child: const Text('Register'),
               ),
               const SizedBox(height: 16),
-              Text(
-                _message,
-                style: const TextStyle(color: Colors.red),
+              const Text(
+                "",
+                style: TextStyle(color: Colors.red),
               ),
             ],
           ),

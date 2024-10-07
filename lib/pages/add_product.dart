@@ -16,6 +16,7 @@ class _ProductPageState extends State<ProductPage> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
   final TextEditingController _descController = TextEditingController();
+  final TextEditingController _typeController = TextEditingController();
   File? _productPic;
   final ImagePicker _picker = ImagePicker();
   final ProductService _productService = ProductService();
@@ -38,8 +39,10 @@ class _ProductPageState extends State<ProductPage> {
     final name = _nameController.text;
     final price = int.parse(_priceController.text);
     final desc = _descController.text;
+    final type = _typeController.text;
     if (_productPic != null) {
-      await _productService.addProduct(name, price, desc, _productPic!.path);
+      await _productService.addProduct(
+          name, price, desc, _productPic!.path, type);
     }
   }
 
@@ -84,6 +87,20 @@ class _ProductPageState extends State<ProductPage> {
                 decoration: InputDecoration(
                   labelText: 'desc',
                   prefixIcon: const Icon(Icons.description),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30.0),
+                  ),
+                  contentPadding: const EdgeInsets.symmetric(
+                      vertical: 10.0, horizontal: 16.0),
+                ),
+              ),
+              const SizedBox(height: 16),
+              TextField(
+                controller: _typeController,
+                maxLines: 3,
+                decoration: InputDecoration(
+                  labelText: 'type',
+                  prefixIcon: const Icon(Icons.type_specimen),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(30.0),
                   ),

@@ -10,8 +10,8 @@ class ProductService {
       FirebaseFirestore.instance.collection('products');
   final _storage = FirebaseStorage.instance;
 
-  Future<void> addProduct(
-      String nama, int price, String desc, String productPicPath) async {
+  Future<void> addProduct(String nama, int price, String desc,
+      String productPicPath, String type) async {
     String picURL = await uploadPic(nama, productPicPath);
     await _products
         .add({
@@ -19,6 +19,7 @@ class ProductService {
           'price': price,
           'description': desc,
           'product_pic': picURL,
+          'type': type,
         })
         .then((value) => log("Product Added"))
         .catchError((error) => log("Failed to add product: $error"));

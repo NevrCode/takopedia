@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:takopedia/model/product_model.dart';
 import 'package:takopedia/model/user_model.dart';
 import 'package:takopedia/pages/add_product.dart';
+import 'package:takopedia/pages/cart.dart';
 import 'package:takopedia/pages/login.dart';
 import 'package:takopedia/pages/product_detail.dart';
 import 'package:takopedia/services/auth_service.dart';
@@ -31,6 +32,7 @@ class DashboardPage extends StatefulWidget {
 class _DashboardPageState extends State<DashboardPage> {
   final _user = FirebaseAuth.instance.currentUser;
   final _productService = ProductService();
+  final _auth = AuthService();
   late Future<List<ProductModel>> _productList;
 
   bool isLoading = true;
@@ -84,7 +86,8 @@ class _DashboardPageState extends State<DashboardPage> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color.fromARGB(255, 61, 118, 172),
+        // backgroundColor: Color.fromARGB(255, 61, 118, 172),
+        backgroundColor: Color.fromARGB(255, 2, 53, 90),
         iconTheme: const IconThemeData(color: Colors.white),
         title: const Text(
           'Calceus',
@@ -96,7 +99,10 @@ class _DashboardPageState extends State<DashboardPage> {
               Icons.shopping_cart_outlined,
               color: Colors.white,
             ),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => CartPage()));
+            },
           ),
         ],
       ),
@@ -155,7 +161,8 @@ class _DashboardPageState extends State<DashboardPage> {
               leading: const Icon(Icons.logout),
               title: const Text('Logout'),
               onTap: () {
-                // Tambahkan logika untuk logout
+                _auth.signOut();
+                Navigator.pushReplacementNamed(context, '/');
               },
             ),
           ],

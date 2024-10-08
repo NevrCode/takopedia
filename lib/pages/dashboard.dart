@@ -84,7 +84,7 @@ class _DashboardPageState extends State<DashboardPage> {
     return Scaffold(
       appBar: AppBar(
         // backgroundColor: Color.fromARGB(255, 61, 118, 172),
-        backgroundColor: Color.fromRGBO(240, 246, 253, 1),
+        backgroundColor: const Color.fromRGBO(240, 246, 253, 1),
         iconTheme: const IconThemeData(color: Color.fromARGB(255, 46, 46, 46)),
         title: const Text(
           'Calceus',
@@ -99,8 +99,8 @@ class _DashboardPageState extends State<DashboardPage> {
               color: Color.fromARGB(255, 77, 77, 77),
             ),
             onPressed: () {
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => CartPage()));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const CartPage()));
             },
           ),
         ],
@@ -184,7 +184,7 @@ class _DashboardPageState extends State<DashboardPage> {
           padding: const EdgeInsets.all(16.0),
           child: SafeArea(
             child: SingleChildScrollView(
-              child: Container(
+              child: SizedBox(
                 height: MediaQuery.sizeOf(context).height,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -426,16 +426,18 @@ class _DashboardPageState extends State<DashboardPage> {
                                                           'Poppins-regular',
                                                     ),
                                                   ),
-                                                  SizedBox(
+                                                  const SizedBox(
                                                     height: 10,
                                                   ),
                                                   Text(
                                                     formatCurrency(product.price
                                                         .toString()),
-                                                    style: TextStyle(
-                                                        color: const Color
-                                                            .fromARGB(255, 114,
-                                                            114, 114)),
+                                                    style: const TextStyle(
+                                                        color: Color.fromARGB(
+                                                            255,
+                                                            114,
+                                                            114,
+                                                            114)),
                                                   )
                                                 ],
                                               ),

@@ -33,7 +33,7 @@ class _CartPageState extends State<CartPage> {
             future: _cardService.fetchSales(_user!.uid),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return CircularProgressIndicator();
+                return const CircularProgressIndicator();
               } else if (snapshot.hasError) {
                 return Center(
                     child: Text(
@@ -77,8 +77,8 @@ class _CartPageState extends State<CartPage> {
                                             bottomLeft: Radius.circular(6)),
                                         child: Container(
                                           decoration: BoxDecoration(
-                                            boxShadow: [
-                                              const BoxShadow(
+                                            boxShadow: const [
+                                              BoxShadow(
                                                   offset: Offset(0.1, 0.1),
                                                   blurRadius: 1)
                                             ],
@@ -113,13 +113,13 @@ class _CartPageState extends State<CartPage> {
                                                   maxLines: 1,
                                                   overflow:
                                                       TextOverflow.ellipsis,
-                                                  style: TextStyle(
+                                                  style: const TextStyle(
                                                       fontFamily:
                                                           'Poppins-regular',
                                                       color: Color.fromARGB(
                                                           255, 117, 117, 117)),
                                                 ),
-                                                Text(
+                                                const Text(
                                                   'Rp. 1.599.000,00',
                                                   style: TextStyle(),
                                                 ),
@@ -136,13 +136,14 @@ class _CartPageState extends State<CartPage> {
                                                               241,
                                                               241)),
                                                   child: Padding(
-                                                    padding: EdgeInsets.only(
-                                                        left: 8.0,
-                                                        right: 8.0,
-                                                        top: 4),
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            left: 8.0,
+                                                            right: 8.0,
+                                                            top: 4),
                                                     child: Text(
-                                                      'Ukuran : 41',
-                                                      style: TextStyle(),
+                                                      'Ukuran : ${cartItem.size}',
+                                                      style: const TextStyle(),
                                                     ),
                                                   ),
                                                 ),
@@ -171,7 +172,7 @@ class _CartPageState extends State<CartPage> {
                                                   color: const Color.fromARGB(
                                                       255, 247, 247, 247)),
                                               child: Padding(
-                                                padding: EdgeInsets.only(
+                                                padding: const EdgeInsets.only(
                                                     left: 8.0, right: 8),
                                                 child: Row(
                                                   mainAxisAlignment:
@@ -190,7 +191,7 @@ class _CartPageState extends State<CartPage> {
                                                             fontSize: 20),
                                                       ),
                                                     ),
-                                                    Text(
+                                                    const Text(
                                                       '1',
                                                       style: TextStyle(
                                                           fontWeight:
@@ -225,7 +226,7 @@ class _CartPageState extends State<CartPage> {
                               ],
                             ),
                           ),
-                          Divider(
+                          const Divider(
                             thickness: 0.4,
                             height: 4,
                           ),

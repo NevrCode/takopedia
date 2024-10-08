@@ -43,11 +43,12 @@ class _LoginPageState extends State<LoginPage> {
           Navigator.pushReplacementNamed(context, '/dashboard');
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              duration: Duration(seconds: 1),
+              duration: const Duration(seconds: 1),
               backgroundColor: const Color.fromARGB(255, 38, 141, 41),
               content: Text(
                 'Hi, ${userProvider.user!.nama}. Selamat Berbelanja',
-                style: TextStyle(fontFamily: 'Poppins-regular', fontSize: 14),
+                style: const TextStyle(
+                    fontFamily: 'Poppins-regular', fontSize: 14),
               ),
             ),
           );
@@ -107,7 +108,7 @@ class _LoginPageState extends State<LoginPage> {
 
     return Scaffold(
       body: _isLoading
-          ? Center(
+          ? const Center(
               child: CircularProgressIndicator(),
             )
           : Stack(

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -23,6 +25,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
   int size = 40;
 
   Future<void> _buyProduct(BuildContext context) async {
+    log(size.toString());
     SalesModel purchasedProduct = SalesModel(
       date: DateTime.timestamp().toString(),
       userId: _user?.uid ?? "",
@@ -112,8 +115,8 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                                         bottomLeft: Radius.circular(6)),
                                     child: Container(
                                       decoration: BoxDecoration(
-                                        boxShadow: [
-                                          const BoxShadow(
+                                        boxShadow: const [
+                                          BoxShadow(
                                               offset: Offset(0.1, 0.1),
                                               blurRadius: 1)
                                         ],
@@ -146,12 +149,12 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                                               widget.product.name,
                                               maxLines: 1,
                                               overflow: TextOverflow.ellipsis,
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   fontFamily: 'Poppins-regular',
                                                   color: Color.fromARGB(
                                                       255, 117, 117, 117)),
                                             ),
-                                            Text(
+                                            const Text(
                                               'Rp. 1.599.000,00',
                                               style: TextStyle(),
                                             ),
@@ -163,13 +166,13 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                                                   color: const Color.fromARGB(
                                                       255, 241, 241, 241)),
                                               child: Padding(
-                                                padding: EdgeInsets.only(
+                                                padding: const EdgeInsets.only(
                                                     left: 8.0,
                                                     right: 8.0,
                                                     top: 4),
                                                 child: Text(
                                                   'Ukuran : $size',
-                                                  style: TextStyle(),
+                                                  style: const TextStyle(),
                                                 ),
                                               ),
                                             ),
@@ -194,7 +197,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                                               color: const Color.fromARGB(
                                                   255, 247, 247, 247)),
                                           child: Padding(
-                                            padding: EdgeInsets.only(
+                                            padding: const EdgeInsets.only(
                                                 left: 8.0, right: 8),
                                             child: Row(
                                               mainAxisAlignment:
@@ -213,7 +216,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                                                         fontSize: 20),
                                                   ),
                                                 ),
-                                                Text(
+                                                const Text(
                                                   '1',
                                                   style: TextStyle(
                                                       fontWeight:
@@ -244,7 +247,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                           ],
                         ),
                       ),
-                      Divider(
+                      const Divider(
                         thickness: 0.4,
                         height: 4,
                       ),
@@ -257,7 +260,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                         return GestureDetector(
                           onTap: () {
                             modalSetState(() {
-                              size = e;
+                              _updateSize(e);
                             });
                           },
                           child: Container(
@@ -267,7 +270,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                                 horizontal: 6, vertical: 6),
                             decoration: BoxDecoration(
                               color: size == e
-                                  ? Color.fromARGB(255, 209, 209, 209)
+                                  ? const Color.fromARGB(255, 209, 209, 209)
                                   : const Color.fromARGB(255, 235, 235, 235),
                               borderRadius: BorderRadius.circular(20),
                             ),

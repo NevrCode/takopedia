@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:takopedia/model/cart_model.dart';
 import 'package:takopedia/pages/cart.dart';
 import 'package:takopedia/pages/component/style.dart';
 
@@ -22,9 +23,28 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
   final User? _user = FirebaseAuth.instance.currentUser;
   int size = 40;
 
-  Future<void> _buyProduct(BuildContext context) async {
-    SalesModel purchasedProduct = SalesModel(
-      date: DateTime.timestamp().toString(),
+  // Future<void> _buyProduct(BuildContext context) async {
+  //   SalesModel purchasedProduct = SalesModel(
+  //     date: DateTime.timestamp().toString(),
+  //     userId: _user?.uid ?? "",
+  //     product: widget.product.toMap(),
+  //     quantity: 1,
+  //     size: size.toString(),
+  //   ); // 1 karena baru bisa beli 1 di page ini
+  //   // Tampilkan pesan loading
+  //   ScaffoldMessenger.of(context).showSnackBar(
+  //     const SnackBar(
+  //       content: Text('Sedang memproses pembelian...'),
+  //       duration: Duration(seconds: 2),
+  //     ),
+  //   );
+  //   _cartService.addCart(purchasedProduct);
+
+  //   // String cleanedPrice = productPrice.replaceAll(RegExp(r'[^0-9]'), '');
+  // }
+
+  Future<void> _addCart(BuildContext context) async {
+    CartModel purchasedProduct = CartModel(
       userId: _user?.uid ?? "",
       product: widget.product.toMap(),
       quantity: 1,
@@ -37,7 +57,11 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
         duration: Duration(seconds: 2),
       ),
     );
-    _cartService.addSales(purchasedProduct);
+    _cartService.addCart(
+      purchasedProduct,
+      _user?.uid,
+      widget.product.name,
+    );
 
     // String cleanedPrice = productPrice.replaceAll(RegExp(r'[^0-9]'), '');
   }
@@ -112,8 +136,8 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                                         bottomLeft: Radius.circular(6)),
                                     child: Container(
                                       decoration: BoxDecoration(
-                                        boxShadow: [
-                                          const BoxShadow(
+                                        boxShadow: const [
+                                          BoxShadow(
                                               offset: Offset(0.1, 0.1),
                                               blurRadius: 1)
                                         ],
@@ -151,9 +175,15 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                                                   color: Color.fromARGB(
                                                       255, 117, 117, 117)),
                                             ),
+                                            SizedBox(
+                                              height: 2,
+                                            ),
                                             Text(
                                               'Rp. 1.599.000,00',
                                               style: TextStyle(),
+                                            ),
+                                            SizedBox(
+                                              height: 2,
                                             ),
                                             Container(
                                               height: 30,
@@ -178,63 +208,6 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                                       ),
                                       const SizedBox(
                                         height: 20,
-                                      ),
-                                      Padding(
-                                        padding:
-                                            const EdgeInsets.only(bottom: 2.0),
-                                        child: Container(
-                                          height: 30,
-                                          width: 100,
-                                          decoration: BoxDecoration(
-                                              border: Border.all(
-                                                  color: const Color.fromARGB(
-                                                      255, 158, 158, 158)),
-                                              borderRadius:
-                                                  BorderRadius.circular(40),
-                                              color: const Color.fromARGB(
-                                                  255, 247, 247, 247)),
-                                          child: Padding(
-                                            padding: EdgeInsets.only(
-                                                left: 8.0, right: 8),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              children: [
-                                                GestureDetector(
-                                                  onTap: () {},
-                                                  child: const Text(
-                                                    '-',
-                                                    style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: 20),
-                                                  ),
-                                                ),
-                                                Text(
-                                                  '1',
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w500),
-                                                ),
-                                                GestureDetector(
-                                                  onTap: () {},
-                                                  child: const Text(
-                                                    '+',
-                                                    style: TextStyle(
-                                                        fontSize: 20,
-                                                        fontWeight:
-                                                            FontWeight.w400,
-                                                        color: Color.fromARGB(
-                                                            255, 51, 51, 51)),
-                                                  ),
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                        ),
                                       ),
                                     ],
                                   ),
@@ -302,7 +275,10 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           ElevatedButton(
-                            onPressed: () => _showModalBottomSheet(context),
+                            onPressed: () {
+                              _addCart(context);
+                              Navigator.pop(context);
+                            },
                             style: ButtonStyle(
                               side: const MaterialStatePropertyAll(BorderSide(
                                 color: Color.fromARGB(255, 255, 255, 255),
@@ -324,7 +300,10 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                             ),
                           ),
                           ElevatedButton(
-                            onPressed: () => _buyProduct(context),
+                            onPressed: () {
+                              _addCart(context);
+                              Navigator.pop(context);
+                            },
                             style: ButtonStyle(
                               side: const MaterialStatePropertyAll(BorderSide(
                                   color: Color.fromARGB(255, 38, 95, 216),
@@ -475,7 +454,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                     ),
                   ),
                   ElevatedButton(
-                    onPressed: () => _buyProduct(context),
+                    onPressed: () => _addCart(context),
                     style: ButtonStyle(
                       side: const MaterialStatePropertyAll(BorderSide(
                           color: Color.fromARGB(255, 38, 95, 216), width: 2)),

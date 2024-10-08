@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:takopedia/model/cart_model.dart';
 import 'package:takopedia/model/sales_model.dart';
 import 'package:takopedia/services/cart_service.dart';
 
@@ -13,6 +15,12 @@ class CartPage extends StatefulWidget {
 class _CartPageState extends State<CartPage> {
   final CartService _cardService = CartService();
   final _user = FirebaseAuth.instance.currentUser;
+
+  String formatCurrency(String price) {
+    final formatter = NumberFormat.currency(locale: 'id', symbol: 'Rp ');
+    return formatter.format(int.parse(price));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,7 +41,7 @@ class _CartPageState extends State<CartPage> {
             future: _cardService.fetchSales(_user!.uid),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return CircularProgressIndicator();
+                return Center(child: CircularProgressIndicator());
               } else if (snapshot.hasError) {
                 return Center(
                     child: Text(
@@ -43,15 +51,15 @@ class _CartPageState extends State<CartPage> {
                   child: Text('cart Kosong'),
                 ); // Show error if fetching failed
               } else {
-                List<SalesModel> cartItems = snapshot.data!;
+                List<CartModel> cartItems = snapshot.data!;
 
                 return Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: ListView.builder(
                     itemCount: cartItems.length,
                     itemBuilder: (context, index) {
-                      SalesModel cartItem = cartItems[index];
-
+                      CartModel cartItem = cartItems[index];
+                      int quantity = 1;
                       return Column(
                         children: [
                           Container(
@@ -120,7 +128,9 @@ class _CartPageState extends State<CartPage> {
                                                           255, 117, 117, 117)),
                                                 ),
                                                 Text(
-                                                  'Rp. 1.599.000,00',
+                                                  formatCurrency(cartItem
+                                                      .product['price']
+                                                      .toString()),
                                                   style: TextStyle(),
                                                 ),
                                                 Container(
@@ -141,7 +151,7 @@ class _CartPageState extends State<CartPage> {
                                                         right: 8.0,
                                                         top: 4),
                                                     child: Text(
-                                                      'Ukuran : 41',
+                                                      'Ukuran : ${cartItem.size}',
                                                       style: TextStyle(),
                                                     ),
                                                   ),
@@ -181,7 +191,51 @@ class _CartPageState extends State<CartPage> {
                                                       CrossAxisAlignment.center,
                                                   children: [
                                                     GestureDetector(
-                                                      onTap: () {},
+                                                      onTap: () {
+                                                        if (quantity > 1) {
+                                                          setState(() {
+                                                            quantity--;
+                                                          });
+                                                        } else {
+                                                          showDialog(
+                                                            context: context,
+                                                            builder:
+                                                                (context) =>
+                                                                    AlertDialog(
+                                                              title: Text(
+                                                                  'Hapus??'),
+                                                              actions: [
+                                                                TextButton(
+                                                                  onPressed: () =>
+                                                                      Navigator.of(
+                                                                              context)
+                                                                          .pop(),
+                                                                  child: Text(
+                                                                      'Cancel'),
+                                                                ),
+                                                                TextButton(
+                                                                  onPressed:
+                                                                      () async {
+                                                                    await _cardService
+                                                                        .deleteProductFromCart(
+                                                                      _user.uid,
+                                                                      cartItem.product[
+                                                                          'name'],
+                                                                    );
+                                                                    setState(
+                                                                        () {}); //  buat refresh cart nya (jangan di apus ya anjeng)
+
+                                                                    Navigator.pop(
+                                                                        context);
+                                                                  },
+                                                                  child: Text(
+                                                                      'sure'),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          );
+                                                        }
+                                                      },
                                                       child: const Text(
                                                         '-',
                                                         style: TextStyle(
@@ -191,13 +245,17 @@ class _CartPageState extends State<CartPage> {
                                                       ),
                                                     ),
                                                     Text(
-                                                      '1',
+                                                      '$quantity',
                                                       style: TextStyle(
                                                           fontWeight:
                                                               FontWeight.w500),
                                                     ),
                                                     GestureDetector(
-                                                      onTap: () {},
+                                                      onTap: () {
+                                                        setState(() {
+                                                          quantity++;
+                                                        });
+                                                      },
                                                       child: const Text(
                                                         '+',
                                                         style: TextStyle(

@@ -26,7 +26,6 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
   int size = 40;
 
   Future<void> _buyProduct(BuildContext context) async {
-    log(size.toString());
     SalesModel purchasedProduct = SalesModel(
       date: DateTime.timestamp().toString(),
       userId: _user?.uid ?? "",
@@ -44,6 +43,21 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
     _cartService.addSales(purchasedProduct);
 
     // String cleanedPrice = productPrice.replaceAll(RegExp(r'[^0-9]'), '');
+  }
+
+  Future<void> _addToCart(BuildContext context) async {
+    CartModel cartItem = CartModel(
+        userId: _user?.uid ?? "",
+        product: widget.product.toMap(),
+        quantity: 1,
+        size: size.toString());
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Ditambahkan ke Cart'),
+        duration: Duration(seconds: 2),
+      ),
+    );
+    _cartService.addToCart(cartItem);
   }
 
   void _updateSize(int e) {
@@ -306,11 +320,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           ElevatedButton(
-                            onPressed: () => _cartService.addToCart(CartModel(
-                                userId: _user?.uid ?? "",
-                                product: widget.product.toMap(),
-                                quantity: 1,
-                                size: size.toString())),
+                            onPressed: () => _addToCart(context),
                             style: ButtonStyle(
                               side: const MaterialStatePropertyAll(BorderSide(
                                 color: Color.fromARGB(255, 255, 255, 255),
@@ -483,7 +493,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                     ),
                   ),
                   ElevatedButton(
-                    onPressed: () => _buyProduct(context),
+                    onPressed: () => _showModalBottomSheet(context),
                     style: ButtonStyle(
                       side: const MaterialStatePropertyAll(BorderSide(
                           color: Color.fromARGB(255, 38, 95, 216), width: 2)),

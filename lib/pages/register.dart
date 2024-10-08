@@ -3,6 +3,7 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -189,32 +190,39 @@ class _RegisterPageState extends State<RegisterPage> {
                 ),
                 const SizedBox(height: 16),
 
-                // Tombol Register
-                ElevatedButton(
-                  onPressed: () async {
-                    var localContext = context;
-                    if (_formKey.currentState!.validate()) {
-                      try {
-                        await _register();
-                        Navigator.pushReplacementNamed(localContext, '/');
-                      } catch (err) {
-                        log(err.toString());
-                        ScaffoldMessenger.of(localContext).showSnackBar(
-                            const SnackBar(
-                                content: Text("Akun sudah ter register")));
-                      }
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30.0),
-                    ),
+              // Tombol Register
+              ElevatedButton(
+                onPressed: () async {
+                  try {
+                    await _register();
+                  } on FirebaseAuthException catch (e) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text("[${e.code}] Email atau Password salah"),
+                      ),
+                    );
+                  } catch (e) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text("Email atau Password salah"),
+                      ),
+                    );
+                  }
+                  Navigator.pushReplacementNamed(context, '/');
+                },
+                style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30.0),
                   ),
-                  child: const Text('Register'),
                 ),
-                const SizedBox(height: 16),
-              ],
-            ),
+                child: const Text('Register'),
+              ),
+              const SizedBox(height: 16),
+              const Text(
+                "",
+                style: TextStyle(color: Colors.red),
+              ),
+            ],
           ),
         ),
       ),

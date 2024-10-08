@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -5,6 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:takopedia/model/user_model.dart';
+import 'package:takopedia/pages/component/style.dart';
 import 'package:takopedia/pages/forgot_password.dart';
 import 'package:takopedia/services/auth_service.dart';
 import 'package:takopedia/services/user_provider.dart';
@@ -67,11 +70,11 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  Future<void> _loginWIthGoogle() async {
-    _auth.signinWithGoogle();
-    if (!context.mounted) return;
-    Navigator.pushReplacementNamed(context, '/dashboard');
-  }
+  // Future<void> _loginWIthGoogle() async {
+  //   _auth.signinWithGoogle();
+  //   if (!context.mounted) return;
+  //   Navigator.pushReplacementNamed(context, '/dashboard');
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -88,20 +91,23 @@ class _LoginPageState extends State<LoginPage> {
           ),
 
           // Konten halaman login di atas background
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Center(
-              child: SingleChildScrollView(
+          SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    const SizedBox(
+                      height: 200,
+                    ),
                     // Logo berbentuk lingkaran
                     const CircleAvatar(
                       backgroundColor: Colors.white,
                       radius: 50,
-                      backgroundImage: AssetImage('assets/img/logo.png'),
+                      backgroundImage: AssetImage('assets/img/logo.jpg'),
                     ),
-                    const SizedBox(height: 24),
+                    const SizedBox(height: 50),
 
                     // TextField email dengan desain kapsul dan ikon email
                     SizedBox(
@@ -176,70 +182,38 @@ class _LoginPageState extends State<LoginPage> {
                     const SizedBox(height: 16),
 
                     // Tombol login dan register dalam satu row
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        ElevatedButton(
-                          onPressed: () async {
-                            try {
-                              await _login();
-                            } on FirebaseAuthException catch (e) {
-                              log(e.runtimeType.toString());
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content:
-                                      Text("Username atau Password Anda Salah"),
-                                ),
-                              );
-                            } catch (e) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text("Terjadi kesalahan di server"),
-                                ),
-                              );
-                            }
-                          },
-                          child: const Text('Login'),
-                        ),
-                        const SizedBox(width: 16),
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.pushNamed(context, '/register');
-                          },
-                          child: const Text('Register'),
-                        ),
-                      ],
+                    ElevatedButton(
+                      style: ButtonStyle(
+                        fixedSize:
+                            MaterialStateProperty.all(const Size(240, 42)),
+                        padding: MaterialStateProperty.all(
+                            const EdgeInsets.fromLTRB(0, 0, 0, 0)),
+                        backgroundColor: MaterialStateProperty.all(
+                            const Color.fromARGB(255, 50, 63, 71)),
+                        elevation: MaterialStateProperty.all(2),
+                      ),
+                      onPressed: _login,
+                      child: const Text(
+                        'Login',
+                        style: loginbuttonTextStyle,
+                      ),
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(width: 16),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/register');
+                      },
+                      child: const Text('Sign Up'),
+                    ),
 
-                    const SizedBox(height: 100),
+                    const SizedBox(height: 16),
 
                     // Login dengan sosial media
-                    const Text(
-                      "Atau login dengan",
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                    ),
-                    const SizedBox(height: 16),
-
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        GestureDetector(
-                          onTap: _loginWIthGoogle,
-                          child: const CircleAvatar(
-                            radius: 25,
-                            backgroundImage:
-                                AssetImage('assets/img/google.png'),
-                          ),
-                        ),
-                      ],
-                    ),
                   ],
                 ),
               ),
             ),
-          ),
+          )
         ],
       ),
     );

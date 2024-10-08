@@ -11,6 +11,8 @@ import 'package:takopedia/pages/add_product.dart';
 import 'package:takopedia/pages/cart.dart';
 import 'package:takopedia/pages/login.dart';
 import 'package:takopedia/pages/product_detail.dart';
+import 'package:takopedia/pages/sales_history.dart';
+import 'package:takopedia/pages/settings_page.dart';
 import 'package:takopedia/services/auth_service.dart';
 import 'package:takopedia/services/product_service.dart';
 import 'package:takopedia/services/user_provider.dart';
@@ -128,6 +130,8 @@ class _DashboardPageState extends State<DashboardPage> {
               title: const Text('Keranjang Belanja'),
               onTap: () {
                 // Tambahkan logika untuk navigasi ke halaman keranjang belanja
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => const CartPage()));
               },
             ),
             ListTile(
@@ -135,6 +139,10 @@ class _DashboardPageState extends State<DashboardPage> {
               title: const Text('Riwayat Belanja'),
               onTap: () {
                 // Tambahkan logika untuk navigasi ke halaman riwayat belanja
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const SalesHistoryPage()));
               },
             ),
             ListTile(
@@ -142,6 +150,10 @@ class _DashboardPageState extends State<DashboardPage> {
               title: const Text('Setting'),
               onTap: () {
                 // Tambahkan logika untuk navigasi ke halaman pengaturan
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const SettingsPage()));
               },
             ),
             ListTile(

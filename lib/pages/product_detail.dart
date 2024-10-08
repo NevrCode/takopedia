@@ -154,7 +154,9 @@ class ProductDetailPage extends StatelessWidget {
                         Icons.add_shopping_cart_outlined,
                         color: Color.fromARGB(255, 250, 253, 255),
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        // pe bikin cart
+                      },
                     )),
                 ElevatedButton(
                   onPressed: () => _buyProduct(context),

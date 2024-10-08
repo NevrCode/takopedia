@@ -85,7 +85,7 @@ class _DashboardPageState extends State<DashboardPage> {
     return Scaffold(
       appBar: AppBar(
         // backgroundColor: Color.fromARGB(255, 61, 118, 172),
-        backgroundColor: Color.fromARGB(255, 2, 53, 90),
+        backgroundColor: const Color.fromARGB(255, 2, 53, 90),
         iconTheme: const IconThemeData(color: Colors.white),
         title: const Text(
           'Calceus',
@@ -98,8 +98,8 @@ class _DashboardPageState extends State<DashboardPage> {
               color: Colors.white,
             ),
             onPressed: () {
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => CartPage()));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const CartPage()));
             },
           ),
         ],

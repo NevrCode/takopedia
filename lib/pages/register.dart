@@ -190,39 +190,41 @@ class _RegisterPageState extends State<RegisterPage> {
                 ),
                 const SizedBox(height: 16),
 
-              // Tombol Register
-              ElevatedButton(
-                onPressed: () async {
-                  try {
-                    await _register();
-                  } on FirebaseAuthException catch (e) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text("[${e.code}] Email atau Password salah"),
-                      ),
-                    );
-                  } catch (e) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text("Email atau Password salah"),
-                      ),
-                    );
-                  }
-                  Navigator.pushReplacementNamed(context, '/');
-                },
-                style: ElevatedButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30.0),
+                // Tombol Register
+                ElevatedButton(
+                  onPressed: () async {
+                    try {
+                      await _register();
+                    } on FirebaseAuthException catch (e) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content:
+                              Text("[${e.code}] Email atau Password salah"),
+                        ),
+                      );
+                    } catch (e) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text("Email atau Password salah"),
+                        ),
+                      );
+                    }
+                    Navigator.pushReplacementNamed(context, '/');
+                  },
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30.0),
+                    ),
                   ),
+                  child: const Text('Register'),
                 ),
-                child: const Text('Register'),
-              ),
-              const SizedBox(height: 16),
-              const Text(
-                "",
-                style: TextStyle(color: Colors.red),
-              ),
-            ],
+                const SizedBox(height: 16),
+                const Text(
+                  "",
+                  style: TextStyle(color: Colors.red),
+                ),
+              ],
+            ),
           ),
         ),
       ),

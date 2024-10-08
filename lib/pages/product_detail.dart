@@ -25,7 +25,14 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
   final User? _user = FirebaseAuth.instance.currentUser;
   int size = 40;
 
-  Future<void> _buyProduct(BuildContext context) async {
+  void _buyProduct(BuildContext context) async {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Sedang memproses pembelian...'),
+        duration: Duration(seconds: 2),
+      ),
+    );
+    log("bought");
     SalesModel purchasedProduct = SalesModel(
       date: DateTime.timestamp().toString(),
       userId: _user?.uid ?? "",
@@ -33,30 +40,24 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
       quantity: 1,
       size: size.toString(),
     ); // 1 karena baru bisa beli 1 di page ini
-    // Tampilkan pesan loading
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Sedang memproses pembelian...'),
-        duration: Duration(seconds: 2),
-      ),
-    );
-    _cartService.addSales(purchasedProduct);
+    await _cartService.addSales(purchasedProduct);
 
     // String cleanedPrice = productPrice.replaceAll(RegExp(r'[^0-9]'), '');
   }
 
-  Future<void> _addToCart(BuildContext context) async {
-    CartModel cartItem = CartModel(
-        userId: _user?.uid ?? "",
-        product: widget.product.toMap(),
-        quantity: 1,
-        size: size.toString());
+  void _addToCart(BuildContext context) async {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Ditambahkan ke Cart'),
         duration: Duration(seconds: 2),
       ),
     );
+    CartModel cartItem = CartModel(
+        userId: _user?.uid ?? "",
+        product: widget.product.toMap(),
+        quantity: 1,
+        size: size.toString());
+
     _cartService.addToCart(cartItem);
   }
 
@@ -74,6 +75,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
   }
 
   void _showModalBottomSheet(BuildContext context) {
+    int quantity = 1;
     showModalBottomSheet(
       context: context,
       isScrollControlled: true, // Allows the modal to expand if necessary
@@ -169,9 +171,11 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                                                   color: Color.fromARGB(
                                                       255, 117, 117, 117)),
                                             ),
-                                            const Text(
-                                              'Rp. 1.599.000,00',
-                                              style: TextStyle(),
+                                            Text(
+                                              formatCurrency(widget
+                                                  .product.price
+                                                  .toString()),
+                                              style: const TextStyle(),
                                             ),
                                             Container(
                                               height: 30,
@@ -222,7 +226,13 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                                                   CrossAxisAlignment.center,
                                               children: [
                                                 GestureDetector(
-                                                  onTap: () {},
+                                                  onTap: () {
+                                                    setState(() {
+                                                      if (quantity > 1) {
+                                                        quantity = quantity--;
+                                                      }
+                                                    });
+                                                  },
                                                   child: const Text(
                                                     '-',
                                                     style: TextStyle(
@@ -231,14 +241,18 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                                                         fontSize: 20),
                                                   ),
                                                 ),
-                                                const Text(
-                                                  '1',
-                                                  style: TextStyle(
+                                                Text(
+                                                  '$quantity',
+                                                  style: const TextStyle(
                                                       fontWeight:
                                                           FontWeight.w500),
                                                 ),
                                                 GestureDetector(
-                                                  onTap: () {},
+                                                  onTap: () {
+                                                    setState(() {
+                                                      quantity = quantity++;
+                                                    });
+                                                  },
                                                   child: const Text(
                                                     '+',
                                                     style: TextStyle(

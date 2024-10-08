@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:takopedia/model/cart_model.dart';
 import 'package:takopedia/pages/cart.dart';
 import 'package:takopedia/pages/component/style.dart';
 
@@ -305,7 +306,11 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           ElevatedButton(
-                            onPressed: () => _showModalBottomSheet(context),
+                            onPressed: () => _cartService.addToCart(CartModel(
+                                userId: _user?.uid ?? "",
+                                product: widget.product.toMap(),
+                                quantity: 1,
+                                size: size.toString())),
                             style: ButtonStyle(
                               side: const MaterialStatePropertyAll(BorderSide(
                                 color: Color.fromARGB(255, 255, 255, 255),

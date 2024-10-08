@@ -11,6 +11,14 @@ class CartModel {
     required this.size,
   });
 
+  factory CartModel.fromMap(Map<String, dynamic> data) {
+    return CartModel(
+      userId: data['user_id'] ?? '',
+      product: data['product'] ?? {},
+      quantity: data['quantity'] ?? 0,
+      size: data['size'] ?? 'no size',
+    );
+  }
   Map<String, dynamic> toMap() {
     return {
       'user_id': userId,

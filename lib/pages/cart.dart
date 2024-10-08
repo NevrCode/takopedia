@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:takopedia/model/cart_model.dart';
 import 'package:takopedia/model/sales_model.dart';
 import 'package:takopedia/services/cart_service.dart';
 
@@ -30,7 +31,7 @@ class _CartPageState extends State<CartPage> {
           decoration:
               const BoxDecoration(color: Color.fromARGB(255, 246, 249, 255)),
           child: FutureBuilder(
-            future: _cardService.fetchSales(_user!.uid),
+            future: _cardService.fetchCart(_user!.uid),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const CircularProgressIndicator();
@@ -43,14 +44,14 @@ class _CartPageState extends State<CartPage> {
                   child: Text('cart Kosong'),
                 ); // Show error if fetching failed
               } else {
-                List<SalesModel> cartItems = snapshot.data!;
+                List<CartModel> cartItems = snapshot.data!;
 
                 return Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: ListView.builder(
                     itemCount: cartItems.length,
                     itemBuilder: (context, index) {
-                      SalesModel cartItem = cartItems[index];
+                      CartModel cartItem = cartItems[index];
 
                       return Column(
                         children: [

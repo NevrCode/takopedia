@@ -25,7 +25,7 @@ class CartService {
           .then((value) => log("Item Added to Cart"))
           .catchError((error) => log("Failed to add product: $error"));
     } else {
-      updateQuantity(uid, name);
+      plus1Quantity(uid, name);
     }
   }
 
@@ -69,7 +69,30 @@ class CartService {
     }
   }
 
-  Future<void> updateQuantity(String uid, String name) async {
+  Future<void> min1Quantity(String uid, String name) async {
+    try {
+      QuerySnapshot qs = await _cart
+          .where('user_id', isEqualTo: uid)
+          .where('product.name', isEqualTo: name)
+          .get();
+      if (qs.docs.isEmpty) {
+        log("No documents found for this buyer ID.");
+        return;
+      }
+
+      await _cart
+          .doc(qs.docs[0].id)
+          .update({
+            'quantity': qs.docs[0]['quantity'] - 1,
+          })
+          .then((value) => log("Shoes Deleted"))
+          .catchError((e) => log(e));
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+
+  Future<void> plus1Quantity(String uid, String name) async {
     try {
       QuerySnapshot qs = await _cart
           .where('user_id', isEqualTo: uid)

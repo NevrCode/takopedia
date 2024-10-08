@@ -59,7 +59,7 @@ class _CartPageState extends State<CartPage> {
                     itemCount: cartItems.length,
                     itemBuilder: (context, index) {
                       CartModel cartItem = cartItems[index];
-                      int quantity = 1;
+
                       return Column(
                         children: [
                           Container(
@@ -191,11 +191,18 @@ class _CartPageState extends State<CartPage> {
                                                       CrossAxisAlignment.center,
                                                   children: [
                                                     GestureDetector(
-                                                      onTap: () {
-                                                        if (quantity > 1) {
-                                                          setState(() {
-                                                            quantity--;
-                                                          });
+                                                      onTap: () async {
+                                                        if (cartItem.quantity >
+                                                            1) {
+                                                          _cardService
+                                                              .min1Quantity(
+                                                            _user.uid,
+                                                            cartItem.product[
+                                                                'name'],
+                                                          );
+                                                          if (mounted) {
+                                                            setState(() {});
+                                                          }
                                                         } else {
                                                           showDialog(
                                                             context: context,
@@ -222,8 +229,10 @@ class _CartPageState extends State<CartPage> {
                                                                       cartItem.product[
                                                                           'name'],
                                                                     );
-                                                                    setState(
-                                                                        () {}); //  buat refresh cart nya (jangan di apus ya anjeng)
+                                                                    if (mounted) {
+                                                                      setState(
+                                                                          () {}); //  buat refresh cart nya (jangan di apus ya anjeng)
+                                                                    }
 
                                                                     Navigator.pop(
                                                                         context);
@@ -236,38 +245,47 @@ class _CartPageState extends State<CartPage> {
                                                           );
                                                         }
                                                       },
-                                                      child: const Text(
-                                                        '-',
-                                                        style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            fontSize: 20),
+                                                      child: Container(
+                                                        child: const Text(
+                                                          '-',
+                                                          style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              fontSize: 20),
+                                                        ),
                                                       ),
                                                     ),
                                                     Text(
-                                                      '$quantity',
+                                                      '${cartItem.quantity}',
                                                       style: TextStyle(
                                                           fontWeight:
                                                               FontWeight.w500),
                                                     ),
                                                     GestureDetector(
-                                                      onTap: () {
-                                                        setState(() {
-                                                          quantity++;
-                                                        });
+                                                      onTap: () async {
+                                                        await _cardService
+                                                            .plus1Quantity(
+                                                                _user.uid,
+                                                                cartItem.product[
+                                                                    'name']);
+                                                        setState(() {});
                                                       },
-                                                      child: const Text(
-                                                        '+',
-                                                        style: TextStyle(
-                                                            fontSize: 20,
-                                                            fontWeight:
-                                                                FontWeight.w400,
-                                                            color:
-                                                                Color.fromARGB(
-                                                                    255,
-                                                                    51,
-                                                                    51,
-                                                                    51)),
+                                                      child: Container(
+                                                        child: const Text(
+                                                          '+',
+                                                          style: TextStyle(
+                                                              fontSize: 20,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w400,
+                                                              color: Color
+                                                                  .fromARGB(
+                                                                      255,
+                                                                      51,
+                                                                      51,
+                                                                      51)),
+                                                        ),
                                                       ),
                                                     )
                                                   ],

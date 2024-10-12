@@ -20,7 +20,6 @@ class CartService {
             'product': cart.product,
             'quantity': cart.quantity,
             'user_id': cart.userId,
-            'size': cart.size,
           })
           .then((value) => log("Item Added to Cart"))
           .catchError((error) => log("Failed to add product: $error"));
@@ -65,7 +64,7 @@ class CartService {
             .catchError((e) => log(e));
       }
     } catch (e) {
-      print(e.toString());
+      log(e.toString());
     }
   }
 
@@ -138,4 +137,18 @@ class CartService {
       log(e.toString());
     }
   }
+
+  Future<int> getTotal(String uid) async {
+    var item = await fetchSales(uid);
+    var sum = 0;
+    for (var i in item) {
+      sum += int.parse(i.product['price']) * i.quantity;
+    }
+
+    return sum;
+  }
+
+  // Stream<List<CartModel>> cartStream() {
+  //   return _cart.snapshots();
+  // }
 }

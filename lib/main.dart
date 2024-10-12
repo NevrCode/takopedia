@@ -2,7 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:takopedia/firebase_options.dart';
-import 'package:takopedia/pages/dashboard.dart';
+import 'package:takopedia/pages/index.dart';
 import 'package:takopedia/pages/forgot_password.dart';
 import 'package:takopedia/pages/login.dart';
 import 'package:takopedia/pages/register.dart';
@@ -26,10 +26,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: '/',
+      initialRoute: '/login',
       routes: {
-        '/': (context) => const LoginPage(),
-        '/dashboard': (context) => const DashboardPage(),
+        '/login': (context) => const LoginPage(),
+        '/': (context) => const Index(),
         '/register': (context) => const RegisterPage(),
         '/forgot': (context) => const ForgotPasswordPage(),
       },

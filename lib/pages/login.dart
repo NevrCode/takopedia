@@ -40,7 +40,7 @@ class _LoginPageState extends State<LoginPage> {
         await fetchUserData(context);
         final userProvider = Provider.of<UserProvider>(context, listen: false);
         if (mounted) {
-          Navigator.pushReplacementNamed(context, '/dashboard');
+          Navigator.pushReplacementNamed(context, '/');
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               duration: Duration(seconds: 1),

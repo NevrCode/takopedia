@@ -1,9 +1,12 @@
+import 'dart:developer';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:takopedia/model/cart_model.dart';
 import 'package:takopedia/pages/cart.dart';
-import 'package:takopedia/pages/component/style.dart';
+import 'package:badges/badges.dart' as badges;
 
 import '../model/product_model.dart';
 import '../model/sales_model.dart';
@@ -22,26 +25,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
   final CartService _cartService = CartService();
   final User? _user = FirebaseAuth.instance.currentUser;
   int size = 40;
-
-  // Future<void> _buyProduct(BuildContext context) async {
-  //   SalesModel purchasedProduct = SalesModel(
-  //     date: DateTime.timestamp().toString(),
-  //     userId: _user?.uid ?? "",
-  //     product: widget.product.toMap(),
-  //     quantity: 1,
-  //     size: size.toString(),
-  //   ); // 1 karena baru bisa beli 1 di page ini
-  //   // Tampilkan pesan loading
-  //   ScaffoldMessenger.of(context).showSnackBar(
-  //     const SnackBar(
-  //       content: Text('Sedang memproses pembelian...'),
-  //       duration: Duration(seconds: 2),
-  //     ),
-  //   );
-  //   _cartService.addCart(purchasedProduct);
-
-  //   // String cleanedPrice = productPrice.replaceAll(RegExp(r'[^0-9]'), '');
-  // }
+  int cartItem = 0;
 
   Future<void> _addCart(BuildContext context) async {
     CartModel purchasedProduct = CartModel(
@@ -66,10 +50,9 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
     // String cleanedPrice = productPrice.replaceAll(RegExp(r'[^0-9]'), '');
   }
 
-  void _updateSize(int e) {
-    setState(() {
-      size = e;
-    });
+  @override
+  void initState() {
+    super.initState();
   }
 
   // Fungsi untuk memformat harga dengan NumberFormat yang sesuai
@@ -170,7 +153,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                                               widget.product.name,
                                               maxLines: 1,
                                               overflow: TextOverflow.ellipsis,
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   fontFamily: 'Poppins-regular',
                                                   color: Color.fromARGB(
                                                       255, 117, 117, 117)),
@@ -179,7 +162,9 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                                               height: 2,
                                             ),
                                             Text(
-                                              'Rp. 1.599.000,00',
+                                              formatCurrency(widget
+                                                  .product.price
+                                                  .toString()),
                                               style: TextStyle(),
                                             ),
                                             SizedBox(
@@ -217,7 +202,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                           ],
                         ),
                       ),
-                      Divider(
+                      const Divider(
                         thickness: 0.4,
                         height: 4,
                       ),
@@ -355,13 +340,81 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
           ),
         ),
         actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const CartPage()));
-            },
-            icon: const Icon(Icons.shopping_cart_outlined),
-          )
+          Padding(
+            padding: const EdgeInsets.only(left: 8.0),
+            child: StreamBuilder<QuerySnapshot>(
+              stream: FirebaseFirestore.instance
+                  .collection('cart')
+                  .where('user_id', isEqualTo: _user!.uid)
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return IconButton(
+                    onPressed: () {},
+                    icon: const Icon(
+                      Icons.shopping_cart_outlined,
+                      color: Color.fromARGB(255, 77, 77, 77),
+                      size: 25,
+                    ),
+                  );
+                } else if (snapshot.hasError) {
+                  return badges.Badge(
+                    badgeContent: const Text(
+                      '-',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    child: IconButton(
+                      icon: const Icon(
+                        Icons.shopping_cart_outlined,
+                        color: Color.fromARGB(255, 77, 77, 77),
+                        size: 25,
+                      ),
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => CartPage()));
+                      },
+                    ),
+                  );
+                } else if (snapshot.data!.docs.isEmpty) {
+                  return IconButton(
+                    icon: const Icon(
+                      Icons.shopping_cart_outlined,
+                      color: Color.fromARGB(255, 77, 77, 77),
+                      size: 25,
+                    ),
+                    onPressed: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => CartPage()));
+                    },
+                  );
+                } else {
+                  int itemCount = snapshot.data!.docs.length;
+                  return badges.Badge(
+                    position: badges.BadgePosition.topEnd(top: 0, end: 5),
+                    badgeContent: Text(
+                      '$itemCount',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    child: IconButton(
+                      icon: const Icon(
+                        Icons.shopping_cart_outlined,
+                        color: Color.fromARGB(255, 77, 77, 77),
+                        size: 25,
+                      ),
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => CartPage()));
+                      },
+                    ),
+                  );
+                }
+              },
+            ),
+          ),
         ],
       ),
       body: Column(

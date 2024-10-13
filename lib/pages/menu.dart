@@ -24,12 +24,13 @@ class MenuPage extends StatefulWidget {
 }
 
 class _MenuPageState extends State<MenuPage> {
+  final _locationContrller = TextEditingController();
   final _user = FirebaseAuth.instance.currentUser;
   final _productService = ProductService();
   final _product = FirebaseFirestore.instance.collection('products');
   late Future<List<ProductModel>> _productList;
   int cartItem = 0;
-
+  bool isTakeAway = false;
   int value = 0;
   bool isLoading = true;
 
@@ -59,66 +60,96 @@ class _MenuPageState extends State<MenuPage> {
                 const SizedBox(
                   height: 40,
                 ),
-                AnimatedToggleSwitch<int>.size(
-                  current: min(value, 2),
-                  style: ToggleStyle(
-                    backgroundColor: Color.fromARGB(8, 255, 255, 255),
-                    indicatorColor: const Color(0xFFEC3345),
-                    borderColor: Color.fromARGB(248, 199, 199, 199),
-                    borderRadius: BorderRadius.circular(15.0),
-                    indicatorBorderRadius: BorderRadius.zero,
+                AnimatedToggleSwitch<bool>.size(
+                  current: isTakeAway,
+                  values: const [true, false],
+                  iconOpacity: 0.2,
+                  indicatorSize: const Size.fromWidth(170),
+                  customIconBuilder: (context, local, global) => Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(local.value ? 'Take Away' : 'Delivery',
+                          style: TextStyle(
+                              fontFamily: 'Poppins-regular',
+                              color: Color.lerp(Colors.black, Colors.white,
+                                  local.animationValue))),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Icon(
+                        local.value
+                            ? Icons.directions_walk
+                            : Icons.local_shipping_rounded,
+                        color: Color.lerp(
+                            Colors.black, Colors.white, local.animationValue),
+                      ),
+                    ],
                   ),
-                  values: const [0, 1],
-                  iconOpacity: 1.0,
-                  selectedIconScale: 1.0,
-                  indicatorSize: const Size.fromWidth(165),
+                  borderWidth: 4.0,
                   iconAnimationType: AnimationType.onHover,
-                  styleAnimationType: AnimationType.onHover,
-                  spacing: 2.0,
-                  height: 40,
-                  customSeparatorBuilder: (context, local, global) {
-                    final opacity =
-                        ((global.position - local.position).abs() - 0.5)
-                            .clamp(0.0, 1.0);
-                    return VerticalDivider(
-                        indent: 10.0,
-                        endIndent: 10.0,
-                        color: Colors.white38.withOpacity(opacity));
-                  },
-                  customIconBuilder: (context, local, global) {
-                    final text = const ['Take Away', 'Delivery'][local.index];
-                    final icon = const [
-                      Icons.directions_walk,
-                      Icons.local_shipping_rounded
-                    ][local.index];
-                    return Center(
-                        child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(text,
-                            style: TextStyle(
-                                color: Color.lerp(Colors.black, Colors.white,
-                                    local.animationValue),
-                                fontFamily: 'Poppins-regular')),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Icon(
-                          icon,
-                          color: Color.lerp(
-                              Colors.black, Colors.white, local.animationValue),
-                        ),
-                      ],
-                    ));
-                  },
-                  borderWidth: 0.4,
-                  onChanged: (i) => setState(() => value = i),
+                  style: ToggleStyle(
+                    indicatorColor: Color.fromARGB(255, 252, 79, 79),
+                    borderColor: Colors.transparent,
+                    borderRadius: BorderRadius.circular(15.0),
+                    boxShadow: [
+                      const BoxShadow(
+                        color: Colors.black26,
+                        spreadRadius: 1,
+                        blurRadius: 2,
+                        offset: Offset(0, 1.5),
+                      ),
+                    ],
+                  ),
+                  selectedIconScale: 1.0,
+                  onChanged: (b) => setState(() => isTakeAway = b),
                 ),
                 SizedBox(
-                  height: 20,
+                  height: 10,
                 ),
+                isTakeAway
+                    ? SizedBox(
+                        height: 10,
+                      )
+                    : Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: SizedBox(
+                          width: 336,
+                          height: 40,
+                          child: TextField(
+                            controller: _locationContrller,
+                            decoration: InputDecoration(
+                                prefixIcon: const Icon(Icons.location_pin),
+                                contentPadding: EdgeInsets.fromLTRB(0, 8, 8, 8),
+                                filled: true,
+                                fillColor: Colors.white.withOpacity(0.8),
+                                hintText: 'Location',
+                                hintStyle: TextStyle(
+                                    fontFamily: 'Poppins-Bold', fontSize: 14),
+                                border: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color:
+                                          Color.fromARGB(255, 179, 178, 178)),
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(15),
+                                  borderSide: BorderSide(
+                                    color: Color.fromARGB(255, 136, 136, 136),
+                                  ),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(15),
+                                  borderSide: BorderSide(
+                                    color: const Color.fromARGB(
+                                        255, 185, 185, 185),
+                                  ),
+                                )),
+                          ),
+                        ),
+                      ),
+                const SizedBox(height: 16),
                 Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
                   child: Container(
                     width: 336,
                     height: 40,
@@ -138,7 +169,7 @@ class _MenuPageState extends State<MenuPage> {
                             children: [
                               Icon(Icons.store),
                               Padding(
-                                padding: const EdgeInsets.only(left: 8.0),
+                                padding: const EdgeInsets.only(left: 16.0),
                                 child: Text(
                                   'GLORIA',
                                   style: TextStyle(fontFamily: 'Poppins-bold'),
@@ -159,10 +190,6 @@ class _MenuPageState extends State<MenuPage> {
                       ],
                     ),
                   ),
-                ),
-                Text(
-                  'Deals 10.10',
-                  style: TextStyle(fontFamily: 'Poppins-regular', fontSize: 20),
                 ),
                 FutureBuilder(
                   future: _productList,
@@ -195,17 +222,38 @@ class _MenuPageState extends State<MenuPage> {
                             groupBy: (e) => e.type,
                             footer: Padding(
                               padding: const EdgeInsets.fromLTRB(8.0, 16, 8, 8),
-                              child: Text(
-                                'Sampai Sini Saja Kenangan Kita ...',
-                                style: TextStyle(
-                                    fontFamily: 'Poppins-Bold',
-                                    fontSize: 20,
-                                    color: Color.fromARGB(255, 207, 104, 104)),
+                              child: Center(
+                                child: Text(
+                                  'Sampai sini aja...',
+                                  style: TextStyle(
+                                      fontFamily: 'Poppins-Bold',
+                                      fontSize: 17,
+                                      color:
+                                          Color.fromARGB(255, 207, 104, 104)),
+                                ),
                               ),
                             ),
-                            groupSeparatorBuilder: (String val) => Padding(
-                              padding: EdgeInsets.all(8),
-                              child: Text(val),
+                            groupSeparatorBuilder: (String val) => Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.all(8),
+                                  child: Text(
+                                    val,
+                                    style: TextStyle(
+                                        fontFamily: 'Poppins-regular',
+                                        fontSize: 22),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 8.0),
+                                  child: Divider(
+                                    indent: 10,
+                                    endIndent:
+                                        MediaQuery.sizeOf(context).width - 70,
+                                  ),
+                                ),
+                              ],
                             ),
                             itemBuilder: (context, dynamic product) {
                               return GestureDetector(
@@ -255,8 +303,7 @@ class _MenuPageState extends State<MenuPage> {
                                             padding: const EdgeInsets.all(8.0),
                                             child: Column(
                                               mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
+                                                  MainAxisAlignment.start,
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
                                               children: [
@@ -269,9 +316,6 @@ class _MenuPageState extends State<MenuPage> {
                                                     fontFamily:
                                                         'Poppins-regular',
                                                   ),
-                                                ),
-                                                SizedBox(
-                                                  height: 10,
                                                 ),
                                                 Text(
                                                   formatCurrency(

@@ -1,31 +1,43 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class CartModel {
+  String productId;
   String userId;
   Map<String, dynamic> product;
   int quantity;
   String size;
+  String ice;
+  String sugar;
 
-  CartModel({
-    required this.userId,
-    required this.product,
-    required this.quantity,
-    required this.size,
-  });
+  CartModel(
+      {required this.productId,
+      required this.userId,
+      required this.product,
+      required this.quantity,
+      required this.size,
+      required this.ice,
+      required this.sugar});
 
-  Map<String, dynamic> toMap() {
-    return {
-      'user_id': userId,
-      'product': product,
-      'quantity': quantity,
-      'size': size,
-    };
-  }
+  // Map<String, dynamic> toMap() {
+  //   return {
+  //     'uid': userId,
+  //     'product': product,
+  //     'quantity': quantity,
+  //     'size': size,
+  //     'ice': ice,
+  //     'sugar': sugar,
+  //   };
+  // }
 
-  factory CartModel.fromMap(Map<String, dynamic> data) {
+  factory CartModel.fromDocument(DocumentSnapshot doc) {
     return CartModel(
-      userId: data['user_id'] ?? '',
-      product: data['product'] ?? {},
-      quantity: data['quantity'] ?? 0,
-      size: data['size'] ?? 'no size',
+      productId: doc.id,
+      userId: doc['uid'] ?? '',
+      product: doc['product'] ?? {},
+      quantity: doc['quantity'] ?? 0,
+      size: doc['size'] ?? 'regular',
+      ice: doc['ice'] ?? 'normal',
+      sugar: doc['sugar'] ?? 'normal',
     );
   }
 }

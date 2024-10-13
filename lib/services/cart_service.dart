@@ -11,7 +11,7 @@ class CartService {
 
   Future<void> addCart(CartModel cart, uid, name) async {
     QuerySnapshot qs = await _cart
-        .where('user_id', isEqualTo: uid)
+        .where('uid', isEqualTo: uid)
         .where('product.name', isEqualTo: name)
         .get();
     if (qs.docs.isEmpty) {
@@ -19,7 +19,10 @@ class CartService {
           .add({
             'product': cart.product,
             'quantity': cart.quantity,
-            'user_id': cart.userId,
+            'uid': cart.userId,
+            'size': cart.size,
+            'ice': cart.ice,
+            'sugar': cart.sugar,
           })
           .then((value) => log("Item Added to Cart"))
           .catchError((error) => log("Failed to add product: $error"));
@@ -33,7 +36,7 @@ class CartService {
       QuerySnapshot snapshot = await _cart.get();
       List<CartModel> cartItem = [];
       final cartData = snapshot.docs.map((doc) {
-        return CartModel.fromMap(doc.data() as Map<String, dynamic>);
+        return CartModel.fromDocument(doc);
       }).toList();
 
       for (var element in cartData) {
@@ -71,7 +74,7 @@ class CartService {
   Future<void> min1Quantity(String uid, String name) async {
     try {
       QuerySnapshot qs = await _cart
-          .where('user_id', isEqualTo: uid)
+          .where('uid', isEqualTo: uid)
           .where('product.name', isEqualTo: name)
           .get();
       if (qs.docs.isEmpty) {
@@ -94,7 +97,7 @@ class CartService {
   Future<void> plus1Quantity(String uid, String name) async {
     try {
       QuerySnapshot qs = await _cart
-          .where('user_id', isEqualTo: uid)
+          .where('uid', isEqualTo: uid)
           .where('product.name', isEqualTo: name)
           .get();
       if (qs.docs.isEmpty) {
@@ -117,7 +120,7 @@ class CartService {
   Future<void> deleteProductFromCart(String uid, String name) async {
     try {
       QuerySnapshot qs = await _cart
-          .where('user_id', isEqualTo: uid)
+          .where('uid', isEqualTo: uid)
           .where('product.name', isEqualTo: name)
           .get();
       if (qs.docs.isEmpty) {
@@ -140,12 +143,13 @@ class CartService {
 
   Future<int> getTotal(String uid) async {
     var item = await fetchSales(uid);
-    var sum = 0;
+    int jml = 0;
     for (var i in item) {
-      sum += int.parse(i.product['price']) * i.quantity;
+      int x = i.product['price'];
+      jml += x * i.quantity;
     }
 
-    return sum;
+    return jml;
   }
 
   // Stream<List<CartModel>> cartStream() {

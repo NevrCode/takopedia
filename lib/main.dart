@@ -6,16 +6,25 @@ import 'package:takopedia/pages/index.dart';
 import 'package:takopedia/pages/forgot_password.dart';
 import 'package:takopedia/pages/login.dart';
 import 'package:takopedia/pages/register.dart';
+import 'package:takopedia/services/cart_provider.dart';
+import 'package:takopedia/services/product_provider.dart';
 import 'package:takopedia/services/user_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
-  runApp(ChangeNotifierProvider(
-    create: (create) => UserProvider(),
-    child: const MyApp(),
-  ));
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => CartProvider()),
+        ChangeNotifierProvider(create: (context) => UserProvider()),
+        ChangeNotifierProvider(create: (context) => ProductProvider()),
+        // Add more providers here
+      ],
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -25,6 +34,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData.from(
+          colorScheme: ColorScheme.fromSeed(
+              seedColor: Color.fromARGB(255, 253, 248, 248))),
       debugShowCheckedModeBanner: false,
       initialRoute: '/login',
       routes: {

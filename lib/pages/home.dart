@@ -1,20 +1,20 @@
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:grouped_list/sliver_grouped_list.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:takopedia/pages/product_detail.dart';
-import 'package:takopedia/services/auth_service.dart';
+import 'package:takopedia/services/product_provider.dart';
 
 import '../model/product_model.dart';
-import '../services/cart_service.dart';
 import '../services/product_service.dart';
-import 'component/style.dart';
+import '../services/user_provider.dart';
 
 final List<String> imgList = [
-  'assets/img/dunkbrown.jpg',
-  'assets/img/excee-carousel.jpg',
-  'assets/img/ultraboost.jpg',
-  'assets/img/max99.jpg',
+  'assets/img/caro1.jpg',
+  'assets/img/caro2.jpg',
+  'assets/img/caro3.jpg',
+  'assets/img/caro4.jpg',
 ];
 
 class HomePage extends StatefulWidget {
@@ -25,13 +25,11 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final _user = FirebaseAuth.instance.currentUser;
   final _productService = ProductService();
-  final _cart = CartService();
-  final _auth = AuthService();
   late Future<List<ProductModel>> _productList;
   int cartItem = 0;
   bool isLoading = true;
+  bool isTakeAway = false;
 
   final List<Widget> carouselItem = imgList
       .map((item) => Container(
@@ -79,67 +77,235 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Container(
-        color: const Color.fromARGB(255, 255, 251, 251),
-        child: Column(
-          children: [
-            SizedBox(
-              width: MediaQuery.sizeOf(context).width,
-              child: const Expanded(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 14.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        children: [
-                          SizedBox(
-                            height: 60,
-                            width: 170,
-                            child: Card(
-                              color: Color.fromARGB(255, 238, 250, 238),
-                              elevation: 0.2,
-                              child: Icon(
-                                Icons.shopping_bag_outlined,
-                                size: 23,
-                                color: Color.fromARGB(255, 77, 192, 81),
-                              ),
-                            ),
-                          ),
-                          Text(
-                            "Style",
-                            style: drawerTextStyle,
-                          )
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          SizedBox(
-                            height: 60,
-                            width: 170,
-                            child: Card(
-                              color: Color.fromARGB(255, 245, 238, 250),
-                              elevation: 0.2,
-                              child: Icon(
-                                Icons.fitness_center_outlined,
-                                size: 23,
-                                color: Color.fromARGB(255, 161, 82, 236),
-                              ),
-                            ),
-                          ),
-                          Text(
-                            "Gym",
-                            style: drawerTextStyle,
-                          )
-                        ],
-                      )
-                    ],
-                  ),
+    Provider.of<ProductProvider>(context).fetchProductList();
+    var userProvider = context.watch<UserProvider>();
+    var products = context.watch<ProductProvider>().product;
+    return Container(
+      decoration:
+          const BoxDecoration(color: Color.fromARGB(255, 255, 251, 251)),
+      child: SingleChildScrollView(
+        child: SafeArea(
+          child: Stack(
+            children: [
+              CarouselSlider(
+                items: carouselItem,
+                options: CarouselOptions(
+                  autoPlay: true,
+                  aspectRatio: 1.5 / 1,
+                  viewportFraction: 1,
                 ),
               ),
-            ),
-          ],
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const SizedBox(
+                      height: 220,
+                    ),
+                    Padding(
+                      padding:
+                          const EdgeInsets.only(left: 8, right: 8, bottom: 8),
+                      child: Container(
+                        width: 336,
+                        height: 50,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(15),
+                          border: Border.all(
+                            color: const Color.fromARGB(255, 199, 199, 199),
+                          ),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 8),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(left: 16.0),
+                                child: Text(
+                                  'Hi, ${userProvider.user!.nama}',
+                                  style: const TextStyle(
+                                      fontFamily: 'Poppins-bold', fontSize: 18),
+                                ),
+                              ),
+                              const Padding(
+                                padding: EdgeInsets.only(right: 16.0),
+                                child: Icon(
+                                  Icons.person,
+                                  color: Color.fromARGB(255, 34, 34, 34),
+                                  size: 32,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    const Padding(
+                        padding: EdgeInsets.only(left: 8, right: 8, bottom: 8),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              height: 70,
+                              width: 360,
+                              child: Text(
+                                "Selamat datang, mari kita mulai dengan cinta",
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontFamily: 'Poppins-bold',
+                                  fontSize: 18,
+                                  color: Color.fromARGB(255, 255, 100, 100),
+                                ),
+                                maxLines: 2,
+                              ),
+                            ),
+                          ],
+                        )),
+                    products.isEmpty
+                        ? Center(child: Text('No products available'))
+                        : CustomScrollView(
+                            physics: const NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            slivers: [
+                              SliverGroupedListView(
+                                // physics: const NeverScrollableScrollPhysics(),
+                                // shrinkWrap: true,
+                                // floatingHeader: true,
+                                // useStickyGroupSeparators: true,
+                                elements: products,
+                                groupBy: (e) => e.type ?? 'Unknown',
+                                footer: const Padding(
+                                  padding: EdgeInsets.fromLTRB(8.0, 16, 8, 8),
+                                  child: Center(
+                                    child: Text(
+                                      'Sampai sini aja...',
+                                      style: TextStyle(
+                                          fontFamily: 'Poppins-Bold',
+                                          fontSize: 17,
+                                          color: Color.fromARGB(
+                                              255, 207, 104, 104)),
+                                    ),
+                                  ),
+                                ),
+                                groupSeparatorBuilder: (String val) => Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(8),
+                                      child: Text(
+                                        val,
+                                        style: const TextStyle(
+                                            fontFamily: 'Poppins-regular',
+                                            fontSize: 22),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 8.0),
+                                      child: Divider(
+                                        indent: 10,
+                                        endIndent:
+                                            MediaQuery.sizeOf(context).width -
+                                                70,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                itemBuilder: (context, dynamic product) {
+                                  return GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  ProductDetailPage(
+                                                      product: product)));
+                                    },
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      child: Card(
+                                        elevation: 0.3,
+                                        child: Container(
+                                          height: 100,
+                                          decoration: const BoxDecoration(
+                                              color: Colors.white),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              // Display item image
+                                              ClipRRect(
+                                                borderRadius:
+                                                    const BorderRadius.only(
+                                                        topLeft:
+                                                            Radius.circular(10),
+                                                        bottomLeft:
+                                                            Radius.circular(
+                                                                10)),
+                                                child: AspectRatio(
+                                                  aspectRatio: 1,
+                                                  child: Image.network(
+                                                    product.picURL,
+                                                    fit: BoxFit.cover,
+                                                    width: double.infinity,
+                                                    // Adjust the height as needed
+                                                  ),
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      product.name,
+                                                      maxLines: 2,
+                                                      style: const TextStyle(
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontFamily:
+                                                            'Poppins-regular',
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      formatCurrency(product
+                                                          .price
+                                                          .toString()),
+                                                      style: const TextStyle(
+                                                          color: Color.fromARGB(
+                                                              255,
+                                                              114,
+                                                              114,
+                                                              114)),
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -10,6 +10,7 @@ import 'package:takopedia/model/user_model.dart';
 import 'package:takopedia/pages/component/style.dart';
 import 'package:takopedia/pages/forgot_password.dart';
 import 'package:takopedia/services/auth_service.dart';
+import 'package:takopedia/services/product_provider.dart';
 import 'package:takopedia/services/user_provider.dart';
 
 class LoginPage extends StatefulWidget {
@@ -39,6 +40,9 @@ class _LoginPageState extends State<LoginPage> {
       if (user != null && mounted) {
         await fetchUserData(context);
         final userProvider = Provider.of<UserProvider>(context, listen: false);
+        final productProvider =
+            Provider.of<ProductProvider>(context, listen: false)
+                .fetchProductList();
         if (mounted) {
           Navigator.pushReplacementNamed(context, '/');
           ScaffoldMessenger.of(context).showSnackBar(
@@ -94,12 +98,6 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  // Future<void> _loginWIthGoogle() async {
-  //   _auth.signinWithGoogle();
-  //   if (!context.mounted) return;
-  //   Navigator.pushReplacementNamed(context, '/dashboard');
-  // }
-
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
@@ -107,7 +105,7 @@ class _LoginPageState extends State<LoginPage> {
 
     return Scaffold(
       body: _isLoading
-          ? Center(
+          ? const Center(
               child: CircularProgressIndicator(),
             )
           : Stack(

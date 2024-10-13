@@ -1,20 +1,19 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 import 'package:takopedia/model/cart_model.dart';
+import 'package:takopedia/model/sales_model.dart';
 import 'package:takopedia/pages/payment.dart';
-import 'package:takopedia/services/cart_provider.dart';
 import 'package:takopedia/services/cart_service.dart';
 
-class CartPage extends StatefulWidget {
-  const CartPage({super.key});
+class OrderListPage extends StatefulWidget {
+  const OrderListPage({super.key});
 
   @override
-  State<CartPage> createState() => _CartPageState();
+  State<OrderListPage> createState() => _OrderListPageState();
 }
 
-class _CartPageState extends State<CartPage> {
+class _OrderListPageState extends State<OrderListPage> {
   final CartService _cardService = CartService();
   final _user = FirebaseAuth.instance.currentUser;
   bool isEmpty = false;
@@ -27,7 +26,7 @@ class _CartPageState extends State<CartPage> {
   @override
   void initState() {
     super.initState();
-    Provider.of<CartProvider>(context, listen: false).fetchCartItem(_user!.uid);
+    getTotal();
   }
 
   void getTotal() async {
@@ -36,63 +35,57 @@ class _CartPageState extends State<CartPage> {
 
   @override
   Widget build(BuildContext context) {
-    final cartItems = Provider.of<CartProvider>(context).cartItems;
-    // final cartItems = cartProvider.cartItems;
-    return Scaffold(
-      appBar: AppBar(
-        leading: GestureDetector(
-            onTap: () => Navigator.pop(context),
-            child: const Icon(
-              Icons.arrow_back_ios_new_outlined,
-              size: 17,
-            )),
-        elevation: 1,
-        surfaceTintColor: const Color.fromARGB(255, 202, 202, 202),
-        shadowColor: Color.fromARGB(255, 223, 223, 223),
-        title: Center(
-          child: const Text(
-            'Cart',
-            style: TextStyle(
-              color: Color.fromARGB(255, 255, 79, 79),
-              fontFamily: 'Poppins-Bold',
-              fontSize: 16,
+    return SafeArea(
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            Container(
+              height: 50,
+              decoration: BoxDecoration(
+                  border: BorderDirectional(
+                      bottom: BorderSide(
+                          color: const Color.fromARGB(255, 156, 156, 156)))),
+              child: Center(
+                child: Text(
+                  'Order List',
+                  style: TextStyle(
+                      color: Colors.red,
+                      fontFamily: "Poppins-bold",
+                      fontSize: 16),
+                ),
+              ),
             ),
-          ),
-        ),
-        actions: const [
-          Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Icon(
-              Icons.list,
-              size: 30,
-            ),
-          )
-        ],
-      ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              cartItems.isEmpty
-                  ? Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Center(
-                          child: Padding(
-                            padding: EdgeInsets.only(top: 80.0),
-                            child: Text(
-                              'Cart kosong, belanja dulu yuk..',
-                              style: TextStyle(
-                                  color: Color.fromARGB(255, 155, 155, 155),
-                                  fontFamily: 'Poppins-regular',
-                                  fontSize: 20),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(10, 20, 10, 10),
+              child: FutureBuilder(
+                future: _cardService.fetchSales(_user!.uid),
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    return Center(
+                        child: Text(
+                            'Error: ${snapshot.error}')); // Show error if fetching failed
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    isEmpty = true;
+                    return SizedBox(
+                      width: MediaQuery.sizeOf(context).width,
+                      height: MediaQuery.sizeOf(context).height - 390,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(10, 20, 10, 10),
+                            child: Center(
+                              child: Text(
+                                'Cart kosong, belanja dulu yuk..',
+                                style: TextStyle(
+                                    color: Color.fromARGB(255, 155, 155, 155),
+                                    fontFamily: 'Poppins-regular',
+                                    fontSize: 20),
+                              ),
                             ),
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(8, 80.0, 8, 8),
-                          child: ElevatedButton(
+                          ElevatedButton(
                             onPressed: () =>
                                 Navigator.pushReplacementNamed(context, '/'),
                             style: ButtonStyle(
@@ -114,11 +107,14 @@ class _CartPageState extends State<CartPage> {
                                   fontFamily: 'Poppins-Bold'),
                             ),
                           ),
-                        ),
-                      ],
-                    )
-                  : Padding(
-                      padding: const EdgeInsets.all(10.0),
+                        ],
+                      ),
+                    ); // Show error if fetching failed
+                  } else {
+                    List<CartModel> cartItems = snapshot.data!;
+
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10.0),
                       child: ListView.builder(
                         physics: NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
@@ -155,8 +151,8 @@ class _CartPageState extends State<CartPage> {
                                                         Radius.circular(6)),
                                             child: Container(
                                               decoration: BoxDecoration(
-                                                boxShadow: const [
-                                                  BoxShadow(
+                                                boxShadow: [
+                                                  const BoxShadow(
                                                       offset: Offset(0.1, 0.1),
                                                       blurRadius: 1)
                                                 ],
@@ -272,7 +268,7 @@ class _CartPageState extends State<CartPage> {
                                                                 1) {
                                                               _cardService
                                                                   .min1Quantity(
-                                                                _user!.uid,
+                                                                _user.uid,
                                                                 cartItem.product[
                                                                     'name'],
                                                               );
@@ -287,7 +283,21 @@ class _CartPageState extends State<CartPage> {
                                                                     (context) =>
                                                                         AlertDialog(
                                                                   title: Text(
-                                                                      'Hapus??'),
+                                                                      'Hapus'),
+                                                                  content: Text(
+                                                                      'Ap'),
+                                                                  backgroundColor:
+                                                                      Color.fromARGB(
+                                                                          255,
+                                                                          255,
+                                                                          255,
+                                                                          255),
+                                                                  surfaceTintColor:
+                                                                      Color.fromARGB(
+                                                                          255,
+                                                                          179,
+                                                                          179,
+                                                                          179),
                                                                   actions: [
                                                                     TextButton(
                                                                       onPressed:
@@ -301,7 +311,7 @@ class _CartPageState extends State<CartPage> {
                                                                           () async {
                                                                         await _cardService
                                                                             .deleteProductFromCart(
-                                                                          _user!
+                                                                          _user
                                                                               .uid,
                                                                           cartItem
                                                                               .product['name'],
@@ -342,7 +352,7 @@ class _CartPageState extends State<CartPage> {
                                                           onTap: () async {
                                                             await _cardService
                                                                 .plus1Quantity(
-                                                                    _user!.uid,
+                                                                    _user.uid,
                                                                     cartItem.product[
                                                                         'name']);
                                                             if (mounted) {
@@ -379,167 +389,25 @@ class _CartPageState extends State<CartPage> {
                           );
                         },
                       ),
-                    ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  height: 200,
-                  decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 255, 250, 250),
-                    border: Border(),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
+                    );
+                  }
+                },
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                height: 200,
+                decoration: BoxDecoration(
+                  color: const Color.fromARGB(255, 255, 250, 250),
+                  border: Border(),
+                  borderRadius: BorderRadius.circular(10),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
-      bottomSheet: isEmpty
-          ? SizedBox()
-          : BottomSheet(
-              elevation: 1,
-              enableDrag: false,
-              shadowColor: Colors.black12,
-              shape: Border.all(
-                  width: 0, color: Color.fromARGB(255, 255, 254, 254)),
-              backgroundColor: Color.fromARGB(255, 255, 251, 251),
-              builder: (BuildContext context) {
-                return Padding(
-                  padding: const EdgeInsets.only(
-                    top: 13.0,
-                    left: 8,
-                    bottom: 8,
-                    right: 8,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const PaymentPage())),
-                        style: ButtonStyle(
-                          shape: MaterialStatePropertyAll(
-                              RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(25))),
-                          fixedSize:
-                              MaterialStateProperty.all(const Size(290, 52)),
-                          padding: MaterialStateProperty.all(
-                              const EdgeInsets.fromLTRB(0, 0, 0, 0)),
-                          backgroundColor: MaterialStateProperty.all(
-                              Color.fromARGB(255, 247, 108, 108)),
-                          elevation: MaterialStateProperty.all(3),
-                        ),
-                        child: const Text(
-                          'Check Out',
-                          style: TextStyle(
-                              color: Color.fromARGB(255, 255, 246, 246),
-                              fontFamily: 'Poppins-Bold'),
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              },
-              onClosing: () {},
-            ),
-    );
-  }
-
-  void _showDeliveryOption(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true, // Allows the modal to expand if necessary
-      builder: (context) {
-        // Use StatefulBuilder to have access to setState inside the modal
-        return StatefulBuilder(
-          builder: (BuildContext context, StateSetter modalSetState) {
-            return Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(5),
-                color: const Color.fromARGB(255, 252, 254, 255),
-              ),
-              height: 300, // Set a fixed height for the bottom sheet
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: const Text(
-                      'Delivery Option',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontFamily: 'Poppins',
-                      ),
-                      textAlign: TextAlign.start,
-                    ),
-                  ),
-                  const Divider(height: 0.3),
-                  Column(
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            content: Text('Jangan Telat yaa  <3'),
-                            backgroundColor:
-                                const Color.fromARGB(255, 55, 129, 58),
-                            duration: Duration(seconds: 1),
-                          ));
-                          Navigator.pop(context);
-                        },
-                        child: Padding(
-                          padding: EdgeInsets.all(8),
-                          child: Text(
-                            'Ambil Sendiri Jangan Malas',
-                            style: TextStyle(
-                              fontFamily: 'Poppins-regular',
-                              fontSize: 20,
-                            ),
-                            textAlign: TextAlign.start,
-                          ),
-                        ),
-                      ),
-                      Divider(
-                        thickness: 0.5,
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            content: Text('Makasih Banyak <3'),
-                            backgroundColor:
-                                const Color.fromARGB(255, 55, 129, 58),
-                            duration: Duration(seconds: 1),
-                          ));
-                          Navigator.pop(context);
-                        },
-                        child: Padding(
-                          padding: EdgeInsets.all(8),
-                          child: Text(
-                            'Kasih Ke Admin <3',
-                            style: TextStyle(
-                              fontFamily: 'Poppins-regular',
-                              fontSize: 20,
-                            ),
-                            textAlign: TextAlign.start,
-                          ),
-                        ),
-                      ),
-                      Divider(
-                        thickness: 0.5,
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 40,
-                  ),
-                ],
-              ),
-            );
-          },
-        );
-      },
     );
   }
 }

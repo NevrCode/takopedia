@@ -42,7 +42,7 @@ class ProductService {
     try {
       QuerySnapshot snapshot = await _products.get();
       return snapshot.docs.map((doc) {
-        return ProductModel.fromMap(doc.data() as Map<String, dynamic>);
+        return ProductModel.fromDocument(doc);
       }).toList();
     } catch (e) {
       log("Error : $e");

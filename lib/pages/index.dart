@@ -6,10 +6,13 @@ import 'package:provider/provider.dart';
 import 'package:takopedia/pages/add_product.dart';
 import 'package:takopedia/pages/cart.dart';
 import 'package:takopedia/pages/component/style.dart';
+import 'package:takopedia/pages/forgot_password.dart';
 import 'package:takopedia/pages/home.dart';
 
 import 'package:takopedia/pages/menu.dart';
+import 'package:takopedia/pages/order_list.dart';
 import 'package:takopedia/services/auth_service.dart';
+import 'package:takopedia/services/product_provider.dart';
 import 'package:takopedia/services/user_provider.dart';
 
 class Index extends StatefulWidget {
@@ -30,7 +33,12 @@ class _IndexState extends State<Index> with SingleTickerProviderStateMixin {
     setState(() {});
   }
 
-  PageController pageController = PageController();
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  late PageController pageController;
 
   String formatCurrency(String price) {
     final formatter = NumberFormat.currency(locale: 'id', symbol: 'Rp ');
@@ -40,6 +48,8 @@ class _IndexState extends State<Index> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     final userProvider = Provider.of<UserProvider>(context).user;
+
+    pageController = PageController(initialPage: 1);
     return Scaffold(
       bottomNavigationBar: CircleNavBar(
         activeIcons: const [
@@ -62,7 +72,7 @@ class _IndexState extends State<Index> with SingleTickerProviderStateMixin {
             style: TextStyle(color: Colors.white, fontFamily: 'Poppins-Bold'),
           ),
         ],
-        color: const Color.fromARGB(255, 214, 52, 52),
+        color: Color.fromARGB(255, 252, 79, 79),
         height: 70,
         circleWidth: 70,
         activeIndex: tabIndex,
@@ -152,23 +162,26 @@ class _IndexState extends State<Index> with SingleTickerProviderStateMixin {
           ],
         ),
       ),
-      body: PageView(
-        controller: pageController,
-        onPageChanged: (v) {
-          tabIndex = v;
-        },
-        children: [
-          const MenuPage(),
-          const HomePage(),
-          Container(
-            width: double.infinity,
-            height: double.infinity,
-            color: const Color.fromARGB(255, 255, 251, 251),
-            child: const Center(
-              child: Text('Order'),
+      body: SafeArea(
+        child: PageView(
+          controller: pageController,
+          onPageChanged: (v) {
+            setState(() {
+              tabIndex = v;
+            });
+          },
+          children: const [
+            MenuPage(
+              key: Key('measdafdfnu'),
             ),
-          ),
-        ],
+            HomePage(
+              key: Key('hoadfadfafme'),
+            ),
+            OrderListPage(
+              key: Key('orddfafasdsder'),
+            ),
+          ],
+        ),
       ),
     );
   }

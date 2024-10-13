@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:animated_toggle_switch/animated_toggle_switch.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -21,18 +22,25 @@ class ProductDetailPage extends StatefulWidget {
 }
 
 class _ProductDetailPageState extends State<ProductDetailPage> {
-  final nomorSepatu = [36, 37, 38, 39, 40, 41, 42, 43, 44, 45];
   final CartService _cartService = CartService();
   final User? _user = FirebaseAuth.instance.currentUser;
-  int size = 40;
   int cartItem = 0;
+  int value = 0;
+  bool loading = false;
+  int? nullableValue;
+  bool size = false;
+  bool ice = true;
+  bool sugar = true;
 
   Future<void> _addCart(BuildContext context) async {
     CartModel purchasedProduct = CartModel(
+      productId: "",
       userId: _user?.uid ?? "",
       product: widget.product.toMap(),
       quantity: 1,
-      size: size.toString(),
+      size: size ? 'Regular' : 'Large',
+      ice: ice ? 'Normal' : 'Less',
+      sugar: sugar ? 'Normal' : 'Less',
     ); // 1 karena baru bisa beli 1 di page ini
     // Tampilkan pesan loading
     ScaffoldMessenger.of(context).showSnackBar(
@@ -75,7 +83,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                 borderRadius: BorderRadius.circular(5),
                 color: const Color.fromARGB(255, 252, 254, 255),
               ),
-              height: 500, // Set a fixed height for the bottom sheet
+              height: 700, // Set a fixed height for the bottom sheet
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -87,9 +95,10 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                           onPressed: () => Navigator.pop(context),
                           icon: const Icon(Icons.arrow_back_ios),
                         ),
-                        const Text('Shoes Size',
-                            style:
-                                TextStyle(fontSize: 18, fontFamily: 'Poppins')),
+                        const Text(
+                          'Shoes Size',
+                          style: TextStyle(fontSize: 18, fontFamily: 'Poppins'),
+                        ),
                       ],
                     ),
                   ),
@@ -184,7 +193,6 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                                                     top: 4),
                                                 child: Text(
                                                   'Ukuran : $size',
-                                                  style: TextStyle(),
                                                 ),
                                               ),
                                             ),
@@ -207,43 +215,6 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                         height: 4,
                       ),
                     ],
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Wrap(
-                      children: nomorSepatu.map((e) {
-                        return GestureDetector(
-                          onTap: () {
-                            modalSetState(() {
-                              size = e;
-                            });
-                          },
-                          child: Container(
-                            width: 60,
-                            height: 40,
-                            margin: const EdgeInsets.symmetric(
-                                horizontal: 6, vertical: 6),
-                            decoration: BoxDecoration(
-                              color: size == e
-                                  ? Color.fromARGB(255, 209, 209, 209)
-                                  : const Color.fromARGB(255, 235, 235, 235),
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: Center(
-                              child: Text(
-                                e.toString(),
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: size == e
-                                      ? const Color.fromARGB(255, 73, 73, 73)
-                                      : const Color.fromARGB(255, 80, 80, 80),
-                                ),
-                              ),
-                            ),
-                          ),
-                        );
-                      }).toList(),
-                    ),
                   ),
                   const SizedBox(
                     height: 40,
@@ -333,10 +304,13 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
       backgroundColor: const Color.fromARGB(255, 255, 255, 255),
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-        title: const Text(
-          'Product Detail',
-          style: TextStyle(
-            fontFamily: 'Poppins-regular',
+        title: Center(
+          child: const Text(
+            'Product Detail',
+            style: TextStyle(
+                color: Color.fromARGB(255, 37, 37, 37),
+                fontFamily: 'Poppins-bold',
+                fontSize: 16),
           ),
         ),
         actions: [
@@ -345,7 +319,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
             child: StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
                   .collection('cart')
-                  .where('user_id', isEqualTo: _user!.uid)
+                  .where('uid', isEqualTo: _user!.uid)
                   .snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
@@ -407,7 +381,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => CartPage()));
+                                builder: (context) => const CartPage()));
                       },
                     ),
                   );
@@ -422,6 +396,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
           Expanded(
             child: SingleChildScrollView(
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Center(
                     child: Image.network(
@@ -467,7 +442,147 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                             color: Colors.black54,
                           ),
                         ),
-                        const SizedBox(height: 30),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(20.0, 10, 10, 20.0),
+                    child: AnimatedToggleSwitch<bool>.size(
+                      current: size,
+                      values: const [true, false],
+                      iconOpacity: 0.2,
+                      indicatorSize: Size.fromWidth(
+                          MediaQuery.sizeOf(context).width - 220),
+                      customIconBuilder: (context, local, global) => Text(
+                          local.value ? 'Regular' : 'Large',
+                          style: TextStyle(
+                              fontFamily: "Poppins-regular",
+                              color: Color.lerp(Colors.black, Colors.white,
+                                  local.animationValue))),
+                      borderWidth: 4.0,
+                      iconAnimationType: AnimationType.onHover,
+                      style: ToggleStyle(
+                        indicatorColor: Color.fromARGB(255, 255, 87, 87),
+                        borderColor: Colors.transparent,
+                        borderRadius: BorderRadius.circular(20.0),
+                        boxShadow: [
+                          const BoxShadow(
+                            color: Colors.black26,
+                            spreadRadius: 1,
+                            blurRadius: 2,
+                            offset: Offset(0, 1.5),
+                          ),
+                        ],
+                      ),
+                      selectedIconScale: 1.0,
+                      onChanged: (b) => setState(() => size = b),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(20.0, 10, 10, 30.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(left: 1.0),
+                              child: Text(
+                                'Ice',
+                                style: TextStyle(
+                                    color: Color.fromARGB(255, 155, 155, 155),
+                                    fontFamily: 'Poppins-regular',
+                                    fontSize: 20),
+                              ),
+                            ),
+                            AnimatedToggleSwitch<bool>.size(
+                              current: ice,
+                              values: const [false, true],
+                              iconOpacity: 0.2,
+                              indicatorSize: Size.fromWidth(70),
+                              customIconBuilder: (context, local, global) =>
+                                  Text(local.value ? 'Normal' : 'Less',
+                                      style: TextStyle(
+                                          fontFamily: "Poppins-regular",
+                                          color: Color.lerp(
+                                              Colors.black,
+                                              Colors.white,
+                                              local.animationValue))),
+                              borderWidth: 4.0,
+                              iconAnimationType: AnimationType.onHover,
+                              style: ToggleStyle(
+                                indicatorColor:
+                                    Color.fromARGB(255, 255, 87, 87),
+                                borderColor: Colors.transparent,
+                                borderRadius: BorderRadius.circular(15.0),
+                                boxShadow: [
+                                  const BoxShadow(
+                                    color: Colors.black26,
+                                    spreadRadius: 1,
+                                    blurRadius: 2,
+                                    offset: Offset(0, 1.5),
+                                  ),
+                                ],
+                              ),
+                              selectedIconScale: 1.0,
+                              onChanged: (b) => setState(() => ice = b),
+                            ),
+                          ],
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(left: 1.0),
+                                child: Text(
+                                  'Sugar',
+                                  style: TextStyle(
+                                      color: Color.fromARGB(255, 155, 155, 155),
+                                      fontFamily: 'Poppins-regular',
+                                      fontSize: 20),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 18.0),
+                                child: AnimatedToggleSwitch<bool>.size(
+                                  current: sugar,
+                                  values: const [false, true],
+                                  iconOpacity: 0.2,
+                                  indicatorSize: Size.fromWidth(70),
+                                  customIconBuilder: (context, local, global) =>
+                                      Text(local.value ? 'Normal' : 'Less',
+                                          style: TextStyle(
+                                              fontFamily: "Poppins-regular",
+                                              color: Color.lerp(
+                                                  Colors.black,
+                                                  Colors.white,
+                                                  local.animationValue))),
+                                  borderWidth: 4.0,
+                                  iconAnimationType: AnimationType.onHover,
+                                  style: ToggleStyle(
+                                    indicatorColor:
+                                        Color.fromARGB(255, 255, 87, 87),
+                                    borderColor: Colors.transparent,
+                                    borderRadius: BorderRadius.circular(15.0),
+                                    boxShadow: [
+                                      const BoxShadow(
+                                        color: Colors.black26,
+                                        spreadRadius: 1,
+                                        blurRadius: 2,
+                                        offset: Offset(0, 1.5),
+                                      ),
+                                    ],
+                                  ),
+                                  selectedIconScale: 1.0,
+                                  onChanged: (b) => setState(() => sugar = b),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -482,57 +597,62 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
               right: 16,
               bottom: 10,
             ),
-            child: SafeArea(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  ElevatedButton(
-                    onPressed: () => _showModalBottomSheet(context),
-                    style: ButtonStyle(
-                      side: const MaterialStatePropertyAll(BorderSide(
-                        color: Color.fromARGB(255, 255, 255, 255),
-                      )),
-                      shape: MaterialStatePropertyAll(RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(17))),
-                      fixedSize: MaterialStateProperty.all(const Size(52, 52)),
-                      padding: MaterialStateProperty.all(
-                          const EdgeInsets.fromLTRB(0, 0, 0, 0)),
-                      backgroundColor: MaterialStateProperty.all(
-                          const Color.fromARGB(255, 54, 121, 199)),
-                      elevation: MaterialStateProperty.all(1),
-                    ),
-                    child: const Icon(
-                      Icons.add_shopping_cart_outlined,
-                      color: Color.fromARGB(255, 250, 253, 255),
-                    ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                ElevatedButton(
+                  onPressed: () => _showModalBottomSheet(context),
+                  style: ButtonStyle(
+                    side: const MaterialStatePropertyAll(BorderSide(
+                      color: Color.fromARGB(255, 255, 255, 255),
+                    )),
+                    shape: MaterialStatePropertyAll(RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(17))),
+                    fixedSize: MaterialStateProperty.all(const Size(52, 52)),
+                    padding: MaterialStateProperty.all(
+                        const EdgeInsets.fromLTRB(0, 0, 0, 0)),
+                    backgroundColor: MaterialStateProperty.all(
+                        Color.fromARGB(255, 247, 78, 78)),
+                    elevation: MaterialStateProperty.all(1),
                   ),
-                  ElevatedButton(
-                    onPressed: () => _addCart(context),
-                    style: ButtonStyle(
-                      side: const MaterialStatePropertyAll(BorderSide(
-                          color: Color.fromARGB(255, 38, 95, 216), width: 2)),
-                      shape: MaterialStatePropertyAll(RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(17))),
-                      fixedSize: MaterialStateProperty.all(const Size(290, 52)),
-                      padding: MaterialStateProperty.all(
-                          const EdgeInsets.fromLTRB(0, 0, 0, 0)),
-                      backgroundColor: MaterialStateProperty.all(
-                          const Color.fromARGB(255, 255, 255, 255)),
-                      elevation: MaterialStateProperty.all(3),
-                    ),
-                    child: const Text(
-                      'Buy Now',
-                      style: TextStyle(
-                          color: Color.fromARGB(255, 38, 95, 216),
-                          fontFamily: 'Poppins-Bold'),
-                    ),
+                  child: const Icon(
+                    Icons.add_shopping_cart_outlined,
+                    color: Color.fromARGB(255, 250, 253, 255),
                   ),
-                ],
-              ),
+                ),
+                ElevatedButton(
+                  onPressed: () => _addCart(context),
+                  style: ButtonStyle(
+                    side: const MaterialStatePropertyAll(BorderSide(
+                        color: Color.fromARGB(255, 253, 93, 93), width: 2)),
+                    shape: MaterialStatePropertyAll(RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(17))),
+                    fixedSize: MaterialStateProperty.all(const Size(290, 52)),
+                    padding: MaterialStateProperty.all(
+                        const EdgeInsets.fromLTRB(0, 0, 0, 0)),
+                    backgroundColor: MaterialStateProperty.all(
+                        const Color.fromARGB(255, 255, 255, 255)),
+                    elevation: MaterialStateProperty.all(3),
+                  ),
+                  child: const Text(
+                    'Buy Now',
+                    style: TextStyle(
+                        color: Color.fromARGB(255, 247, 90, 90),
+                        fontFamily: 'Poppins-Bold'),
+                  ),
+                ),
+              ],
             ),
           ),
         ],
       ),
     );
   }
+
+  Color colorBuilder(int value) => switch (value) {
+        0 => Colors.blueAccent,
+        1 => Colors.green,
+        2 => Colors.orangeAccent,
+        _ => Colors.red,
+      };
 }

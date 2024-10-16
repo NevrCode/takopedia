@@ -392,8 +392,10 @@ class _PaymentPageState extends State<PaymentPage> {
                             top: 8.0, left: 7, bottom: 8, right: 2),
                         child: Column(
                           children: [
-                            _buildRadioTile("Card", Payment.card),
-                            _buildRadioTile("Qris", Payment.qris),
+                            _buildRadioTile(
+                                "Card", Payment.card, Icons.credit_card),
+                            _buildRadioTile(
+                                "Qris", Payment.qris, Icons.qr_code_2),
                           ],
                         ),
                       ),
@@ -467,7 +469,7 @@ class _PaymentPageState extends State<PaymentPage> {
     );
   }
 
-  Widget _buildRadioTile(String title, Payment value) {
+  Widget _buildRadioTile(String title, Payment value, IconData icon) {
     return ListTile(
       leading: SizedBox(
         // height: 40,
@@ -475,9 +477,17 @@ class _PaymentPageState extends State<PaymentPage> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              title,
-              style: TextStyle(fontFamily: 'Poppins-bold', fontSize: 15),
+            Row(
+              children: [
+                Icon(icon),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    title,
+                    style: TextStyle(fontFamily: 'Poppins-bold', fontSize: 15),
+                  ),
+                ),
+              ],
             ),
             Radio<Payment>(
               value: value,

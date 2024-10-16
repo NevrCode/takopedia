@@ -6,13 +6,11 @@ import 'package:provider/provider.dart';
 import 'package:takopedia/pages/add_product.dart';
 import 'package:takopedia/pages/cart.dart';
 import 'package:takopedia/pages/component/style.dart';
-import 'package:takopedia/pages/forgot_password.dart';
 import 'package:takopedia/pages/home.dart';
 
 import 'package:takopedia/pages/menu.dart';
 import 'package:takopedia/pages/order_list.dart';
 import 'package:takopedia/services/auth_service.dart';
-import 'package:takopedia/services/product_provider.dart';
 import 'package:takopedia/services/user_provider.dart';
 
 class Index extends StatefulWidget {
@@ -21,6 +19,24 @@ class Index extends StatefulWidget {
   @override
   State<Index> createState() => _IndexState();
 }
+
+const _navBarItems = [
+  BottomNavigationBarItem(
+    icon: Icon(Icons.restaurant_menu_outlined),
+    activeIcon: Icon(Icons.restaurant_menu_rounded),
+    label: 'Menu',
+  ),
+  BottomNavigationBarItem(
+    icon: Icon(Icons.home_rounded),
+    activeIcon: Icon(Icons.home_rounded),
+    label: 'Home',
+  ),
+  BottomNavigationBarItem(
+    icon: Icon(Icons.list_alt),
+    activeIcon: Icon(Icons.list_alt_outlined),
+    label: 'Order',
+  ),
+];
 
 class _IndexState extends State<Index> with SingleTickerProviderStateMixin {
   final _user = FirebaseAuth.instance.currentUser;
@@ -51,46 +67,23 @@ class _IndexState extends State<Index> with SingleTickerProviderStateMixin {
 
     pageController = PageController(initialPage: 1);
     return Scaffold(
-      bottomNavigationBar: CircleNavBar(
-        activeIcons: const [
-          Icon(Icons.restaurant_rounded,
-              color: Color.fromARGB(255, 255, 255, 255)),
-          Icon(Icons.home_rounded, color: Color.fromARGB(255, 255, 255, 255)),
-          Icon(Icons.list_alt_rounded,
-              color: Color.fromARGB(255, 255, 255, 255)),
-        ],
-        inactiveIcons: const [
-          Text(
-            "Menu",
-            style: TextStyle(color: Colors.white, fontFamily: 'Poppins-Bold'),
-          ),
-          Text("Home",
-              style:
-                  TextStyle(color: Colors.white, fontFamily: 'Poppins-Bold')),
-          Text(
-            "Order",
-            style: TextStyle(color: Colors.white, fontFamily: 'Poppins-Bold'),
-          ),
-        ],
-        color: Color.fromARGB(255, 252, 79, 79),
-        height: 70,
-        circleWidth: 70,
-        activeIndex: tabIndex,
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _tabIndex,
+        iconSize: 27,
+        selectedLabelStyle: TextStyle(fontFamily: 'Poppins-bold'),
+        unselectedLabelStyle: TextStyle(fontFamily: 'Poppins-regular'),
+        selectedItemColor: Color.fromARGB(255, 240, 94, 94),
+        unselectedItemColor: Color.fromARGB(255, 165, 145, 145),
+        type: BottomNavigationBarType.fixed,
         onTap: (index) {
-          tabIndex = index;
-          pageController.jumpToPage(tabIndex);
+          setState(() {
+            _tabIndex = index;
+            pageController.jumpToPage(index);
+          });
         },
-        // padding: const EdgeInsets.only(left: 8, right: 8, bottom: 10),
-        cornerRadius: const BorderRadius.only(
-          topLeft: Radius.circular(8),
-          topRight: Radius.circular(8),
-          bottomRight: Radius.circular(24),
-          bottomLeft: Radius.circular(24),
-        ),
-        shadowColor: const Color.fromARGB(255, 187, 187, 187),
-        elevation: 10,
+        items: _navBarItems,
       ),
-      drawerScrimColor: const Color.fromARGB(117, 78, 78, 78),
+      drawerScrimColor: Color.fromARGB(117, 88, 88, 88),
       drawer: Drawer(
         backgroundColor: Colors.white,
         child: Column(
@@ -106,7 +99,7 @@ class _IndexState extends State<Index> with SingleTickerProviderStateMixin {
                 ),
               ),
               decoration: const BoxDecoration(
-                color: Color.fromARGB(255, 50, 123, 187),
+                color: Color.fromARGB(255, 177, 132, 132),
               ),
             ),
             ListTile(

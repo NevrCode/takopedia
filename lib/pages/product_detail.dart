@@ -5,9 +5,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:takopedia/model/cart_model.dart';
 import 'package:takopedia/pages/cart.dart';
 import 'package:badges/badges.dart' as badges;
+import 'package:takopedia/services/cart_provider.dart';
 
 import '../model/product_model.dart';
 import '../model/sales_model.dart';
@@ -33,10 +35,11 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
   bool sugar = true;
 
   Future<void> _addCart(BuildContext context) async {
+    final productMap = widget.product.toMap();
     CartModel purchasedProduct = CartModel(
-      productId: "",
-      userId: _user?.uid ?? "",
-      product: widget.product.toMap(),
+      id: productMap['id'] + _user!.uid,
+      userId: _user.uid,
+      product: productMap,
       quantity: 1,
       size: size ? 'Regular' : 'Large',
       ice: ice ? 'Normal' : 'Less',
@@ -49,11 +52,8 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
         duration: Duration(seconds: 2),
       ),
     );
-    _cartService.addCart(
-      purchasedProduct,
-      _user?.uid,
-      widget.product.name,
-    );
+    Provider.of<CartProvider>(context, listen: false)
+        .addItemToCart(purchasedProduct);
 
     // String cleanedPrice = productPrice.replaceAll(RegExp(r'[^0-9]'), '');
   }
@@ -73,7 +73,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
   void _showModalBottomSheet(BuildContext context) {
     showModalBottomSheet(
       context: context,
-      isScrollControlled: true, // Allows the modal to expand if necessary
+      isScrollControlled: true,
       builder: (BuildContext context) {
         // Use StatefulBuilder to have access to setState inside the modal
         return StatefulBuilder(
@@ -318,7 +318,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
             padding: const EdgeInsets.only(left: 8.0),
             child: StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
-                  .collection('cart')
+                  .collection('carts')
                   .where('uid', isEqualTo: _user!.uid)
                   .snapshots(),
               builder: (context, snapshot) {

@@ -1,33 +1,40 @@
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:takopedia/model/cart_model.dart';
-import 'package:takopedia/model/sales_model.dart';
+import 'package:takopedia/model/product_model.dart';
 
 class CartService {
   final CollectionReference _cart =
-      FirebaseFirestore.instance.collection('cart');
+      FirebaseFirestore.instance.collection('carts');
 
-  Future<void> addCart(CartModel cart, uid, name) async {
+  Future<void> addCart({
+    required Map<String, dynamic> product,
+    required int quantity,
+    required String uid,
+    required String size,
+    required String ice,
+    required String sugar,
+  }) async {
     QuerySnapshot qs = await _cart
         .where('uid', isEqualTo: uid)
-        .where('product.name', isEqualTo: name)
+        .where('product.id', isEqualTo: product['id'])
         .get();
     if (qs.docs.isEmpty) {
       await _cart
-          .add({
-            'product': cart.product,
-            'quantity': cart.quantity,
-            'uid': cart.userId,
-            'size': cart.size,
-            'ice': cart.ice,
-            'sugar': cart.sugar,
+          .doc(product['id'] + uid)
+          .set({
+            'product': product,
+            'quantity': quantity,
+            'uid': uid,
+            'size': size,
+            'ice': ice,
+            'sugar': sugar,
           })
           .then((value) => log("Item Added to Cart"))
           .catchError((error) => log("Failed to add product: $error"));
     } else {
-      plus1Quantity(uid, name);
+      plus1Quantity(uid, product['id']);
     }
   }
 
@@ -71,11 +78,11 @@ class CartService {
     }
   }
 
-  Future<void> min1Quantity(String uid, String name) async {
+  Future<void> min1Quantity(String uid, String productId) async {
     try {
       QuerySnapshot qs = await _cart
           .where('uid', isEqualTo: uid)
-          .where('product.name', isEqualTo: name)
+          .where('product.id', isEqualTo: productId)
           .get();
       if (qs.docs.isEmpty) {
         log("No documents found for this buyer ID.");
@@ -94,11 +101,11 @@ class CartService {
     }
   }
 
-  Future<void> plus1Quantity(String uid, String name) async {
+  Future<void> plus1Quantity(String uid, String productId) async {
     try {
       QuerySnapshot qs = await _cart
           .where('uid', isEqualTo: uid)
-          .where('product.name', isEqualTo: name)
+          .where('product.id', isEqualTo: productId)
           .get();
       if (qs.docs.isEmpty) {
         log("No documents found for this buyer ID.");
@@ -117,14 +124,11 @@ class CartService {
     }
   }
 
-  Future<void> deleteProductFromCart(String uid, String name) async {
+  Future<void> deleteProductFromCart(String id) async {
     try {
-      QuerySnapshot qs = await _cart
-          .where('uid', isEqualTo: uid)
-          .where('product.name', isEqualTo: name)
-          .get();
+      QuerySnapshot qs = await _cart.where('id', isEqualTo: id).get();
       if (qs.docs.isEmpty) {
-        log("No documents found for this buyer ID.");
+        log("No documents found for this ID.");
         return;
       }
 

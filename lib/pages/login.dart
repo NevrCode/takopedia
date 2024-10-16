@@ -10,6 +10,7 @@ import 'package:takopedia/model/user_model.dart';
 import 'package:takopedia/pages/component/style.dart';
 import 'package:takopedia/pages/forgot_password.dart';
 import 'package:takopedia/services/auth_service.dart';
+import 'package:takopedia/services/cart_provider.dart';
 import 'package:takopedia/services/product_provider.dart';
 import 'package:takopedia/services/user_provider.dart';
 
@@ -38,13 +39,13 @@ class _LoginPageState extends State<LoginPage> {
       final user = await _auth.signInWithEmailAndPassword(email, password);
 
       if (user != null && mounted) {
+        Provider.of<ProductProvider>(context, listen: false).fetchProductList();
+        Provider.of<CartProvider>(context, listen: false)
+            .fetchCartItem(user.uid);
+
         await fetchUserData(context);
         final userProvider = Provider.of<UserProvider>(context, listen: false);
-        final productProvider =
-            Provider.of<ProductProvider>(context, listen: false)
-                .fetchProductList();
         if (mounted) {
-          Navigator.pushReplacementNamed(context, '/');
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               duration: Duration(seconds: 1),
@@ -55,6 +56,11 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
           );
+
+          Navigator.pushReplacementNamed(context, '/');
+          setState(() {
+            _isLoading = false;
+          });
         }
         log('Logged in as ${user.email}');
       } else {
@@ -66,11 +72,7 @@ class _LoginPageState extends State<LoginPage> {
       ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text("Login failed: ${e.toString()}")));
     } finally {
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
-      }
+      if (mounted) {}
     }
   }
 

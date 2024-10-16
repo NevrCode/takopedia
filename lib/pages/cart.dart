@@ -27,7 +27,6 @@ class _CartPageState extends State<CartPage> {
   @override
   void initState() {
     super.initState();
-    Provider.of<CartProvider>(context, listen: false).fetchCartItem(_user!.uid);
   }
 
   void getTotal() async {
@@ -149,10 +148,7 @@ class _CartPageState extends State<CartPage> {
                                           padding: const EdgeInsets.all(8.0),
                                           child: ClipRRect(
                                             borderRadius:
-                                                const BorderRadius.only(
-                                                    topLeft: Radius.circular(6),
-                                                    bottomLeft:
-                                                        Radius.circular(6)),
+                                                BorderRadius.circular(100),
                                             child: Container(
                                               decoration: BoxDecoration(
                                                 boxShadow: const [
@@ -160,9 +156,6 @@ class _CartPageState extends State<CartPage> {
                                                       offset: Offset(0.1, 0.1),
                                                       blurRadius: 1)
                                                 ],
-                                                border: Border.all(
-                                                    color: const Color.fromARGB(
-                                                        255, 240, 239, 239)),
                                               ),
                                               child: Image.network(
                                                 cartItem.product['picURL'],
@@ -300,12 +293,7 @@ class _CartPageState extends State<CartPage> {
                                                                       onPressed:
                                                                           () async {
                                                                         await _cardService
-                                                                            .deleteProductFromCart(
-                                                                          _user!
-                                                                              .uid,
-                                                                          cartItem
-                                                                              .product['name'],
-                                                                        );
+                                                                            .deleteProductFromCart(cartItem.id);
                                                                         if (mounted) {
                                                                           setState(
                                                                               () {
@@ -445,101 +433,6 @@ class _CartPageState extends State<CartPage> {
               },
               onClosing: () {},
             ),
-    );
-  }
-
-  void _showDeliveryOption(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true, // Allows the modal to expand if necessary
-      builder: (context) {
-        // Use StatefulBuilder to have access to setState inside the modal
-        return StatefulBuilder(
-          builder: (BuildContext context, StateSetter modalSetState) {
-            return Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(5),
-                color: const Color.fromARGB(255, 252, 254, 255),
-              ),
-              height: 300, // Set a fixed height for the bottom sheet
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: const Text(
-                      'Delivery Option',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontFamily: 'Poppins',
-                      ),
-                      textAlign: TextAlign.start,
-                    ),
-                  ),
-                  const Divider(height: 0.3),
-                  Column(
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            content: Text('Jangan Telat yaa  <3'),
-                            backgroundColor:
-                                const Color.fromARGB(255, 55, 129, 58),
-                            duration: Duration(seconds: 1),
-                          ));
-                          Navigator.pop(context);
-                        },
-                        child: Padding(
-                          padding: EdgeInsets.all(8),
-                          child: Text(
-                            'Ambil Sendiri Jangan Malas',
-                            style: TextStyle(
-                              fontFamily: 'Poppins-regular',
-                              fontSize: 20,
-                            ),
-                            textAlign: TextAlign.start,
-                          ),
-                        ),
-                      ),
-                      Divider(
-                        thickness: 0.5,
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            content: Text('Makasih Banyak <3'),
-                            backgroundColor:
-                                const Color.fromARGB(255, 55, 129, 58),
-                            duration: Duration(seconds: 1),
-                          ));
-                          Navigator.pop(context);
-                        },
-                        child: Padding(
-                          padding: EdgeInsets.all(8),
-                          child: Text(
-                            'Kasih Ke Admin <3',
-                            style: TextStyle(
-                              fontFamily: 'Poppins-regular',
-                              fontSize: 20,
-                            ),
-                            textAlign: TextAlign.start,
-                          ),
-                        ),
-                      ),
-                      Divider(
-                        thickness: 0.5,
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 40,
-                  ),
-                ],
-              ),
-            );
-          },
-        );
-      },
     );
   }
 }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:takopedia/pages/product_detail.dart';
 import 'package:takopedia/services/product_provider.dart';
 
@@ -28,11 +29,30 @@ class _MenuPageState extends State<MenuPage> {
   @override
   void initState() {
     super.initState();
+    _loadDeliveryOption();
+  }
+
+  // Load the saved delivery option
+  Future<void> _loadDeliveryOption() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      isTakeAway = prefs.getBool('isTakeAway') ?? true;
+    });
+  }
+
+  // Save the delivery option
+  Future<void> _saveDeliveryOption(bool istake) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isTakeAway', istake);
+    setState(() {
+      isTakeAway = istake;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     var products = Provider.of<ProductProvider>(context).product;
+    // final isTakeAway =
     return Container(
       decoration:
           const BoxDecoration(color: Color.fromARGB(255, 255, 251, 251)),
@@ -87,13 +107,18 @@ class _MenuPageState extends State<MenuPage> {
                     ],
                   ),
                   selectedIconScale: 1.0,
-                  onChanged: (b) => setState(() => isTakeAway = b),
+                  onChanged: (b) {
+                    setState(() {
+                      isTakeAway = b;
+                    });
+                    _saveDeliveryOption(b);
+                  },
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
                 isTakeAway
-                    ? SizedBox(
+                    ? const SizedBox(
                         height: 10,
                       )
                     : Padding(
@@ -105,29 +130,29 @@ class _MenuPageState extends State<MenuPage> {
                             controller: _locationContrller,
                             decoration: InputDecoration(
                                 prefixIcon: const Icon(Icons.location_pin),
-                                contentPadding: EdgeInsets.fromLTRB(0, 8, 8, 8),
+                                contentPadding:
+                                    const EdgeInsets.fromLTRB(0, 8, 8, 8),
                                 filled: true,
                                 fillColor: Colors.white.withOpacity(0.8),
                                 hintText: 'Location',
-                                hintStyle: TextStyle(
+                                hintStyle: const TextStyle(
                                     fontFamily: 'Poppins-Bold', fontSize: 14),
                                 border: OutlineInputBorder(
-                                  borderSide: BorderSide(
+                                  borderSide: const BorderSide(
                                       color:
                                           Color.fromARGB(255, 179, 178, 178)),
                                   borderRadius: BorderRadius.circular(15),
                                 ),
                                 focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(15),
-                                  borderSide: BorderSide(
+                                  borderSide: const BorderSide(
                                     color: Color.fromARGB(255, 136, 136, 136),
                                   ),
                                 ),
                                 enabledBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(15),
-                                  borderSide: BorderSide(
-                                    color: const Color.fromARGB(
-                                        255, 185, 185, 185),
+                                  borderSide: const BorderSide(
+                                    color: Color.fromARGB(255, 185, 185, 185),
                                   ),
                                 )),
                           ),
@@ -143,10 +168,10 @@ class _MenuPageState extends State<MenuPage> {
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(15),
                       border: Border.all(
-                        color: Color.fromARGB(255, 199, 199, 199),
+                        color: const Color.fromARGB(255, 199, 199, 199),
                       ),
                     ),
-                    child: Row(
+                    child: const Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Padding(
@@ -155,7 +180,7 @@ class _MenuPageState extends State<MenuPage> {
                             children: [
                               Icon(Icons.store),
                               Padding(
-                                padding: const EdgeInsets.only(left: 16.0),
+                                padding: EdgeInsets.only(left: 16.0),
                                 child: Text(
                                   'GLORIA',
                                   style: TextStyle(fontFamily: 'Poppins-bold'),
@@ -165,12 +190,11 @@ class _MenuPageState extends State<MenuPage> {
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(right: 8.0),
+                          padding: EdgeInsets.only(right: 8.0),
                           child: Text(
                             'Ubah',
                             style: TextStyle(
-                                color:
-                                    const Color.fromARGB(255, 151, 151, 151)),
+                                color: Color.fromARGB(255, 151, 151, 151)),
                           ),
                         ),
                       ],
@@ -184,8 +208,8 @@ class _MenuPageState extends State<MenuPage> {
                   // useStickyGroupSeparators: true,
                   elements: products,
                   groupBy: (e) => e.type,
-                  footer: Padding(
-                    padding: const EdgeInsets.fromLTRB(8.0, 16, 8, 8),
+                  footer: const Padding(
+                    padding: EdgeInsets.fromLTRB(8.0, 16, 8, 8),
                     child: Center(
                       child: Text(
                         'Sampai sini aja...',
@@ -200,10 +224,10 @@ class _MenuPageState extends State<MenuPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Padding(
-                        padding: EdgeInsets.all(8),
+                        padding: const EdgeInsets.all(8),
                         child: Text(
                           val,
-                          style: TextStyle(
+                          style: const TextStyle(
                               fontFamily: 'Poppins-regular', fontSize: 22),
                         ),
                       ),
@@ -273,8 +297,8 @@ class _MenuPageState extends State<MenuPage> {
                                       Text(
                                         formatCurrency(
                                             product.price.toString()),
-                                        style: TextStyle(
-                                            color: const Color.fromARGB(
+                                        style: const TextStyle(
+                                            color: Color.fromARGB(
                                                 255, 114, 114, 114)),
                                       )
                                     ],

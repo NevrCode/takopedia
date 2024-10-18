@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:takopedia/pages/add_product.dart';
 import 'package:takopedia/pages/cart.dart';
 import 'package:takopedia/pages/component/style.dart';
+import 'package:takopedia/pages/history.dart';
 import 'package:takopedia/pages/home.dart';
 
 import 'package:takopedia/pages/menu.dart';
@@ -120,7 +121,10 @@ class _IndexState extends State<Index> with SingleTickerProviderStateMixin {
               leading: const Icon(Icons.history),
               title: const Text('Riwayat Belanja', style: drawerTextStyle),
               onTap: () {
-                // Tambahkan logika untuk navigasi ke halaman riwayat belanja
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const HistoryPage()));
               },
             ),
             ListTile(

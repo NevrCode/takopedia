@@ -2,11 +2,11 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:takopedia/model/cart_model.dart';
-import 'package:takopedia/model/product_model.dart';
 
 class CartService {
   final CollectionReference _cart =
       FirebaseFirestore.instance.collection('carts');
+  final _order = FirebaseFirestore.instance.collection('orders');
 
   Future<void> addCart({
     required Map<String, dynamic> product,
@@ -60,7 +60,7 @@ class CartService {
 
   Future<void> clearCart(String uid) async {
     try {
-      QuerySnapshot qs = await _cart.where('user_id', isEqualTo: uid).get();
+      QuerySnapshot qs = await _cart.where('uid', isEqualTo: uid).get();
       if (qs.docs.isEmpty) {
         log("No documents found for this buyer ID.");
         return; // Exit if no documents found
@@ -126,22 +126,13 @@ class CartService {
 
   Future<void> deleteProductFromCart(String id) async {
     try {
-      QuerySnapshot qs = await _cart.where('id', isEqualTo: id).get();
-      if (qs.docs.isEmpty) {
-        log("No documents found for this ID.");
-        return;
-      }
-
-      for (QueryDocumentSnapshot doc in qs.docs) {
-        log('masuk');
-        await _cart
-            .doc(doc.id)
-            .delete()
-            .then((value) => log("Shoes Deleted"))
-            .catchError((e) => log(e));
-      }
+      await _cart
+          .doc(id)
+          .delete()
+          .then((value) => print("cartitem Deleted"))
+          .catchError((e) => print(e));
     } catch (e) {
-      log(e.toString());
+      print(e.toString());
     }
   }
 
@@ -156,7 +147,13 @@ class CartService {
     return jml;
   }
 
-  // Stream<List<CartModel>> cartStream() {
-  //   return _cart.snapshots();
-  // }
+  Future<void> proceed(String uid) async {
+    var snapshot = await _cart.where('uid', isEqualTo: uid).get();
+
+    if (snapshot.docs.isNotEmpty) {
+      List<dynamic> cartItems = snapshot.docs;
+
+      await _order.add({'uid': cartItems});
+    }
+  }
 }

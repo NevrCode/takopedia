@@ -1,11 +1,15 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:takopedia/model/cart_model.dart';
 import 'package:takopedia/services/cart_service.dart';
 
 class CartProvider with ChangeNotifier {
   List<CartModel> _cartItems = [];
+  List<String> _productId = [];
   final _cartService = CartService();
   List<CartModel> get cartItems => _cartItems;
+  List<String> get productId => _productId;
 
   Future<void> remove(String id) async {
     await _cartService.deleteProductFromCart(id);
@@ -13,9 +17,21 @@ class CartProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> clearCart(uid) async {
+    await _cartService.clearCart(uid);
+
+    for (var e in _cartItems) {
+      _productId.add(e.id);
+    }
+    _cartItems.clear();
+    notifyListeners();
+  }
+
   Future<void> fetchCartItem(String uid) async {
     final cartItem = await _cartService.fetchSales(uid);
+
     setCartItems(cartItem);
+    notifyListeners();
   }
 
   Future<void> addItemToCart(CartModel cartItem) async {
@@ -43,7 +59,7 @@ class CartProvider with ChangeNotifier {
       }
       notifyListeners();
     } catch (e) {
-      print('Error adding item to cart: $e');
+      log('Error adding item to cart: $e');
     }
   }
 
@@ -57,7 +73,7 @@ class CartProvider with ChangeNotifier {
       item.quantity++;
       notifyListeners();
     } catch (e) {
-      print('Error updating cart item: $e');
+      log('Error updating cart item: $e');
     }
   }
 
@@ -71,7 +87,7 @@ class CartProvider with ChangeNotifier {
       item.quantity--;
       notifyListeners();
     } catch (e) {
-      print('Error updating cart item: $e');
+      log('Error updating cart item: $e');
     }
   }
 

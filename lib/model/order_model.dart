@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:takopedia/model/cart_model.dart';
 
-class CartModel {
+class OrderModel {
   String id;
   String userId;
   Map<String, dynamic> product;
@@ -9,7 +10,7 @@ class CartModel {
   String ice;
   String sugar;
 
-  CartModel(
+  OrderModel(
       {required this.id,
       required this.userId,
       required this.product,
@@ -18,8 +19,8 @@ class CartModel {
       required this.ice,
       required this.sugar});
 
-  factory CartModel.fromDocument(DocumentSnapshot doc) {
-    return CartModel(
+  factory OrderModel.fromDocument(DocumentSnapshot doc) {
+    return OrderModel(
       id: doc.id,
       userId: doc['uid'] ?? '',
       product: doc['product'] ?? {},
@@ -28,15 +29,5 @@ class CartModel {
       ice: doc['ice'] ?? 'normal',
       sugar: doc['sugar'] ?? 'normal',
     );
-  }
-  Map<String, dynamic> toMap() {
-    return {
-      'uid': userId,
-      'product': product,
-      'quantity': quantity,
-      'ice': ice,
-      'size': size,
-      'sugar': sugar,
-    };
   }
 }

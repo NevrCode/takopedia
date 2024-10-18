@@ -11,6 +11,7 @@ import 'package:takopedia/pages/component/style.dart';
 import 'package:takopedia/pages/forgot_password.dart';
 import 'package:takopedia/services/auth_service.dart';
 import 'package:takopedia/services/cart_provider.dart';
+import 'package:takopedia/services/order_provider.dart';
 import 'package:takopedia/services/product_provider.dart';
 import 'package:takopedia/services/user_provider.dart';
 
@@ -40,6 +41,7 @@ class _LoginPageState extends State<LoginPage> {
 
       if (user != null && mounted) {
         Provider.of<ProductProvider>(context, listen: false).fetchProductList();
+        Provider.of<OrderProvider>(context, listen: false).fetchOrder(user.uid);
         Provider.of<CartProvider>(context, listen: false)
             .fetchCartItem(user.uid);
 
@@ -48,7 +50,7 @@ class _LoginPageState extends State<LoginPage> {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              duration: Duration(seconds: 1),
+              duration: const Duration(seconds: 1),
               backgroundColor: const Color.fromARGB(255, 38, 141, 41),
               content: Text(
                 'Hi, ${userProvider.user!.nama}. Selamat Berbelanja',

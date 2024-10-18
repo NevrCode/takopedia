@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:takopedia/model/cart_model.dart';
 import 'package:takopedia/pages/component/costum_radio_item.dart';
 import 'package:takopedia/pages/home.dart';
@@ -13,9 +14,10 @@ import 'package:takopedia/pages/payment.dart';
 import 'package:takopedia/pages/qr_generate.dart';
 import 'package:takopedia/pages/success.dart';
 import 'package:takopedia/services/cart_provider.dart';
+import 'package:takopedia/services/order_provider.dart';
 import 'package:takopedia/util/style.dart';
 
-enum Payment { card, qris }
+enum Payment { card, qris, gopay, dana }
 
 class PaymentPage extends StatefulWidget {
   const PaymentPage({super.key});
@@ -28,22 +30,31 @@ class _PaymentPageState extends State<PaymentPage> {
   final _cartNumController = TextEditingController();
   final _cartValidMonth = TextEditingController();
   final _cartValidYear = TextEditingController();
+  final _user = FirebaseAuth.instance.currentUser;
   Payment? _paymentMethod = Payment.qris;
   bool isEmpty = false;
   int total = 0;
+  bool isTakeAway = false;
   String formatCurrency(String price) {
     final formatter = NumberFormat.currency(locale: 'id', symbol: 'Rp ');
     return formatter.format(int.parse(price));
   }
 
+  Future<void> _getDeliveryOption() async {
+    final prefs = await SharedPreferences.getInstance();
+    isTakeAway = prefs.getBool('isTakeAway') ?? true;
+  }
+
   @override
   void initState() {
     super.initState();
+    _getDeliveryOption();
   }
 
   @override
   Widget build(BuildContext context) {
     final cartProvider = Provider.of<CartProvider>(context);
+    final order = Provider.of<OrderProvider>(context);
     final cartItems = cartProvider.cartItems;
     final total = cartProvider.totalPrice;
     // final cartItems = cartProvider.cartItems;
@@ -150,12 +161,9 @@ class _PaymentPageState extends State<PaymentPage> {
                                           Padding(
                                             padding: const EdgeInsets.all(8.0),
                                             child: ClipRRect(
+                                              clipBehavior: Clip.hardEdge,
                                               borderRadius:
-                                                  const BorderRadius.only(
-                                                      topLeft:
-                                                          Radius.circular(6),
-                                                      bottomLeft:
-                                                          Radius.circular(6)),
+                                                  BorderRadius.circular(100),
                                               child: Container(
                                                 decoration: BoxDecoration(
                                                   boxShadow: const [
@@ -164,13 +172,6 @@ class _PaymentPageState extends State<PaymentPage> {
                                                             Offset(0.1, 0.1),
                                                         blurRadius: 1)
                                                   ],
-                                                  border: Border.all(
-                                                      color:
-                                                          const Color.fromARGB(
-                                                              255,
-                                                              240,
-                                                              239,
-                                                              239)),
                                                 ),
                                                 child: Image.network(
                                                   cartItem.product['picURL'],
@@ -396,6 +397,10 @@ class _PaymentPageState extends State<PaymentPage> {
                                 "Card", Payment.card, Icons.credit_card),
                             _buildRadioTile(
                                 "Qris", Payment.qris, Icons.qr_code_2),
+                            _buildRadioTile(
+                                "Dana", Payment.dana, Icons.batch_prediction),
+                            _buildRadioTile("Gopay", Payment.gopay,
+                                Icons.currency_yen_sharp),
                           ],
                         ),
                       ),
@@ -430,6 +435,8 @@ class _PaymentPageState extends State<PaymentPage> {
                       ElevatedButton(
                         onPressed: () {
                           if (_paymentMethod == Payment.card) {
+                            order.addOrder(cartItems,
+                                isTakeAway ? "Take Away" : "Delivery");
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(

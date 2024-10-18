@@ -15,6 +15,22 @@ class _QrPageState extends State<QrPage> {
   Widget build(BuildContext context) {
     int total = Provider.of<CartProvider>(context).totalPrice;
     return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: AppBar(
+          automaticallyImplyLeading: false,
+          backgroundColor: Color.fromARGB(255, 245, 66, 66),
+          title: Center(
+            child: Text(
+              'Payment',
+              style: TextStyle(
+                  color: Color.fromARGB(255, 247, 242, 242),
+                  fontFamily: "Poppins-bold",
+                  fontSize: 16),
+            ),
+          ),
+        ),
+      ),
       body: Center(
         child: QrImageView(
           data: total.toString(),

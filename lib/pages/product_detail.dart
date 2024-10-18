@@ -46,12 +46,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
       sugar: sugar ? 'Normal' : 'Less',
     ); // 1 karena baru bisa beli 1 di page ini
     // Tampilkan pesan loading
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Sedang memproses pembelian...'),
-        duration: Duration(seconds: 2),
-      ),
-    );
+
     Provider.of<CartProvider>(context, listen: false)
         .addItemToCart(purchasedProduct);
 

@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -14,6 +15,7 @@ class SuccessPage extends StatefulWidget {
 
 class _SuccessPageState extends State<SuccessPage> {
   DateTime now = DateTime.now();
+  final _user = FirebaseAuth.instance.currentUser;
   String formatCurrency(String price) {
     final formatter = NumberFormat.currency(locale: 'id', symbol: 'Rp ');
     return formatter.format(int.parse(price));
@@ -21,8 +23,8 @@ class _SuccessPageState extends State<SuccessPage> {
 
   @override
   Widget build(BuildContext context) {
-    final total = Provider.of<CartProvider>(context).totalPrice;
-
+    final cartProvider = Provider.of<CartProvider>(context);
+    final total = cartProvider.totalPrice;
     String formattedDate = DateFormat('dd-MM-yyyy').format(now);
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 251, 255, 252),
@@ -125,6 +127,7 @@ class _SuccessPageState extends State<SuccessPage> {
                   padding: const EdgeInsets.only(top: 80.0),
                   child: ElevatedButton(
                     onPressed: () {
+                      cartProvider.clearCart(_user!.uid);
                       Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(

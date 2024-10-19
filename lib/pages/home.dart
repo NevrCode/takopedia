@@ -269,6 +269,39 @@ class _HomePageState extends State<HomePage> {
                                                   style: const TextStyle(
                                                       color: Color.fromARGB(
                                                           255, 114, 114, 114)),
+                                                ),
+                                                SizedBox(
+                                                  height: 40,
+                                                  child: Row(
+                                                    children: [
+                                                      Icon(
+                                                        Icons.star_rounded,
+                                                        size: 30,
+                                                        color: Color.fromARGB(
+                                                            255, 253, 235, 72),
+                                                      ),
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .only(
+                                                                left: 8.0),
+                                                        child: Text(
+                                                          '${product.rate} /5',
+                                                          style: TextStyle(
+                                                            fontFamily:
+                                                                'Poppins-regular',
+                                                            fontSize: 14,
+                                                            color:
+                                                                Color.fromARGB(
+                                                                    255,
+                                                                    165,
+                                                                    165,
+                                                                    165),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
                                                 )
                                               ],
                                             ),

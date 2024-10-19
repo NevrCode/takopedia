@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:takopedia/pages/index.dart';
 import 'package:takopedia/services/cart_provider.dart';
+import 'package:takopedia/services/order_provider.dart';
 import 'package:takopedia/util/style.dart';
 
 class SuccessPage extends StatefulWidget {
@@ -24,6 +25,8 @@ class _SuccessPageState extends State<SuccessPage> {
   @override
   Widget build(BuildContext context) {
     final cartProvider = Provider.of<CartProvider>(context);
+    final orderProvider = Provider.of<OrderProvider>(context);
+    final orderID = orderProvider.id;
     final total = cartProvider.totalPrice;
     String formattedDate = DateFormat('dd-MM-yyyy').format(now);
     return Scaffold(
@@ -40,11 +43,11 @@ class _SuccessPageState extends State<SuccessPage> {
                   height: 200,
                   width: 200,
                 ),
-                Text(
+                const Text(
                   'Payment Successfully',
                   style: TextStyle(fontFamily: "Poppins-regular", fontSize: 26),
                 ),
-                Text(
+                const Text(
                   'Thank you for purchasing<3',
                   style: TextStyle(fontFamily: "Poppins-regular", fontSize: 17),
                 ),
@@ -69,7 +72,7 @@ class _SuccessPageState extends State<SuccessPage> {
                                 style: OrderDetailTextStyle,
                               ),
                               Text(
-                                '1558-2830-12938',
+                                orderID!,
                                 style: OrderDetailValueTextStyle,
                               )
                             ],

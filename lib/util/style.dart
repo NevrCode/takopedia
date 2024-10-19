@@ -24,3 +24,16 @@ const HistoryItemTextStyle = TextStyle(
   fontSize: 14,
   color: Color.fromARGB(255, 51, 51, 51),
 );
+const textStyleProductCard = TextStyle(
+  fontFamily: 'Poppins-regular',
+);
+
+const loginbuttonTextStyle = TextStyle(
+    fontFamily: 'Poppins-regular',
+    fontSize: 15,
+    color: Color.fromARGB(255, 255, 255, 255));
+
+const drawerTextStyle = TextStyle(
+  color: Color.fromARGB(255, 51, 51, 51),
+  fontFamily: 'Poppins-regular',
+);

@@ -11,7 +11,7 @@ class ProductService {
   final _storage = FirebaseStorage.instance;
 
   Future<void> addProduct(String nama, int price, String desc,
-      String productPicPath, String type) async {
+      String productPicPath, String type, int rate) async {
     String picURL = await uploadPic(nama, productPicPath);
     await _products
         .add({
@@ -20,6 +20,7 @@ class ProductService {
           'description': desc,
           'product_pic': picURL,
           'type': type,
+          'rate': rate
         })
         .then((value) => log("Product Added"))
         .catchError((error) => log("Failed to add product: $error"));
@@ -45,7 +46,7 @@ class ProductService {
         return ProductModel.fromDocument(doc);
       }).toList();
     } catch (e) {
-      log("Error : $e");
+      print("Error : $e");
       return [];
     }
   }

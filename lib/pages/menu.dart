@@ -4,8 +4,10 @@ import 'package:grouped_list/grouped_list.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:takopedia/model/product_model.dart';
 import 'package:takopedia/pages/product_detail.dart';
 import 'package:takopedia/services/product_provider.dart';
+import 'package:takopedia/util/style.dart';
 
 class MenuPage extends StatefulWidget {
   const MenuPage({super.key});
@@ -240,7 +242,7 @@ class _MenuPageState extends State<MenuPage> {
                       ),
                     ],
                   ),
-                  itemBuilder: (context, dynamic product) {
+                  itemBuilder: (context, ProductModel product) {
                     return GestureDetector(
                       onTap: () {
                         Navigator.push(
@@ -281,25 +283,60 @@ class _MenuPageState extends State<MenuPage> {
                                 Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text(
-                                        product.name,
-                                        maxLines: 2,
-                                        style: const TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                          fontFamily: 'Poppins-regular',
-                                        ),
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            product.name,
+                                            maxLines: 2,
+                                            style: const TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                              fontFamily: 'Poppins-regular',
+                                            ),
+                                          ),
+                                          Text(
+                                            formatCurrency(
+                                                product.price.toString()),
+                                            style: const TextStyle(
+                                                color: Color.fromARGB(
+                                                    255, 114, 114, 114)),
+                                          ),
+                                        ],
                                       ),
-                                      Text(
-                                        formatCurrency(
-                                            product.price.toString()),
-                                        style: const TextStyle(
-                                            color: Color.fromARGB(
-                                                255, 114, 114, 114)),
+                                      SizedBox(
+                                        height: 40,
+                                        child: Row(
+                                          children: [
+                                            Icon(
+                                              Icons.star_rounded,
+                                              size: 30,
+                                              color: Color.fromARGB(
+                                                  255, 253, 235, 72),
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 8.0),
+                                              child: Text(
+                                                '${product.rate} /5',
+                                                style: TextStyle(
+                                                  fontFamily: 'Poppins-regular',
+                                                  fontSize: 14,
+                                                  color: Color.fromARGB(
+                                                      255, 165, 165, 165),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       )
                                     ],
                                   ),

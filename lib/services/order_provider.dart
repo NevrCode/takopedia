@@ -9,12 +9,19 @@ import 'package:takopedia/model/transaction_model.dart';
 class OrderProvider with ChangeNotifier {
   final _transaction = FirebaseFirestore.instance.collection('transactions');
   final _order = FirebaseFirestore.instance.collection('orders');
-
+  String? id;
+  int _totalPrice = 0;
   List<OrderModel> _orderModel = [];
 
   List<Transactions> _trans = [];
   List<Transactions> get trans => _trans;
   List<OrderModel> get order => _orderModel;
+  int get total => _totalPrice;
+
+  Future<void> setTotal(int total) async {
+    _totalPrice = total;
+    notifyListeners();
+  }
 
   Future<void> setTrans(List<Transactions> trans) async {
     _trans = trans;
@@ -44,9 +51,7 @@ class OrderProvider with ChangeNotifier {
       final trans = snapshot.docs.map((doc) {
         return Transactions.fromDocument(doc);
       }).toList();
-      if (trans.isEmpty) {
-        print('object');
-      }
+      if (trans.isEmpty) {}
       setTrans(trans);
       notifyListeners();
     } catch (e) {
@@ -73,8 +78,9 @@ class OrderProvider with ChangeNotifier {
     }
   }
 
-  Future<void> addOrder(List<CartModel> carts, String deliveryType) async {
-    String id = generateRandomId(15);
+  Future<void> addOrder(
+      List<CartModel> carts, String deliveryType, int price) async {
+    id = generateRandomId(15);
     final now = DateTime.now();
     for (var cart in carts) {
       await _transaction.doc(id).set({
@@ -82,6 +88,7 @@ class OrderProvider with ChangeNotifier {
         'cart': cart.id,
         'timestamp': now,
         'deliveryType': deliveryType,
+        'price': price,
       });
       Map<String, dynamic> mapped = cart.toMap();
       mapped.addAll({
@@ -90,11 +97,12 @@ class OrderProvider with ChangeNotifier {
       await _order.doc(cart.id).set(mapped);
     }
     _trans.add(Transactions(
-      transId: id,
+      transId: id!,
       userId: carts[0].userId,
       cartId: carts[0].id,
       timestamp: now,
       deliveryType: deliveryType,
+      price: price,
     ));
     notifyListeners();
   }

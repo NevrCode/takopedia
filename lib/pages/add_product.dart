@@ -43,7 +43,7 @@ class _ProductPageState extends State<ProductPage> {
     final type = _typeController.text;
     if (_productPic != null) {
       await _productService.addProduct(
-          name, price, desc, _productPic!.path, type);
+          name, price, desc, _productPic!.path, type, 5);
     }
   }
 

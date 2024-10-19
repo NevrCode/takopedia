@@ -6,6 +6,7 @@ class Transactions {
   String cartId;
   DateTime timestamp;
   String deliveryType;
+  int price;
 
   Transactions({
     required this.transId,
@@ -13,6 +14,7 @@ class Transactions {
     required this.cartId,
     required this.timestamp,
     required this.deliveryType,
+    required this.price,
   });
 
   factory Transactions.fromDocument(DocumentSnapshot doc) {
@@ -22,6 +24,7 @@ class Transactions {
       cartId: doc['cart'] ?? '',
       deliveryType: doc['deliveryType'] ?? 'Take Away',
       timestamp: doc['timestamp'].toDate() ?? DateTime.now(),
+      price: doc['price'] ?? 0,
     );
   }
 }

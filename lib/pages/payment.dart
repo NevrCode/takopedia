@@ -7,10 +7,6 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:takopedia/model/cart_model.dart';
-import 'package:takopedia/pages/component/costum_radio_item.dart';
-import 'package:takopedia/pages/home.dart';
-import 'package:takopedia/pages/index.dart';
-import 'package:takopedia/pages/payment.dart';
 import 'package:takopedia/pages/qr_generate.dart';
 import 'package:takopedia/pages/success.dart';
 import 'package:takopedia/services/cart_provider.dart';
@@ -30,7 +26,6 @@ class _PaymentPageState extends State<PaymentPage> {
   final _cartNumController = TextEditingController();
   final _cartValidMonth = TextEditingController();
   final _cartValidYear = TextEditingController();
-  final _user = FirebaseAuth.instance.currentUser;
   Payment? _paymentMethod = Payment.qris;
   bool isEmpty = false;
   int total = 0;
@@ -435,8 +430,11 @@ class _PaymentPageState extends State<PaymentPage> {
                       ElevatedButton(
                         onPressed: () {
                           if (_paymentMethod == Payment.card) {
-                            order.addOrder(cartItems,
-                                isTakeAway ? "Take Away" : "Delivery");
+                            order.addOrder(
+                              cartItems,
+                              isTakeAway ? "Take Away" : "Delivery",
+                              ((total * 0.1) + total).toInt(),
+                            );
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(

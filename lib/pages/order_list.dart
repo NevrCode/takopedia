@@ -37,15 +37,16 @@ class _OrderListPageState extends State<OrderListPage> {
     final total = cartProvider.totalPrice;
     // final cartItems = cartProvider.cartItems;
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 247, 247, 247),
+      backgroundColor: Color.fromARGB(255, 255, 255, 255),
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: Color.fromARGB(255, 245, 66, 66),
+        surfaceTintColor: Color.fromARGB(255, 252, 245, 245),
+        backgroundColor: Color.fromARGB(255, 255, 252, 252),
         title: Center(
           child: Text(
             'Order List',
             style: TextStyle(
-                color: Color.fromARGB(255, 247, 242, 242),
+                color: Color.fromARGB(255, 255, 94, 94),
                 fontFamily: "Poppins-bold",
                 fontSize: 16),
           ),
@@ -60,11 +61,14 @@ class _OrderListPageState extends State<OrderListPage> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
+                        SizedBox(
+                          height: 140,
+                        ),
                         const Center(
                           child: Padding(
                             padding: EdgeInsets.only(top: 80.0),
                             child: Text(
-                              'Cart kosong, belanja dulu yuk..',
+                              'Kamu belum order..',
                               style: TextStyle(
                                   color: Color.fromARGB(255, 155, 155, 155),
                                   fontFamily: 'Poppins-regular',
@@ -73,16 +77,16 @@ class _OrderListPageState extends State<OrderListPage> {
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.fromLTRB(8, 80.0, 8, 8),
+                          padding: const EdgeInsets.fromLTRB(8, 20.0, 8, 8),
                           child: ElevatedButton(
                             onPressed: () =>
                                 Navigator.pushReplacementNamed(context, '/'),
                             style: ButtonStyle(
                               shape: MaterialStatePropertyAll(
                                   RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(25))),
+                                      borderRadius: BorderRadius.circular(12))),
                               fixedSize: MaterialStateProperty.all(
-                                  const Size(290, 52)),
+                                  const Size(150, 52)),
                               padding: MaterialStateProperty.all(
                                   const EdgeInsets.fromLTRB(0, 0, 0, 0)),
                               backgroundColor: MaterialStateProperty.all(
@@ -90,7 +94,7 @@ class _OrderListPageState extends State<OrderListPage> {
                               elevation: MaterialStateProperty.all(3),
                             ),
                             child: const Text(
-                              'Mari...',
+                              'Order disini',
                               style: TextStyle(
                                   color: Color.fromARGB(255, 255, 246, 246),
                                   fontFamily: 'Poppins-Bold'),

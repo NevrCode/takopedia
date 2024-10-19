@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:takopedia/pages/component/rating.dart';
 import 'package:takopedia/services/order_provider.dart';
 
 import '../util/style.dart';
@@ -20,6 +21,8 @@ class _HistoryPageState extends State<HistoryPage> {
   bool isTakeAway = false;
   int value = 0;
   bool isLoading = true;
+  List<int> quantity = [];
+  List<int> price = [];
 
   String formatCurrency(String price) {
     final formatter = NumberFormat.currency(locale: 'id', symbol: 'Rp ');
@@ -39,12 +42,13 @@ class _HistoryPageState extends State<HistoryPage> {
       backgroundColor: Color.fromARGB(255, 255, 255, 255),
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: const Color.fromARGB(255, 245, 66, 66),
+        surfaceTintColor: Color.fromARGB(255, 252, 245, 245),
+        backgroundColor: Color.fromARGB(255, 255, 252, 252),
         title: const Center(
           child: Text(
             'Order History',
             style: TextStyle(
-                color: Color.fromARGB(255, 247, 242, 242),
+                color: Color.fromARGB(255, 255, 94, 94),
                 fontFamily: "Poppins-bold",
                 fontSize: 16),
           ),
@@ -77,7 +81,6 @@ class _HistoryPageState extends State<HistoryPage> {
                           itemCount: history.length,
                           itemBuilder: (context, index) {
                             final historyItem = history[index];
-                            int totalPrice = 0;
                             return Padding(
                               padding: const EdgeInsets.all(10.0),
                               child: Container(
@@ -123,7 +126,7 @@ class _HistoryPageState extends State<HistoryPage> {
                                           right: 20),
                                       child: Row(
                                         mainAxisAlignment:
-                                            MainAxisAlignment.start,
+                                            MainAxisAlignment.spaceBetween,
                                         children: [
                                           Text(
                                             historyItem.deliveryType,
@@ -131,6 +134,13 @@ class _HistoryPageState extends State<HistoryPage> {
                                                 fontFamily: 'Poppins-regular',
                                                 fontSize: 15),
                                           ),
+                                          Text(
+                                            DateFormat('dd MMM yyyy hh:mm a')
+                                                .format(historyItem.timestamp),
+                                            style: TextStyle(
+                                                fontFamily: 'Poppins-regular',
+                                                fontSize: 15),
+                                          )
                                         ],
                                       ),
                                     ),
@@ -173,13 +183,13 @@ class _HistoryPageState extends State<HistoryPage> {
                                                 snapshot.data!.docs;
                                             return ListView.builder(
                                               shrinkWrap: true,
+                                              physics:
+                                                  NeverScrollableScrollPhysics(),
                                               itemCount: datalist.length,
                                               itemBuilder: (context, index) {
                                                 var item =
                                                     datalist[index].data();
-                                                int quantity = item['quantity'];
-                                                int price =
-                                                    item['product']['price'];
+
                                                 return Padding(
                                                   padding: EdgeInsets.only(
                                                       top: 8.0,
@@ -197,7 +207,7 @@ class _HistoryPageState extends State<HistoryPage> {
                                                             HistoryItemTextStyle,
                                                       ),
                                                       Text(
-                                                        '${quantity}x',
+                                                        '${item['quantity']}x',
                                                         style:
                                                             HistoryItemTextStyle,
                                                       )
@@ -223,7 +233,8 @@ class _HistoryPageState extends State<HistoryPage> {
                                             style: OrderTitleTextStyle,
                                           ),
                                           Text(
-                                            '$totalPrice',
+                                            formatCurrency(
+                                                historyItem.price.toString()),
                                             style: TextStyle(
                                               fontFamily: 'Poppins-bold',
                                               fontSize: 14,
@@ -234,6 +245,17 @@ class _HistoryPageState extends State<HistoryPage> {
                                         ],
                                       ),
                                     ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Row(
+                                        children: [
+                                          StarRatingWidget(
+                                              onRatingSelected: (rating) {
+                                            print(rating);
+                                          }),
+                                        ],
+                                      ),
+                                    )
                                   ],
                                 ),
                               ),

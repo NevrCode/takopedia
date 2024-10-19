@@ -7,6 +7,7 @@ class ProductModel {
   int price;
   String picURL;
   String type;
+  double rate;
 
   ProductModel({
     required this.id,
@@ -15,6 +16,7 @@ class ProductModel {
     required this.price,
     required this.picURL,
     required this.type,
+    required this.rate,
   });
 
   factory ProductModel.fromDocument(DocumentSnapshot doc) {
@@ -25,6 +27,7 @@ class ProductModel {
       price: doc['price'] ?? '',
       picURL: doc['product_pic'] ?? '',
       type: doc['type'] ?? '',
+      rate: doc['rate'] ?? 5,
     );
   }
   Map<String, dynamic> toMap() {
@@ -35,6 +38,7 @@ class ProductModel {
       'desc': desc,
       'picURL': picURL,
       'type': type,
+      'rate': rate,
     };
   }
 }

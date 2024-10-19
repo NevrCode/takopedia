@@ -1,11 +1,10 @@
-import 'package:circle_nav_bar/circle_nav_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:takopedia/pages/add_product.dart';
 import 'package:takopedia/pages/cart.dart';
-import 'package:takopedia/pages/component/style.dart';
+
 import 'package:takopedia/pages/history.dart';
 import 'package:takopedia/pages/home.dart';
 
@@ -13,6 +12,8 @@ import 'package:takopedia/pages/menu.dart';
 import 'package:takopedia/pages/order_list.dart';
 import 'package:takopedia/services/auth_service.dart';
 import 'package:takopedia/services/user_provider.dart';
+
+import '../util/style.dart';
 
 class Index extends StatefulWidget {
   const Index({super.key});
@@ -23,19 +24,24 @@ class Index extends StatefulWidget {
 
 const _navBarItems = [
   BottomNavigationBarItem(
-    icon: Icon(Icons.restaurant_menu_outlined),
-    activeIcon: Icon(Icons.restaurant_menu_rounded),
-    label: 'Menu',
-  ),
-  BottomNavigationBarItem(
     icon: Icon(Icons.home_rounded),
     activeIcon: Icon(Icons.home_rounded),
     label: 'Home',
   ),
   BottomNavigationBarItem(
+    icon: Icon(Icons.restaurant_menu_outlined),
+    activeIcon: Icon(Icons.restaurant_menu_rounded),
+    label: 'Menu',
+  ),
+  BottomNavigationBarItem(
     icon: Icon(Icons.list_alt),
     activeIcon: Icon(Icons.list_alt_outlined),
     label: 'Order',
+  ),
+  BottomNavigationBarItem(
+    icon: Icon(Icons.history),
+    activeIcon: Icon(Icons.history_rounded),
+    label: 'History',
   ),
 ];
 
@@ -43,7 +49,7 @@ class _IndexState extends State<Index> with SingleTickerProviderStateMixin {
   final _user = FirebaseAuth.instance.currentUser;
   final AuthService _auth = AuthService();
 
-  int _tabIndex = 1;
+  int _tabIndex = 0;
   int get tabIndex => _tabIndex;
   set tabIndex(int v) {
     _tabIndex = v;
@@ -168,15 +174,16 @@ class _IndexState extends State<Index> with SingleTickerProviderStateMixin {
             });
           },
           children: const [
-            MenuPage(
-              key: Key('measdafdfnu'),
-            ),
             HomePage(
               key: Key('hoadfadfafme'),
+            ),
+            MenuPage(
+              key: Key('measdafdfnu'),
             ),
             OrderListPage(
               key: Key('orddfafasdsder'),
             ),
+            HistoryPage(),
           ],
         ),
       ),

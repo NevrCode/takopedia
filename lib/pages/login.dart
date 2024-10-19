@@ -15,6 +15,8 @@ import 'package:takopedia/services/order_provider.dart';
 import 'package:takopedia/services/product_provider.dart';
 import 'package:takopedia/services/user_provider.dart';
 
+import '../util/style.dart';
+
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
@@ -108,6 +110,7 @@ class _LoginPageState extends State<LoginPage> {
     final screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
+      backgroundColor: Color.fromARGB(255, 238, 220, 220),
       body: _isLoading
           ? const Center(
               child: CircularProgressIndicator(),
@@ -131,13 +134,15 @@ class _LoginPageState extends State<LoginPage> {
                           const SizedBox(
                             height: 200,
                           ),
+
                           // Logo berbentuk lingkaran
                           const CircleAvatar(
                             backgroundColor: Colors.white,
                             radius: 50,
-                            backgroundImage: AssetImage('assets/img/logo.jpg'),
+                            backgroundImage: AssetImage('assets/img/logo.png'),
                           ),
-                          const SizedBox(height: 50),
+
+                          const SizedBox(height: 70),
 
                           // TextField email dengan desain kapsul dan ikon email
                           SizedBox(
@@ -205,7 +210,9 @@ class _LoginPageState extends State<LoginPage> {
                               },
                               child: const Text(
                                 'Lupa Password?',
-                                style: TextStyle(color: Colors.blue),
+                                style: TextStyle(
+                                    fontFamily: 'Poppins-regular',
+                                    color: Color.fromARGB(255, 230, 64, 64)),
                               ),
                             ),
                           ),
@@ -219,7 +226,7 @@ class _LoginPageState extends State<LoginPage> {
                               padding: MaterialStateProperty.all(
                                   const EdgeInsets.fromLTRB(0, 0, 0, 0)),
                               backgroundColor: MaterialStateProperty.all(
-                                  const Color.fromARGB(255, 50, 63, 71)),
+                                  Color.fromARGB(255, 226, 140, 140)),
                               elevation: MaterialStateProperty.all(2),
                             ),
                             onPressed: () {
@@ -235,7 +242,12 @@ class _LoginPageState extends State<LoginPage> {
                             onPressed: () {
                               Navigator.pushNamed(context, '/register');
                             },
-                            child: const Text('Sign Up'),
+                            child: const Text(
+                              'Sign Up',
+                              style: TextStyle(
+                                  fontFamily: 'Poppins-regular',
+                                  color: Color.fromARGB(255, 236, 147, 147)),
+                            ),
                           ),
 
                           const SizedBox(height: 16),

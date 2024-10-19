@@ -53,18 +53,18 @@ class _LoginPageState extends State<LoginPage> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               duration: const Duration(seconds: 1),
-              backgroundColor: const Color.fromARGB(255, 38, 141, 41),
+              backgroundColor: Color.fromARGB(255, 242, 255, 242),
               content: Text(
                 'Hi, ${userProvider.user!.nama}. Selamat Berbelanja',
-                style: TextStyle(fontFamily: 'Poppins-regular', fontSize: 14),
+                style: TextStyle(
+                    fontFamily: 'Poppins-regular',
+                    fontSize: 14,
+                    color: Color.fromARGB(255, 61, 223, 83)),
               ),
             ),
           );
 
           Navigator.pushReplacementNamed(context, '/');
-          setState(() {
-            _isLoading = false;
-          });
         }
         log('Logged in as ${user.email}');
       } else {
@@ -110,10 +110,12 @@ class _LoginPageState extends State<LoginPage> {
     final screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 238, 220, 220),
+      backgroundColor: Color.fromARGB(255, 255, 255, 255),
       body: _isLoading
           ? const Center(
-              child: CircularProgressIndicator(),
+              child: CircularProgressIndicator(
+                color: Color.fromARGB(255, 247, 130, 130),
+              ),
             )
           : Stack(
               children: [
@@ -132,14 +134,13 @@ class _LoginPageState extends State<LoginPage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           const SizedBox(
-                            height: 200,
+                            height: 250,
                           ),
 
                           // Logo berbentuk lingkaran
-                          const CircleAvatar(
-                            backgroundColor: Colors.white,
-                            radius: 50,
-                            backgroundImage: AssetImage('assets/img/logo.png'),
+                          Image.asset(
+                            'assets/img/logo.png',
+                            width: 60,
                           ),
 
                           const SizedBox(height: 70),
@@ -150,15 +151,31 @@ class _LoginPageState extends State<LoginPage> {
                             child: TextField(
                               controller: _emailController,
                               decoration: InputDecoration(
-                                labelText: 'Email',
-                                prefixIcon: const Icon(Icons.email),
+                                labelText: 'E-mail',
+                                labelStyle: TextStyle(
+                                    color: Color.fromARGB(255, 243, 103, 103)),
+                                prefixIcon: const Icon(
+                                  Icons.email,
+                                  color: Color.fromARGB(255, 247, 129, 129),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.white),
+                                  borderRadius: BorderRadius.circular(30),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color:
+                                          Color.fromARGB(255, 245, 182, 182)),
+                                  borderRadius: BorderRadius.circular(30),
+                                ),
                                 border: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.white),
                                   borderRadius: BorderRadius.circular(30),
                                 ),
                                 contentPadding:
                                     const EdgeInsets.symmetric(horizontal: 20),
                                 filled: true,
-                                fillColor: Colors.white.withOpacity(0.8),
+                                fillColor: Color.fromARGB(255, 248, 248, 248),
                               ),
                             ),
                           ),
@@ -171,13 +188,19 @@ class _LoginPageState extends State<LoginPage> {
                               controller: _passwordController,
                               obscureText: _obscureText,
                               decoration: InputDecoration(
+                                iconColor:
+                                    const Color.fromARGB(26, 168, 73, 73),
                                 labelText: 'Password',
-                                prefixIcon: const Icon(Icons.lock),
+                                labelStyle: TextStyle(
+                                    color: Color.fromARGB(255, 243, 103, 103)),
+                                prefixIcon: const Icon(Icons.lock,
+                                    color: Color.fromARGB(255, 247, 129, 129)),
                                 suffixIcon: IconButton(
                                   icon: Icon(
                                     _obscureText
-                                        ? Icons.visibility
-                                        : Icons.visibility_off,
+                                        ? Icons.visibility_off
+                                        : Icons.visibility,
+                                    color: Color.fromARGB(255, 247, 129, 129),
                                   ),
                                   onPressed: () {
                                     setState(() {
@@ -185,13 +208,24 @@ class _LoginPageState extends State<LoginPage> {
                                     });
                                   },
                                 ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.white),
+                                  borderRadius: BorderRadius.circular(30),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color:
+                                          Color.fromARGB(255, 245, 182, 182)),
+                                  borderRadius: BorderRadius.circular(30),
+                                ),
                                 border: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.white),
                                   borderRadius: BorderRadius.circular(30),
                                 ),
                                 contentPadding:
                                     const EdgeInsets.symmetric(horizontal: 20),
                                 filled: true,
-                                fillColor: Colors.white.withOpacity(0.8),
+                                fillColor: Color.fromARGB(255, 248, 248, 248),
                               ),
                             ),
                           ),
@@ -212,7 +246,7 @@ class _LoginPageState extends State<LoginPage> {
                                 'Lupa Password?',
                                 style: TextStyle(
                                     fontFamily: 'Poppins-regular',
-                                    color: Color.fromARGB(255, 230, 64, 64)),
+                                    color: Color.fromARGB(255, 235, 109, 109)),
                               ),
                             ),
                           ),

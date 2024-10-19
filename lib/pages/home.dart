@@ -118,7 +118,7 @@ class _HomePageState extends State<HomePage> {
                               Padding(
                                 padding: const EdgeInsets.only(left: 16.0),
                                 child: Text(
-                                  'Hi, ${userProvider.user!.nama}',
+                                  'Hi, ${userProvider.user?.nama ?? 'Quest'}',
                                   style: const TextStyle(
                                       fontFamily: 'Poppins-bold', fontSize: 18),
                                 ),

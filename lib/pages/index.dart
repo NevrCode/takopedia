@@ -98,7 +98,7 @@ class _IndexState extends State<Index> with SingleTickerProviderStateMixin {
             UserAccountsDrawerHeader(
               accountName: Text(userProvider?.nama ?? 'Quest'), // Nama pengguna
               accountEmail:
-                  Text(_user!.email ?? "name@domain.com"), // Email pengguna
+                  Text(_user?.email ?? "name@domain.com"), // Email pengguna
               currentAccountPicture: CircleAvatar(
                 backgroundImage: NetworkImage(
                   userProvider?.img ??

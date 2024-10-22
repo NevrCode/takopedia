@@ -37,7 +37,7 @@ class _OrderListPageState extends State<OrderListPage> {
     final total = cartProvider.totalPrice;
     // final cartItems = cartProvider.cartItems;
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 255, 255, 255),
+      backgroundColor: Color.fromARGB(255, 255, 251, 251),
       appBar: AppBar(
         automaticallyImplyLeading: false,
         surfaceTintColor: Color.fromARGB(255, 252, 245, 245),
@@ -162,7 +162,7 @@ class _OrderListPageState extends State<OrderListPage> {
                                                     child: Image.network(
                                                       cartItem
                                                           .product['picURL'],
-                                                      height: 120,
+                                                      height: 80,
                                                     ),
                                                   ),
                                                 ),
@@ -178,7 +178,7 @@ class _OrderListPageState extends State<OrderListPage> {
                                                       width: MediaQuery.sizeOf(
                                                                   context)
                                                               .width -
-                                                          190,
+                                                          150,
                                                       child: Column(
                                                         crossAxisAlignment:
                                                             CrossAxisAlignment
@@ -209,32 +209,131 @@ class _OrderListPageState extends State<OrderListPage> {
                                                                     .toString()),
                                                             style: TextStyle(),
                                                           ),
-                                                          Container(
-                                                            height: 30,
-                                                            decoration: BoxDecoration(
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
+                                                          Row(
+                                                            children: [
+                                                              Container(
+                                                                height: 30,
+                                                                decoration: BoxDecoration(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
                                                                             10),
-                                                                color: const Color
-                                                                    .fromARGB(
-                                                                    255,
-                                                                    241,
-                                                                    241,
-                                                                    241)),
-                                                            child: Padding(
-                                                              padding: EdgeInsets
-                                                                  .only(
-                                                                      left: 8.0,
-                                                                      right:
-                                                                          8.0,
-                                                                      top: 4),
-                                                              child: Text(
-                                                                'Ukuran : ${cartItem.size}',
-                                                                style:
-                                                                    TextStyle(),
+                                                                    color: Color
+                                                                        .fromARGB(
+                                                                            255,
+                                                                            247,
+                                                                            246,
+                                                                            246)),
+                                                                child: Padding(
+                                                                  padding: EdgeInsets
+                                                                      .only(
+                                                                          left:
+                                                                              8.0,
+                                                                          right:
+                                                                              8.0,
+                                                                          top:
+                                                                              4),
+                                                                  child: Text(
+                                                                    cartItem.size ==
+                                                                            'Large'
+                                                                        ? 'L'
+                                                                        : 'R',
+                                                                    style: TextStyle(
+                                                                        fontFamily:
+                                                                            'Poppins-regular'),
+                                                                  ),
+                                                                ),
                                                               ),
-                                                            ),
+                                                              cartItem.ice ==
+                                                                      'Normal'
+                                                                  ? Padding(
+                                                                      padding: const EdgeInsets
+                                                                          .only(
+                                                                          left:
+                                                                              4.0),
+                                                                      child:
+                                                                          SizedBox(
+                                                                        width:
+                                                                            1,
+                                                                      ),
+                                                                    )
+                                                                  : Padding(
+                                                                      padding: const EdgeInsets
+                                                                          .only(
+                                                                          left:
+                                                                              4.0),
+                                                                      child:
+                                                                          Container(
+                                                                        height:
+                                                                            30,
+                                                                        decoration: BoxDecoration(
+                                                                            borderRadius: BorderRadius.circular(
+                                                                                10),
+                                                                            color: Color.fromARGB(
+                                                                                255,
+                                                                                247,
+                                                                                246,
+                                                                                246)),
+                                                                        child:
+                                                                            Padding(
+                                                                          padding: EdgeInsets.only(
+                                                                              left: 8.0,
+                                                                              right: 8.0,
+                                                                              top: 4),
+                                                                          child:
+                                                                              Text(
+                                                                            'ice : ${cartItem.ice}',
+                                                                            style:
+                                                                                TextStyle(fontFamily: 'Poppins-regular'),
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                              cartItem.sugar ==
+                                                                      'Normal'
+                                                                  ? Padding(
+                                                                      padding: const EdgeInsets
+                                                                          .only(
+                                                                          left:
+                                                                              4.0),
+                                                                      child:
+                                                                          SizedBox(
+                                                                        width:
+                                                                            1,
+                                                                      ),
+                                                                    )
+                                                                  : Padding(
+                                                                      padding: const EdgeInsets
+                                                                          .only(
+                                                                          left:
+                                                                              4.0),
+                                                                      child:
+                                                                          Container(
+                                                                        height:
+                                                                            30,
+                                                                        decoration: BoxDecoration(
+                                                                            borderRadius: BorderRadius.circular(
+                                                                                10),
+                                                                            color: Color.fromARGB(
+                                                                                255,
+                                                                                247,
+                                                                                246,
+                                                                                246)),
+                                                                        child:
+                                                                            Padding(
+                                                                          padding: EdgeInsets.only(
+                                                                              left: 8.0,
+                                                                              right: 8.0,
+                                                                              top: 4),
+                                                                          child:
+                                                                              Text(
+                                                                            'sugar : ${cartItem.sugar}',
+                                                                            style:
+                                                                                TextStyle(fontFamily: 'Poppins-regular'),
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                            ],
                                                           ),
                                                         ],
                                                       ),

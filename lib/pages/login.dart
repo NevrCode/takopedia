@@ -5,6 +5,7 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:takopedia/model/user_model.dart';
 import 'package:takopedia/pages/forgot_password.dart';
@@ -67,6 +68,24 @@ class _LoginPageState extends State<LoginPage> {
         }
         log('Logged in as ${user.email}');
       } else {
+        setState(() {
+          _isLoading = false;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            duration: const Duration(seconds: 2),
+            backgroundColor: Color.fromARGB(255, 255, 242, 242),
+            content: Center(
+              child: Text(
+                'Login Gagal',
+                style: TextStyle(
+                    fontFamily: 'Poppins-regular',
+                    fontSize: 14,
+                    color: Color.fromARGB(255, 223, 61, 61)),
+              ),
+            ),
+          ),
+        );
         log('Login failed');
       }
     } catch (e) {
@@ -107,7 +126,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor:
-          _isLoading ? Colors.white : Color.fromARGB(255, 212, 204, 204),
+          _isLoading ? Colors.white : Color.fromARGB(255, 255, 250, 250),
       body: _isLoading
           ? const Center(
               child: CircularProgressIndicator(
@@ -153,16 +172,16 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                               enabledBorder: OutlineInputBorder(
                                 borderSide: BorderSide(color: Colors.white),
-                                borderRadius: BorderRadius.circular(30),
+                                borderRadius: BorderRadius.circular(10),
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
                                     color: Color.fromARGB(255, 245, 182, 182)),
-                                borderRadius: BorderRadius.circular(30),
+                                borderRadius: BorderRadius.circular(10),
                               ),
                               border: OutlineInputBorder(
                                 borderSide: BorderSide(color: Colors.white),
-                                borderRadius: BorderRadius.circular(30),
+                                borderRadius: BorderRadius.circular(10),
                               ),
                               contentPadding:
                                   const EdgeInsets.symmetric(horizontal: 20),
@@ -201,16 +220,16 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                               enabledBorder: OutlineInputBorder(
                                 borderSide: BorderSide(color: Colors.white),
-                                borderRadius: BorderRadius.circular(30),
+                                borderRadius: BorderRadius.circular(10),
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
                                     color: Color.fromARGB(255, 245, 182, 182)),
-                                borderRadius: BorderRadius.circular(30),
+                                borderRadius: BorderRadius.circular(10),
                               ),
                               border: OutlineInputBorder(
                                 borderSide: BorderSide(color: Colors.white),
-                                borderRadius: BorderRadius.circular(30),
+                                borderRadius: BorderRadius.circular(10),
                               ),
                               contentPadding:
                                   const EdgeInsets.symmetric(horizontal: 20),

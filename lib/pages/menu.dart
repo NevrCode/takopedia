@@ -7,7 +7,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:takopedia/model/product_model.dart';
 import 'package:takopedia/pages/product_detail.dart';
 import 'package:takopedia/services/product_provider.dart';
-import 'package:takopedia/util/style.dart';
 
 class MenuPage extends StatefulWidget {
   const MenuPage({super.key});
@@ -71,6 +70,7 @@ class _MenuPageState extends State<MenuPage> {
                 AnimatedToggleSwitch<bool>.size(
                   current: isTakeAway,
                   values: const [true, false],
+                  animationDuration: Duration(milliseconds: 400),
                   iconOpacity: 0.2,
                   indicatorSize: const Size.fromWidth(170),
                   customIconBuilder: (context, local, global) => Row(
@@ -78,6 +78,7 @@ class _MenuPageState extends State<MenuPage> {
                     children: [
                       Text(local.value ? 'Take Away' : 'Delivery',
                           style: TextStyle(
+                              fontSize: 13,
                               fontFamily: 'Poppins-regular',
                               color: Color.lerp(Colors.black, Colors.white,
                                   local.animationValue))),
@@ -93,22 +94,15 @@ class _MenuPageState extends State<MenuPage> {
                       ),
                     ],
                   ),
-                  borderWidth: 4.0,
+                  borderWidth: 0.3,
                   iconAnimationType: AnimationType.onHover,
                   style: ToggleStyle(
+                    backgroundColor: Color.fromARGB(255, 255, 251, 251),
                     indicatorColor: const Color.fromARGB(255, 252, 79, 79),
-                    borderColor: Colors.transparent,
-                    borderRadius: BorderRadius.circular(15.0),
-                    boxShadow: [
-                      const BoxShadow(
-                        color: Colors.black26,
-                        spreadRadius: 1,
-                        blurRadius: 2,
-                        offset: Offset(0, 1.5),
-                      ),
-                    ],
+                    borderColor: Color.fromARGB(255, 214, 214, 214),
+                    borderRadius: BorderRadius.circular(12.0),
                   ),
-                  selectedIconScale: 1.0,
+                  selectedIconScale: 1.1,
                   onChanged: (b) {
                     setState(() {
                       isTakeAway = b;
@@ -316,7 +310,7 @@ class _MenuPageState extends State<MenuPage> {
                                         height: 40,
                                         child: Row(
                                           children: [
-                                            Icon(
+                                            const Icon(
                                               Icons.star_rounded,
                                               size: 30,
                                               color: Color.fromARGB(
@@ -326,8 +320,8 @@ class _MenuPageState extends State<MenuPage> {
                                               padding: const EdgeInsets.only(
                                                   left: 8.0),
                                               child: Text(
-                                                '${product.rate} /5',
-                                                style: TextStyle(
+                                                '${product.rate.toStringAsFixed(product.rate.truncateToDouble() == product.rate ? 0 : 1)} /5',
+                                                style: const TextStyle(
                                                   fontFamily: 'Poppins-regular',
                                                   fontSize: 14,
                                                   color: Color.fromARGB(

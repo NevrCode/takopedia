@@ -18,4 +18,12 @@ class ProductProvider with ChangeNotifier {
     setProduct(item);
     notifyListeners();
   }
+
+  Future<void> updateProductRating(ProductModel product, int rate) async {
+    final newrate = await _productService.updateRate(product, rate);
+
+    var updatedrate = _productList.firstWhere((item) => item.id == product.id);
+
+    updatedrate.rate = newrate;
+  }
 }

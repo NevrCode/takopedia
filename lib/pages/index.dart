@@ -72,7 +72,7 @@ class _IndexState extends State<Index> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     final userProvider = Provider.of<UserProvider>(context).user;
 
-    pageController = PageController(initialPage: 1);
+    pageController = PageController(initialPage: 0);
     return Scaffold(
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _tabIndex,

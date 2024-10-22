@@ -4,8 +4,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:takopedia/model/product_model.dart';
 import 'package:takopedia/pages/component/rating.dart';
 import 'package:takopedia/services/order_provider.dart';
+import 'package:takopedia/services/product_provider.dart';
 
 import '../util/style.dart';
 
@@ -29,6 +31,10 @@ class _HistoryPageState extends State<HistoryPage> {
     return formatter.format(int.parse(price));
   }
 
+  String minSize(String size) {
+    return size == 'Large' ? 'L' : 'R';
+  }
+
   @override
   void initState() {
     super.initState();
@@ -37,9 +43,10 @@ class _HistoryPageState extends State<HistoryPage> {
   @override
   Widget build(BuildContext context) {
     final history = Provider.of<OrderProvider>(context).trans;
+    final product = Provider.of<ProductProvider>(context);
     // final isTakeAway =
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 255, 255, 255),
+      backgroundColor: Color.fromARGB(255, 255, 251, 251),
       appBar: AppBar(
         automaticallyImplyLeading: false,
         surfaceTintColor: Color.fromARGB(255, 252, 245, 245),
@@ -55,8 +62,6 @@ class _HistoryPageState extends State<HistoryPage> {
         ),
       ),
       body: Container(
-        decoration:
-            const BoxDecoration(color: Color.fromARGB(255, 255, 245, 245)),
         child: SingleChildScrollView(
           child: SafeArea(
             child: Padding(
@@ -68,13 +73,7 @@ class _HistoryPageState extends State<HistoryPage> {
                     height: 20,
                   ),
                   history.isEmpty
-                      ? const Center(
-                          child: Text(
-                            'Empty',
-                            style: TextStyle(
-                                fontFamily: 'Poppins-bold', fontSize: 30),
-                          ),
-                        )
+                      ? const Text('')
                       : ListView.builder(
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
@@ -184,35 +183,186 @@ class _HistoryPageState extends State<HistoryPage> {
                                             return ListView.builder(
                                               shrinkWrap: true,
                                               physics:
-                                                  NeverScrollableScrollPhysics(),
+                                                  const NeverScrollableScrollPhysics(),
                                               itemCount: datalist.length,
                                               itemBuilder: (context, index) {
-                                                var item =
+                                                var cartItem =
                                                     datalist[index].data();
-
-                                                return Padding(
-                                                  padding: EdgeInsets.only(
-                                                      top: 8.0,
-                                                      left: 14,
-                                                      bottom: 8,
-                                                      right: 20),
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
-                                                    children: [
-                                                      Text(
-                                                        item['product']['name'],
-                                                        style:
-                                                            HistoryItemTextStyle,
+                                                return Column(
+                                                  children: [
+                                                    Container(
+                                                      decoration:
+                                                          const BoxDecoration(
+                                                        color: Color.fromARGB(
+                                                            255, 255, 255, 255),
+                                                        borderRadius:
+                                                            BorderRadius.all(
+                                                                Radius.circular(
+                                                                    10)),
                                                       ),
-                                                      Text(
-                                                        '${item['quantity']}x',
-                                                        style:
-                                                            HistoryItemTextStyle,
-                                                      )
-                                                    ],
-                                                  ),
+                                                      width: MediaQuery.sizeOf(
+                                                              context)
+                                                          .width,
+                                                      child: Column(
+                                                        children: [
+                                                          Row(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              Padding(
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                        .all(
+                                                                        8.0),
+                                                                child:
+                                                                    ClipRRect(
+                                                                  clipBehavior:
+                                                                      Clip.hardEdge,
+                                                                  borderRadius:
+                                                                      const BorderRadius
+                                                                          .all(
+                                                                          Radius.circular(
+                                                                              100)),
+                                                                  child:
+                                                                      Container(
+                                                                    decoration:
+                                                                        BoxDecoration(
+                                                                      boxShadow: const [
+                                                                        BoxShadow(
+                                                                            offset: Offset(0.1,
+                                                                                0.1),
+                                                                            blurRadius:
+                                                                                1)
+                                                                      ],
+                                                                    ),
+                                                                    child: Image
+                                                                        .network(
+                                                                      cartItem[
+                                                                              'product']
+                                                                          [
+                                                                          'picURL'],
+                                                                      height:
+                                                                          80,
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              Padding(
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                        .only(
+                                                                        left:
+                                                                            3.0,
+                                                                        top:
+                                                                            10),
+                                                                child: Column(
+                                                                  crossAxisAlignment:
+                                                                      CrossAxisAlignment
+                                                                          .end,
+                                                                  children: [
+                                                                    SizedBox(
+                                                                      width: MediaQuery.sizeOf(context)
+                                                                              .width -
+                                                                          180,
+                                                                      child:
+                                                                          Column(
+                                                                        crossAxisAlignment:
+                                                                            CrossAxisAlignment.start,
+                                                                        children: [
+                                                                          Text(
+                                                                            cartItem['product']['name'],
+                                                                            maxLines:
+                                                                                1,
+                                                                            overflow:
+                                                                                TextOverflow.ellipsis,
+                                                                            style:
+                                                                                const TextStyle(fontFamily: 'Poppins-regular', color: Color.fromARGB(255, 117, 117, 117)),
+                                                                          ),
+                                                                          Text(
+                                                                            formatCurrency(cartItem['product']['price'].toString()),
+                                                                            style:
+                                                                                TextStyle(fontFamily: 'Poppins-rgular'),
+                                                                          ),
+                                                                          Row(
+                                                                            children: [
+                                                                              Container(
+                                                                                height: 30,
+                                                                                decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Color.fromARGB(255, 247, 246, 246)),
+                                                                                child: Padding(
+                                                                                  padding: EdgeInsets.only(left: 8.0, right: 8.0, top: 4),
+                                                                                  child: Text(
+                                                                                    cartItem['size'] == 'Large' ? 'L' : 'R',
+                                                                                    style: TextStyle(fontFamily: 'Poppins-regular'),
+                                                                                  ),
+                                                                                ),
+                                                                              ),
+                                                                              cartItem['ice'] == 'Normal'
+                                                                                  ? Padding(
+                                                                                      padding: const EdgeInsets.only(left: 4.0),
+                                                                                      child: SizedBox(
+                                                                                        width: 1,
+                                                                                      ),
+                                                                                    )
+                                                                                  : Padding(
+                                                                                      padding: const EdgeInsets.only(left: 4.0),
+                                                                                      child: Container(
+                                                                                        height: 30,
+                                                                                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Color.fromARGB(255, 247, 246, 246)),
+                                                                                        child: Padding(
+                                                                                          padding: EdgeInsets.only(left: 8.0, right: 8.0, top: 4),
+                                                                                          child: Text(
+                                                                                            'ice : ${cartItem['ice']}',
+                                                                                            style: TextStyle(fontFamily: 'Poppins-regular'),
+                                                                                          ),
+                                                                                        ),
+                                                                                      ),
+                                                                                    ),
+                                                                              cartItem['sugar'] == 'Normal'
+                                                                                  ? Padding(
+                                                                                      padding: const EdgeInsets.only(left: 4.0),
+                                                                                      child: SizedBox(
+                                                                                        width: 1,
+                                                                                      ),
+                                                                                    )
+                                                                                  : Padding(
+                                                                                      padding: const EdgeInsets.only(left: 4.0),
+                                                                                      child: Container(
+                                                                                        height: 30,
+                                                                                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Color.fromARGB(255, 247, 246, 246)),
+                                                                                        child: Padding(
+                                                                                          padding: EdgeInsets.only(left: 8.0, right: 8.0, top: 4),
+                                                                                          child: Text(
+                                                                                            'sugar : ${cartItem['sugar']}',
+                                                                                            style: TextStyle(fontFamily: 'Poppins-regular'),
+                                                                                          ),
+                                                                                        ),
+                                                                                      ),
+                                                                                    ),
+                                                                            ],
+                                                                          ),
+                                                                          StarRatingWidget(onRatingSelected:
+                                                                              (rate) {
+                                                                            final productmap =
+                                                                                ProductModel.fromMap(cartItem['product'], cartItem['product']['id']);
+                                                                            product.updateProductRating(productmap,
+                                                                                rate);
+                                                                          })
+                                                                        ],
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ],
                                                 );
                                               },
                                             );
@@ -245,17 +395,6 @@ class _HistoryPageState extends State<HistoryPage> {
                                         ],
                                       ),
                                     ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Row(
-                                        children: [
-                                          StarRatingWidget(
-                                              onRatingSelected: (rating) {
-                                            print(rating);
-                                          }),
-                                        ],
-                                      ),
-                                    )
                                   ],
                                 ),
                               ),
@@ -271,39 +410,6 @@ class _HistoryPageState extends State<HistoryPage> {
           ),
         ),
       ),
-      bottomSheet: BottomSheet(
-          backgroundColor: const Color.fromARGB(255, 255, 245, 245),
-          elevation: 0,
-          onClosing: () {},
-          builder: (context) {
-            return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ElevatedButton(
-                    onPressed: () => Navigator.pop(context),
-                    style: ButtonStyle(
-                      shape: MaterialStatePropertyAll(RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20))),
-                      fixedSize: MaterialStateProperty.all(const Size(290, 52)),
-                      padding: MaterialStateProperty.all(
-                          const EdgeInsets.fromLTRB(0, 0, 0, 0)),
-                      backgroundColor: MaterialStateProperty.all(
-                          Color.fromARGB(255, 247, 108, 108)),
-                      elevation: MaterialStateProperty.all(3),
-                    ),
-                    child: const Text(
-                      'Back',
-                      style: TextStyle(
-                          color: Color.fromARGB(255, 255, 246, 246),
-                          fontFamily: 'Poppins-Bold'),
-                    ),
-                  ),
-                ],
-              ),
-            );
-          }),
     );
   }
 }

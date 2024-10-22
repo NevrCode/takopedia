@@ -31,133 +31,118 @@ class _SuccessPageState extends State<SuccessPage> {
     String formattedDate = DateFormat('dd-MM-yyyy').format(now);
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 251, 255, 252),
-      body: Stack(
-        children: [
-          SizedBox(
-            width: MediaQuery.sizeOf(context).width,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.asset(
-                  'assets/img/success.gif',
-                  height: 200,
-                  width: 200,
-                ),
-                const Text(
-                  'Payment Successfully',
-                  style: TextStyle(fontFamily: "Poppins-regular", fontSize: 26),
-                ),
-                const Text(
-                  'Thank you for purchasing<3',
-                  style: TextStyle(fontFamily: "Poppins-regular", fontSize: 17),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Color.fromARGB(255, 251, 255, 252),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(
-                              top: 8.0, left: 14, bottom: 8, right: 20),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'ID Transaksi ',
-                                style: OrderDetailTextStyle,
-                              ),
-                              Text(
-                                orderID!,
-                                style: OrderDetailValueTextStyle,
-                              )
-                            ],
-                          ),
+      body: SizedBox(
+        width: MediaQuery.sizeOf(context).width,
+        child: GestureDetector(
+          onTap: () {
+            cartProvider.clearCart(_user!.uid);
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (context) => const Index()));
+          },
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(
+                'assets/img/success.gif',
+                height: 200,
+                width: 200,
+              ),
+              const Text(
+                'Payment Successfully',
+                style: TextStyle(fontFamily: "Poppins-regular", fontSize: 26),
+              ),
+              const Text(
+                'Thank you for purchasing<3',
+                style: TextStyle(fontFamily: "Poppins-regular", fontSize: 17),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Color.fromARGB(255, 251, 255, 252),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(
+                            top: 8.0, left: 14, bottom: 8, right: 20),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'ID Transaksi ',
+                              style: OrderDetailTextStyle,
+                            ),
+                            Text(
+                              orderID!,
+                              style: OrderDetailValueTextStyle,
+                            )
+                          ],
                         ),
-                        Padding(
-                          padding: EdgeInsets.only(
-                              top: 8.0, left: 14, bottom: 8, right: 20),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'Tanggal Transaksi',
-                                style: OrderDetailTextStyle,
-                              ),
-                              Text(
-                                formattedDate,
-                                style: OrderDetailValueTextStyle,
-                              ),
-                            ],
-                          ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(
+                            top: 8.0, left: 14, bottom: 8, right: 20),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Tanggal Transaksi',
+                              style: OrderDetailTextStyle,
+                            ),
+                            Text(
+                              formattedDate,
+                              style: OrderDetailValueTextStyle,
+                            ),
+                          ],
                         ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 6.0),
-                          child: Divider(),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(
-                              top: 8.0, left: 14, bottom: 8, right: 20),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'Total',
-                                style: OrderTitleTextStyle,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 6.0),
+                        child: Divider(),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(
+                            top: 8.0, left: 14, bottom: 8, right: 20),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Total',
+                              style: OrderTitleTextStyle,
+                            ),
+                            Text(
+                              (formatCurrency(
+                                  ((total * 0.1) + total).toInt().toString())),
+                              style: TextStyle(
+                                fontFamily: 'Poppins-bold',
+                                fontSize: 14,
+                                color: Color.fromARGB(255, 44, 44, 44),
                               ),
-                              Text(
-                                (formatCurrency(((total * 0.1) + total)
-                                    .toInt()
-                                    .toString())),
-                                style: TextStyle(
-                                  fontFamily: 'Poppins-bold',
-                                  fontSize: 14,
-                                  color: Color.fromARGB(255, 44, 44, 44),
-                                ),
-                              ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 80.0),
-                  child: ElevatedButton(
-                    onPressed: () {
-                      cartProvider.clearCart(_user!.uid);
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const Index()));
-                    },
-                    style: ButtonStyle(
-                      shape: MaterialStatePropertyAll(RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20))),
-                      fixedSize: MaterialStateProperty.all(const Size(125, 52)),
-                      padding: MaterialStateProperty.all(
-                          const EdgeInsets.fromLTRB(0, 0, 0, 0)),
-                      backgroundColor: MaterialStateProperty.all(
-                          Color.fromARGB(255, 25, 175, 93)),
-                      elevation: MaterialStateProperty.all(0),
-                    ),
-                    child: Text(
-                      'Back to Menu',
-                      style: TextStyle(
-                          color: Color.fromARGB(255, 248, 252, 248),
-                          fontFamily: 'Poppins-Bold'),
-                    ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 80.0),
+                child: Text(
+                  'tap anything to exit',
+                  style: TextStyle(
+                    color: Color.fromARGB(255, 212, 212, 212),
+                    fontFamily: 'Poppins-regular',
+                    fontSize: 14,
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

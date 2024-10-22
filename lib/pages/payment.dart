@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:takopedia/model/cart_model.dart';
+import 'package:takopedia/pages/cash.dart';
 import 'package:takopedia/pages/qr_generate.dart';
 import 'package:takopedia/pages/success.dart';
 import 'package:takopedia/services/cart_provider.dart';
@@ -393,7 +394,7 @@ class _PaymentPageState extends State<PaymentPage> {
                             _buildRadioTile(
                                 "Qris", Payment.qris, Icons.qr_code_2),
                             _buildRadioTile(
-                                "Dana", Payment.dana, Icons.batch_prediction),
+                                "Cash", Payment.dana, Icons.batch_prediction),
                             _buildRadioTile("Gopay", Payment.gopay,
                                 Icons.currency_yen_sharp),
                           ],
@@ -415,7 +416,7 @@ class _PaymentPageState extends State<PaymentPage> {
           : BottomSheet(
               elevation: 0,
               enableDrag: false,
-              backgroundColor: Color.fromARGB(139, 255, 251, 251),
+              backgroundColor: Color.fromARGB(137, 247, 240, 240),
               builder: (BuildContext context) {
                 return Padding(
                   padding: const EdgeInsets.only(
@@ -435,11 +436,27 @@ class _PaymentPageState extends State<PaymentPage> {
                               isTakeAway ? "Take Away" : "Delivery",
                               ((total * 0.1) + total).toInt(),
                             );
-                            Navigator.push(
+                            Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => const SuccessPage()));
+                          } else if (_paymentMethod == Payment.dana) {
+                            order.addOrder(
+                              cartItems,
+                              isTakeAway ? "Take Away" : "Delivery",
+                              ((total * 0.1) + total).toInt(),
+                            );
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const CashPaymentPage()));
                           } else {
+                            order.addOrder(
+                              cartItems,
+                              isTakeAway ? "Take Away" : "Delivery",
+                              ((total * 0.1) + total).toInt(),
+                            );
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(

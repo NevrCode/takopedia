@@ -85,7 +85,6 @@ class OrderProvider with ChangeNotifier {
     for (var cart in carts) {
       await _transaction.doc(id).set({
         'uid': cart.userId,
-        'cart': cart.id,
         'timestamp': now,
         'deliveryType': deliveryType,
         'price': price,
@@ -99,7 +98,6 @@ class OrderProvider with ChangeNotifier {
     _trans.add(Transactions(
       transId: id!,
       userId: carts[0].userId,
-      cartId: carts[0].id,
       timestamp: now,
       deliveryType: deliveryType,
       price: price,

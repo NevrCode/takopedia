@@ -8,6 +8,7 @@ class ProductModel {
   String picURL;
   String type;
   double rate;
+  int rater;
 
   ProductModel({
     required this.id,
@@ -17,6 +18,7 @@ class ProductModel {
     required this.picURL,
     required this.type,
     required this.rate,
+    required this.rater,
   });
 
   factory ProductModel.fromDocument(DocumentSnapshot doc) {
@@ -28,6 +30,7 @@ class ProductModel {
       picURL: doc['product_pic'] ?? '',
       type: doc['type'] ?? '',
       rate: doc['rate'] ?? 5,
+      rater: doc['rater'] ?? 100,
     );
   }
   Map<String, dynamic> toMap() {
@@ -39,6 +42,20 @@ class ProductModel {
       'picURL': picURL,
       'type': type,
       'rate': rate,
+      'rater': rater,
     };
+  }
+
+  factory ProductModel.fromMap(Map<String, dynamic> doc, String id) {
+    return ProductModel(
+      id: id,
+      name: doc['name'] ?? '',
+      desc: doc['description'] ?? '',
+      price: doc['price'] ?? '',
+      picURL: doc['product_pic'] ?? '',
+      type: doc['type'] ?? '',
+      rate: doc['rate'] ?? 5,
+      rater: doc['rater'] ?? 0,
+    );
   }
 }

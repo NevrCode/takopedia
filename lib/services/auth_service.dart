@@ -29,7 +29,7 @@ class AuthService {
   }
 
   Future<User?> registerWithEmailandDetail(String email, String password,
-      String name, String address, String profilePicPath, String telp) async {
+      String name, String profilePicPath, String telp) async {
     try {
       UserCredential result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
@@ -41,7 +41,6 @@ class AuthService {
         await _db.collection('users').doc(user.uid).set({
           'name': name,
           'email': email,
-          'address': address,
           'profile_pic': picUrl,
           'telp': telp,
         });

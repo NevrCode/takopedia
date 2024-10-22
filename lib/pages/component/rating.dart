@@ -33,8 +33,10 @@ class _StarRatingWidgetState extends State<StarRatingWidget> {
             index < _currentRating
                 ? Icons.star_rounded
                 : Icons.star_border_rounded,
-            color: Color.fromARGB(255, 252, 233, 62),
-            size: 40.0,
+            color: index < _currentRating
+                ? Color.fromARGB(255, 252, 233, 62)
+                : Color.fromARGB(255, 121, 121, 121),
+            size: 25.0,
           ),
         );
       }),

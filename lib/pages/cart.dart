@@ -404,7 +404,7 @@ class _CartPageState extends State<CartPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       ElevatedButton(
-                        onPressed: () => Navigator.push(
+                        onPressed: () => Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
                                 builder: (context) => const PaymentPage())),

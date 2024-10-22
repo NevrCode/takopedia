@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:takopedia/model/product_model.dart';
 import 'package:takopedia/pages/product_detail.dart';
 import 'package:takopedia/services/product_provider.dart';
 
@@ -201,7 +202,7 @@ class _HomePageState extends State<HomePage> {
                                 ),
                               ],
                             ),
-                            itemBuilder: (context, dynamic product) {
+                            itemBuilder: (context, ProductModel product) {
                               return GestureDetector(
                                 onTap: () {
                                   Navigator.push(
@@ -286,7 +287,7 @@ class _HomePageState extends State<HomePage> {
                                                                 .only(
                                                                 left: 8.0),
                                                         child: Text(
-                                                          '${product.rate} /5',
+                                                          '${product.rate.toStringAsFixed(product.rate.truncateToDouble() == product.rate ? 0 : 1)} /5',
                                                           style: TextStyle(
                                                             fontFamily:
                                                                 'Poppins-regular',

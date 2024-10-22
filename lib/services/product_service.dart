@@ -50,4 +50,18 @@ class ProductService {
       return [];
     }
   }
+
+  Future<double> updateRate(ProductModel product, int rate) async {
+    int pr = product.rater + 1;
+    double newrate = ((product.rate * product.rater) + rate) / pr;
+    print("product rate : " + product.rate.toString());
+    print("rater o : " + product.rater.toString());
+    print("rate : " + newrate.toString());
+    print("rater : " + pr.toString());
+    await _products.doc(product.id).update({
+      'rater': pr,
+      'rate': newrate,
+    });
+    return newrate;
+  }
 }

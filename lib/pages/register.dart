@@ -21,7 +21,6 @@ class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _namaController = TextEditingController();
-  final TextEditingController _alamatController = TextEditingController();
   final TextEditingController _teleponController = TextEditingController();
   File? _profilePic;
   final AuthService _authService = AuthService();
@@ -38,7 +37,6 @@ class _RegisterPageState extends State<RegisterPage> {
     final email = _emailController.text;
     final pass = _passwordController.text;
     final nama = _namaController.text;
-    final alamat = _alamatController.text;
     final telp = _teleponController.text;
 
     // await _saveImage(); // Simpan gambar sebelum registrasi
@@ -48,7 +46,6 @@ class _RegisterPageState extends State<RegisterPage> {
         email,
         pass,
         nama,
-        alamat,
         _profilePic!.path,
         telp,
       );
@@ -67,7 +64,7 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 206, 190, 190),
+      backgroundColor: Color.fromARGB(255, 250, 244, 244),
       body: SingleChildScrollView(
         child: SafeArea(
           child: Padding(
@@ -140,16 +137,16 @@ class _RegisterPageState extends State<RegisterPage> {
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.white),
-                            borderRadius: BorderRadius.circular(30),
+                            borderRadius: BorderRadius.circular(10),
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderSide: BorderSide(
                                 color: Color.fromARGB(255, 245, 182, 182)),
-                            borderRadius: BorderRadius.circular(30),
+                            borderRadius: BorderRadius.circular(10),
                           ),
                           border: OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.white),
-                            borderRadius: BorderRadius.circular(30),
+                            borderRadius: BorderRadius.circular(10),
                           ),
                           contentPadding:
                               const EdgeInsets.symmetric(horizontal: 20),
@@ -174,16 +171,16 @@ class _RegisterPageState extends State<RegisterPage> {
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.white),
-                            borderRadius: BorderRadius.circular(30),
+                            borderRadius: BorderRadius.circular(10),
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderSide: BorderSide(
                                 color: Color.fromARGB(255, 245, 182, 182)),
-                            borderRadius: BorderRadius.circular(30),
+                            borderRadius: BorderRadius.circular(10),
                           ),
                           border: OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.white),
-                            borderRadius: BorderRadius.circular(30),
+                            borderRadius: BorderRadius.circular(10),
                           ),
                           contentPadding:
                               const EdgeInsets.symmetric(horizontal: 20),
@@ -208,16 +205,16 @@ class _RegisterPageState extends State<RegisterPage> {
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.white),
-                            borderRadius: BorderRadius.circular(30),
+                            borderRadius: BorderRadius.circular(10),
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderSide: BorderSide(
                                 color: Color.fromARGB(255, 245, 182, 182)),
-                            borderRadius: BorderRadius.circular(30),
+                            borderRadius: BorderRadius.circular(10),
                           ),
                           border: OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.white),
-                            borderRadius: BorderRadius.circular(30),
+                            borderRadius: BorderRadius.circular(10),
                           ),
                           contentPadding:
                               const EdgeInsets.symmetric(horizontal: 20),
@@ -227,43 +224,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(18, 8, 18, 8),
-                    child: SizedBox(
-                      child: TextField(
-                        maxLines: 3,
-                        textAlignVertical: TextAlignVertical.top,
-                        textAlign: TextAlign.start,
-                        controller: _alamatController,
-                        decoration: InputDecoration(
-                          labelText: 'Address',
-                          labelStyle: TextStyle(
-                              color: Color.fromARGB(255, 243, 103, 103)),
-                          prefixIcon: const Icon(
-                            Icons.location_pin,
-                            color: Color.fromARGB(255, 247, 129, 129),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.white),
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                color: Color.fromARGB(255, 245, 182, 182)),
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.white),
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                          contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 10),
-                          filled: true,
-                          fillColor: Color.fromARGB(255, 248, 248, 248),
-                        ),
-                      ),
-                    ),
-                  ),
+
                   Padding(
                     padding: const EdgeInsets.fromLTRB(18, 8, 18, 8),
                     child: SizedBox(
@@ -279,16 +240,16 @@ class _RegisterPageState extends State<RegisterPage> {
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.white),
-                            borderRadius: BorderRadius.circular(30),
+                            borderRadius: BorderRadius.circular(10),
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderSide: BorderSide(
                                 color: Color.fromARGB(255, 245, 182, 182)),
-                            borderRadius: BorderRadius.circular(30),
+                            borderRadius: BorderRadius.circular(10),
                           ),
                           border: OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.white),
-                            borderRadius: BorderRadius.circular(30),
+                            borderRadius: BorderRadius.circular(10),
                           ),
                           contentPadding:
                               const EdgeInsets.symmetric(horizontal: 0),
@@ -316,7 +277,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             padding: MaterialStateProperty.all(
                                 const EdgeInsets.fromLTRB(0, 0, 0, 0)),
                             backgroundColor: MaterialStateProperty.all(
-                                Color.fromARGB(255, 255, 252, 252)),
+                                Color.fromARGB(255, 252, 252, 252)),
                             elevation: MaterialStateProperty.all(0),
                           ),
                           onPressed: () async {
